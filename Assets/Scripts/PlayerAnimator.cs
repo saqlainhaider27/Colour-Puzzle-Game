@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerAnimator : MonoBehaviour {
     
     private Animator animator;
-    [SerializeField] private SwipeDetection swipeDetection;
+    [SerializeField] private Player player;
 
     private const string MOVING = "Moving";
 
@@ -12,6 +12,6 @@ public class PlayerAnimator : MonoBehaviour {
     }
     private void Update() {
 
-        animator.SetBool(MOVING, swipeDetection.CanPlayerMove());
+        animator.SetBool(MOVING, player.CanPlayerMove());
     }
 }
