@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIController : Singleton<UIController> {
 
@@ -21,6 +22,15 @@ public class UIController : Singleton<UIController> {
     }
     private void HideUIBlur() {
         blur.SetActive(false);
+    }
+    public void LoadNextLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    public void BackToHome() {
+        SceneManager.LoadScene(0);
+    }
+    public void ReplayCurrentLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
 

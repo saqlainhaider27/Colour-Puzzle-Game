@@ -24,76 +24,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     ""name"": ""InputActions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
-            ""id"": ""6e23dfb6-1462-468d-ab24-f58c6de44cc1"",
-            ""actions"": [
-                {
-                    ""name"": ""DragPosition"",
-                    ""type"": ""Value"",
-                    ""id"": ""aa81e870-aa00-41e8-9a43-ddccc844a6db"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Drag"",
-                    ""type"": ""Button"",
-                    ""id"": ""b30a32ad-2aeb-41c3-9103-e626558cdd77"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""774f5c9e-65fe-43a0-8ed8-861e8fa19767"",
-                    ""path"": ""<Mouse>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DragPosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""01633995-9e1b-4f34-a53e-181776ab380b"",
-                    ""path"": ""<Touchscreen>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DragPosition"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5239ae76-f375-4c2c-9129-799cd0f526af"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Drag"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1eee7bd3-2867-4a66-93eb-b3a015081f53"",
-                    ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Drag"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
             ""name"": ""Touch"",
             ""id"": ""901d3660-d8d4-47b5-aa63-567a08b8b5bf"",
             ""actions"": [
@@ -111,6 +41,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""ff500757-a93a-4c69-9314-d72b9436a754"",
                     ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GameStart"",
+                    ""type"": ""Button"",
+                    ""id"": ""8cc67033-06af-4691-9711-4c1e58a65a6f"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -160,20 +99,39 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""action"": ""PrimaryPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7b4affb5-58f6-4080-a5ce-809a9a89f457"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GameStart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""01a33566-fe4d-428d-9b54-c0b7a4a1077e"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GameStart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_DragPosition = m_Player.FindAction("DragPosition", throwIfNotFound: true);
-        m_Player_Drag = m_Player.FindAction("Drag", throwIfNotFound: true);
         // Touch
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_PrimaryContact = m_Touch.FindAction("PrimaryContact", throwIfNotFound: true);
         m_Touch_PrimaryPosition = m_Touch.FindAction("PrimaryPosition", throwIfNotFound: true);
+        m_Touch_GameStart = m_Touch.FindAction("GameStart", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -232,71 +190,19 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Player
-    private readonly InputActionMap m_Player;
-    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_DragPosition;
-    private readonly InputAction m_Player_Drag;
-    public struct PlayerActions
-    {
-        private @InputActions m_Wrapper;
-        public PlayerActions(@InputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @DragPosition => m_Wrapper.m_Player_DragPosition;
-        public InputAction @Drag => m_Wrapper.m_Player_Drag;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActions instance)
-        {
-            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @DragPosition.started += instance.OnDragPosition;
-            @DragPosition.performed += instance.OnDragPosition;
-            @DragPosition.canceled += instance.OnDragPosition;
-            @Drag.started += instance.OnDrag;
-            @Drag.performed += instance.OnDrag;
-            @Drag.canceled += instance.OnDrag;
-        }
-
-        private void UnregisterCallbacks(IPlayerActions instance)
-        {
-            @DragPosition.started -= instance.OnDragPosition;
-            @DragPosition.performed -= instance.OnDragPosition;
-            @DragPosition.canceled -= instance.OnDragPosition;
-            @Drag.started -= instance.OnDrag;
-            @Drag.performed -= instance.OnDrag;
-            @Drag.canceled -= instance.OnDrag;
-        }
-
-        public void RemoveCallbacks(IPlayerActions instance)
-        {
-            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IPlayerActions instance)
-        {
-            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public PlayerActions @Player => new PlayerActions(this);
-
     // Touch
     private readonly InputActionMap m_Touch;
     private List<ITouchActions> m_TouchActionsCallbackInterfaces = new List<ITouchActions>();
     private readonly InputAction m_Touch_PrimaryContact;
     private readonly InputAction m_Touch_PrimaryPosition;
+    private readonly InputAction m_Touch_GameStart;
     public struct TouchActions
     {
         private @InputActions m_Wrapper;
         public TouchActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @PrimaryContact => m_Wrapper.m_Touch_PrimaryContact;
         public InputAction @PrimaryPosition => m_Wrapper.m_Touch_PrimaryPosition;
+        public InputAction @GameStart => m_Wrapper.m_Touch_GameStart;
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -312,6 +218,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PrimaryPosition.started += instance.OnPrimaryPosition;
             @PrimaryPosition.performed += instance.OnPrimaryPosition;
             @PrimaryPosition.canceled += instance.OnPrimaryPosition;
+            @GameStart.started += instance.OnGameStart;
+            @GameStart.performed += instance.OnGameStart;
+            @GameStart.canceled += instance.OnGameStart;
         }
 
         private void UnregisterCallbacks(ITouchActions instance)
@@ -322,6 +231,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @PrimaryPosition.started -= instance.OnPrimaryPosition;
             @PrimaryPosition.performed -= instance.OnPrimaryPosition;
             @PrimaryPosition.canceled -= instance.OnPrimaryPosition;
+            @GameStart.started -= instance.OnGameStart;
+            @GameStart.performed -= instance.OnGameStart;
+            @GameStart.canceled -= instance.OnGameStart;
         }
 
         public void RemoveCallbacks(ITouchActions instance)
@@ -339,14 +251,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         }
     }
     public TouchActions @Touch => new TouchActions(this);
-    public interface IPlayerActions
-    {
-        void OnDragPosition(InputAction.CallbackContext context);
-        void OnDrag(InputAction.CallbackContext context);
-    }
     public interface ITouchActions
     {
         void OnPrimaryContact(InputAction.CallbackContext context);
         void OnPrimaryPosition(InputAction.CallbackContext context);
+        void OnGameStart(InputAction.CallbackContext context);
     }
 }

@@ -3,11 +3,12 @@ using UnityEngine;
 public class PlayerAnimator : MonoBehaviour {
     
     private Animator animator;
-    [SerializeField] private Player player;
+    private Player player;
 
     private const string MOVING = "Moving";
 
     private void Awake() {
+        player = GetComponentInParent<Player>();
         animator = GetComponent<Animator>();
     }
     private void Update() {

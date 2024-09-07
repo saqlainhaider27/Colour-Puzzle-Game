@@ -1,22 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Singleton<Player> {
 
     [Header("Player Settings")]
     [SerializeField] private float moveSpeed;
     private Vector2 moveDirection;
     [SerializeField] private float raycastLength = 0.5f;
-
+    [SerializeField] private List<GameObject> playerMeshes = new List<GameObject>();
 
     [Header("References")]
     [SerializeField] private SwipeDetection swipeDetection;
     [SerializeField] private LayerMask collisionLayer;
 
 
+    private bool generated = false;
     private bool canMove;
 
+    [SerializeField] private Colour currentColour;
+
+    private void Start() {
+        currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
+    }
     private void Update() {
         moveDirection = swipeDetection.GetSwipeDirection();
+
         canMove = IsPathClear() && moveDirection != Vector2.zero;
         if (canMove) {
             transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
@@ -35,10 +43,31 @@ public class Player : MonoBehaviour {
         RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
         if (raycastHit) {
             if (raycastHit.collider.GetComponent<Wall>() != null) {
-                Debug.Log("Collided Wall");
+                // Debug.Log("Collided Wall");
+
                 RotateAwayFromCollision(raycastHit.point);
+                Wall collidedWall = raycastHit.collider.GetComponent<Wall>();
+                bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
+                if (WallColourDifferent) {
+                    DestroySelf();
+                }
                 return false; // Collision detected, cannot move
 
+            }
+            if (raycastHit.collider.GetComponent<Paint>() != null) {
+                // Switch colour if paint is different than current colour
+                Paint collidedPaint = raycastHit.collider.GetComponent<Paint>();
+                bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint); // Checks if colour is different from collided paint
+                if (switchColour) { 
+                    generated = false;
+                }
+                if (!generated) {
+                    // Switch colour if different
+                    ColourSwitcher.Instance.SwitchColour(collidedPaint);
+                    generated = true;
+                }
+
+                return true;
             }
         }
 
@@ -54,8 +83,25 @@ public class Player : MonoBehaviour {
         return true; // No collision and not close enough to WinPoint
     }
 
+    public void DestroySelf() {
+        Destroy(gameObject);
+    }
+    public void HideMeshWithColour(Colour hideColour) {
+        foreach (GameObject playerMesh in playerMeshes) {
+            if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() ==  hideColour) {
+                playerMesh.gameObject.SetActive(false);
+            }
+        }
+    }
+    public void ShowMeshWithColour(Colour showColour) {
+        foreach (GameObject playerMesh in playerMeshes) {
+            if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() == showColour) {
 
-    private void HideSelf() {
+                playerMesh.gameObject.SetActive(true);
+            }
+        }
+    }
+    public void HideSelf() {
         this.gameObject.SetActive(false);
     }
     private void RotateInMoveDirection() {
@@ -69,8 +115,14 @@ public class Player : MonoBehaviour {
     }
 
 
+    public Colour GetPlayerColour() {
+        return currentColour;
+    }
+
     public bool CanPlayerMove() {
         return canMove;
     }
-
+    public void SetCurrentPlayerColour(Colour setColour) {
+        currentColour = setColour;
+    }
 }
