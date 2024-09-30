@@ -16,7 +16,10 @@ public class Player : Singleton<Player> {
 
     private bool generated = false;
     private bool canMove;
+    private bool canTeleport;
 
+    private float timeToNextTeleport;
+    private float teleportCoolDuration = 2f;
     [SerializeField] private Colour currentColour;
 
     private void Start() {
@@ -36,6 +39,11 @@ public class Player : Singleton<Player> {
 
         }
 
+        if (timeToNextTeleport > teleportCoolDuration ) {
+
+        }
+
+
     }
 
     private bool IsPathClear() {
@@ -54,11 +62,11 @@ public class Player : Singleton<Player> {
                 return false; // Collision detected, cannot move
 
             }
-            if (raycastHit.collider.GetComponent<Paint>() != null) {
+            else if (raycastHit.collider.GetComponent<Paint>() != null) {
                 // Switch colour if paint is different than current colour
                 Paint collidedPaint = raycastHit.collider.GetComponent<Paint>();
                 bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint); // Checks if colour is different from collided paint
-                if (switchColour) { 
+                if (switchColour) {
                     generated = false;
                 }
                 if (!generated) {
@@ -67,6 +75,12 @@ public class Player : Singleton<Player> {
                     generated = true;
                 }
 
+                return true;
+            }
+            else if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
+                TeleportController.Instance.TeleportPlayer(this.transform ,out canTeleport);
+                
+                canTeleport = true;
                 return true;
             }
         }
