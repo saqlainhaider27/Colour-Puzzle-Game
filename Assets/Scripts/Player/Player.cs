@@ -6,6 +6,8 @@ public class Player : Singleton<Player> {
     [Header("Player Settings")]
     [SerializeField] private float moveSpeed;
     private Vector2 moveDirection;
+    private Vector2 newMoveDirection;
+
     [SerializeField] private float raycastLength = 0.5f;
     [SerializeField] private List<GameObject> playerMeshes = new List<GameObject>();
 
@@ -25,7 +27,12 @@ public class Player : Singleton<Player> {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
-        moveDirection = swipeDetection.GetSwipeDirection();
+        if (swipeDetection.GetSwipeDirection() != Vector2.zero){
+            moveDirection = swipeDetection.GetSwipeDirection();
+        }
+        else if (newMoveDirection != Vector2.zero && newMoveDirection != moveDirection) {
+            moveDirection = newMoveDirection;
+        }
         canMove = IsPathClear() && moveDirection != Vector2.zero;
         if (canMove) {
             transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
@@ -78,9 +85,8 @@ public class Player : Singleton<Player> {
             }
             else if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
                 if (!teleported) {
-                    Vector2 newMoveDirection;
+
                     raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
-                    moveDirection = newMoveDirection;
                     teleported = true;
                 }
                 //TeleportController.Instance.TeleportPlayer(this.transform);
