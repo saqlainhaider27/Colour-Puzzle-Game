@@ -16,18 +16,16 @@ public class Player : Singleton<Player> {
 
     private bool generated = false;
     private bool canMove;
-    private bool canTeleport;
-
-    private float timeToNextTeleport;
-    private float teleportCoolDuration = 2f;
     [SerializeField] private Colour currentColour;
+    private bool teleported = false;
+    private float lastTeleportTime;
+    private float teleportCooldownTime = 0.1f;
 
     private void Start() {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
         moveDirection = swipeDetection.GetSwipeDirection();
-
         canMove = IsPathClear() && moveDirection != Vector2.zero;
         if (canMove) {
             transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
@@ -39,8 +37,9 @@ public class Player : Singleton<Player> {
 
         }
 
-        if (timeToNextTeleport > teleportCoolDuration ) {
-
+        if (Time.time >= lastTeleportTime + teleportCooldownTime) {
+            lastTeleportTime = Time.time;
+            teleported = false;
         }
 
 
@@ -78,9 +77,13 @@ public class Player : Singleton<Player> {
                 return true;
             }
             else if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
-                TeleportController.Instance.TeleportPlayer(this.transform ,out canTeleport);
-                
-                canTeleport = true;
+                if (!teleported) {
+                    Vector2 newMoveDirection;
+                    raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
+                    moveDirection = newMoveDirection;
+                    teleported = true;
+                }
+                //TeleportController.Instance.TeleportPlayer(this.transform);
                 return true;
             }
             return false;
