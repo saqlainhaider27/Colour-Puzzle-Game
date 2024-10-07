@@ -83,6 +83,7 @@ public class Player : Singleton<Player> {
                 canTeleport = true;
                 return true;
             }
+            return false;
         }
 
 
