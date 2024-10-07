@@ -1,10 +1,15 @@
+using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class UIController : Singleton<UIController> {
 
     [SerializeField] private GameObject winMenu;
     [SerializeField] private GameObject blur;
+
+    public event EventHandler OnLoadNextLevel;
+    public event EventHandler OnReplayButtonPressed;
+    public event EventHandler OnHomeButtonPressed;
+
     private void Awake() {
         HideUIBlur();
         HideWinMenu();    
@@ -24,13 +29,17 @@ public class UIController : Singleton<UIController> {
         blur.SetActive(false);
     }
     public void LoadNextLevel() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        OnLoadNextLevel?.Invoke(this, EventArgs.Empty);
     }
     public void BackToHome() {
-        SceneManager.LoadScene(0);
+        OnHomeButtonPressed?.Invoke(this, EventArgs.Empty);
     }
     public void ReplayCurrentLevel() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        OnReplayButtonPressed?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ShowLoseMenu() {
+        
     }
 }
 

@@ -21,19 +21,25 @@ public class Player : Singleton<Player> {
     [SerializeField] private Colour currentColour;
     private bool teleported = false;
     private float lastTeleportTime;
-    private float teleportCooldownTime = 0.1f;
+    private float teleportCooldownTime = 0.5f;
 
     private void Start() {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
+
+        if (Time.time >= lastTeleportTime + teleportCooldownTime) {
+            lastTeleportTime = Time.time;
+            teleported = false;
+        }
+
         if (swipeDetection.GetSwipeDirection() != Vector2.zero){
             moveDirection = swipeDetection.GetSwipeDirection();
         }
         else if (newMoveDirection != Vector2.zero && newMoveDirection != moveDirection) {
             moveDirection = newMoveDirection;
         }
-        canMove = IsPathClear() && moveDirection != Vector2.zero;
+        canMove = CheckForCollidersInPath() && moveDirection != Vector2.zero;
         if (canMove) {
             transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
             RotateInMoveDirection(); // Rotate object in move direction
@@ -44,15 +50,12 @@ public class Player : Singleton<Player> {
 
         }
 
-        if (Time.time >= lastTeleportTime + teleportCooldownTime) {
-            lastTeleportTime = Time.time;
-            teleported = false;
-        }
+
 
 
     }
 
-    private bool IsPathClear() {
+    private bool CheckForCollidersInPath() {
         // Check for collision with anything on the collision layer
         RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
         if (raycastHit) {
@@ -64,6 +67,7 @@ public class Player : Singleton<Player> {
                 bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
                 if (WallColourDifferent) {
                     DestroySelf();
+                    UIController.Instance.ShowLoseMenu();
                 }
                 return false; // Collision detected, cannot move
 
@@ -85,9 +89,8 @@ public class Player : Singleton<Player> {
             }
             else if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
                 if (!teleported) {
-
-                    raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
                     teleported = true;
+                    raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
                 }
                 //TeleportController.Instance.TeleportPlayer(this.transform);
                 return true;
@@ -137,7 +140,6 @@ public class Player : Singleton<Player> {
         float angle = Mathf.Atan2(directionAwayFromCollision.x, directionAwayFromCollision.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
     }
-
 
     public Colour GetPlayerColour() {
         return currentColour;

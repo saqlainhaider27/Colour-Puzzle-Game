@@ -1,0 +1,23 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SceneController : MonoBehaviour {
+
+    private void Awake() {
+        UIController.Instance.OnLoadNextLevel += UIController_OnLoadNextLevel;
+        UIController.Instance.OnReplayButtonPressed += UIController_OnReplayButtonPressed;
+        UIController.Instance.OnHomeButtonPressed += UIController_OnHomeButtonPressed;
+    }
+
+    private void UIController_OnHomeButtonPressed(object sender, System.EventArgs e) {
+        SceneManager.LoadScene(0);
+    }
+
+    private void UIController_OnReplayButtonPressed(object sender, System.EventArgs e) {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void UIController_OnLoadNextLevel(object sender, System.EventArgs e) {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+}
