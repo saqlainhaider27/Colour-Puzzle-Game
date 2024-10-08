@@ -27,88 +27,119 @@ public class Player : Singleton<Player> {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
+        HandleTeleportCooldown();
+        UpdateMoveDirection();
+        canMove = CanMove();
 
+        if (canMove) {
+            MovePlayer();
+            RotateInMoveDirection(); // Rotate object in move direction
+        }
+        else {
+            StopPlayer();
+        }
+    }
+
+    private void HandleTeleportCooldown() {
         if (Time.time >= lastTeleportTime + teleportCooldownTime) {
             lastTeleportTime = Time.time;
             teleported = false;
         }
+    }
 
-        if (swipeDetection.GetSwipeDirection() != Vector2.zero){
+    private void UpdateMoveDirection() {
+        if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
             moveDirection = swipeDetection.GetSwipeDirection();
         }
         else if (newMoveDirection != Vector2.zero && newMoveDirection != moveDirection) {
             moveDirection = newMoveDirection;
         }
-        canMove = CheckForCollidersInPath() && moveDirection != Vector2.zero;
-        if (canMove) {
-            transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
-            RotateInMoveDirection(); // Rotate object in move direction
-        }
-        else {
-            // Stop player movement if WinPoint reached or collision detected
-            moveDirection = Vector2.zero;
-
-        }
-
-
-
-
     }
-
+    private bool CanMove() {
+        return CheckForCollidersInPath() && moveDirection != Vector2.zero;
+    }
+    private void MovePlayer() {
+        transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
+    }
+    private void StopPlayer() {
+        moveDirection = Vector2.zero; // Stop player movement
+    }
     private bool CheckForCollidersInPath() {
-        // Check for collision with anything on the collision layer
         RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
+
         if (raycastHit) {
-            if (raycastHit.collider.GetComponent<Wall>() != null) {
-                // Debug.Log("Collided Wall");
-
-                RotateAwayFromCollision(raycastHit.point);
-                Wall collidedWall = raycastHit.collider.GetComponent<Wall>();
-                bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
-                if (WallColourDifferent) {
-                    DestroySelf();
-                    UIController.Instance.ShowLoseMenu();
-                }
-                return false; // Collision detected, cannot move
-
-            }
-            else if (raycastHit.collider.GetComponent<Paint>() != null) {
-                // Switch colour if paint is different than current colour
-                Paint collidedPaint = raycastHit.collider.GetComponent<Paint>();
-                bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint); // Checks if colour is different from collided paint
-                if (switchColour) {
-                    generated = false;
-                }
-                if (!generated) {
-                    // Switch colour if different
-                    ColourSwitcher.Instance.SwitchColour(collidedPaint);
-                    generated = true;
-                }
-
+            if (CheckWallCollision(raycastHit))
+                return false;
+            if (CheckPaintCollision(raycastHit))
                 return true;
-            }
-            else if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
-                if (!teleported) {
-                    teleported = true;
-                    raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
-                }
-                //TeleportController.Instance.TeleportPlayer(this.transform);
+            if (CheckTeleportPointCollision(raycastHit))
                 return true;
-            }
+
             return false;
         }
 
+        return CheckWinPointProximity();
+    }
+    private bool CheckWallCollision(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.GetComponent<Wall>() != null) {
+            RotateAwayFromCollision(raycastHit.point);
 
-        // Check if close enough to WinPoint (using distance)
+            Wall collidedWall = raycastHit.collider.GetComponent<Wall>();
+            bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
+
+            if (WallColourDifferent) {
+                DestroySelf();
+                UIController.Instance.ShowLoseMenu();
+            }
+
+            return true; // Collision with wall detected
+        }
+
+        return false;
+    }
+    private bool CheckPaintCollision(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.GetComponent<Paint>() != null) {
+            Paint collidedPaint = raycastHit.collider.GetComponent<Paint>();
+            bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
+
+            if (switchColour) {
+                generated = false;
+            }
+
+            if (!generated) {
+                ColourSwitcher.Instance.SwitchColour(collidedPaint);
+                generated = true;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    private bool CheckTeleportPointCollision(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
+            if (!teleported) {
+                teleported = true;
+                raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
+            }
+
+            return true; // Teleportation happened
+        }
+
+        return false;
+    }
+    private bool CheckWinPointProximity() {
         float distanceToWinPoint = Vector2.Distance(transform.position, WinPoint.Instance.transform.position);
+
         if (distanceToWinPoint <= 0.1f) {
             UIController.Instance.ShowWinMenu();
             HideSelf();
             return false;
         }
 
-        return true; // No collision and not close enough to WinPoint
+        return true;
     }
+
 
     public void DestroySelf() {
         Destroy(gameObject);
