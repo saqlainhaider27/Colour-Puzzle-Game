@@ -21,7 +21,7 @@ public class Player : Singleton<Player> {
     [SerializeField] private Colour currentColour;
     private bool teleported = false;
     private float lastTeleportTime;
-    private float teleportCooldownTime = 0.5f;
+    private float teleportCooldownTime = 0.25f;
 
     private void Start() {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();

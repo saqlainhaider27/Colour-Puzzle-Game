@@ -35,6 +35,5 @@ public class TeleportPoint : MonoBehaviour {
 
         transform.position = toTeleportPoint.transform.position;
         modifiedMoveDirection = moveDirVector;
-        Debug.Log(moveDirVector);
     }
 }
