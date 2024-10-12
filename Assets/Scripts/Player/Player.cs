@@ -131,7 +131,7 @@ public class Player : Singleton<Player> {
     private bool CheckWinPointProximity() {
         float distanceToWinPoint = Vector2.Distance(transform.position, WinPoint.Instance.transform.position);
 
-        if (distanceToWinPoint <= 0.1f) {
+        if (distanceToWinPoint <= 0.5f) {
             UIController.Instance.ShowWinMenu();
             HideSelf();
             return false;
