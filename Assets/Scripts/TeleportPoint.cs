@@ -52,6 +52,5 @@ public class TeleportPoint : MonoBehaviour {
     private IEnumerator TeleportCooldown() {
         yield return new WaitForSeconds(teleportCooldown);
         isTeleportReady = true; // Re-enable teleportation after cooldown
-        Debug.Log("Player can teleport to: " + this.gameObject.name);
     }
 }
