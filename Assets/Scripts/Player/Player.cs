@@ -48,12 +48,14 @@ public class Player : Singleton<Player> {
     }
 
     private void UpdateMoveDirection() {
+        if (newMoveDirection != moveDirection) {
+            moveDirection = newMoveDirection;
+            Debug.Log(moveDirection);
+        }
         if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
             moveDirection = swipeDetection.GetSwipeDirection();
         }
-        else if (newMoveDirection != Vector2.zero && newMoveDirection != moveDirection) {
-            moveDirection = newMoveDirection;
-        }
+
     }
     private bool CanMove() {
         return CheckForCollidersInPath() && moveDirection != Vector2.zero;
