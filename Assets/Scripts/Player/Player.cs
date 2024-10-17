@@ -19,15 +19,11 @@ public class Player : Singleton<Player> {
     private bool generated = false;
     private bool canMove;
     [SerializeField] private Colour currentColour;
-    private bool teleported = false;
-    private float lastTeleportTime;
-    private float teleportCooldownTime = 0.25f;
 
     private void Start() {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
-        HandleTeleportCooldown();
         UpdateMoveDirection();
         canMove = CanMove();
 
@@ -40,17 +36,11 @@ public class Player : Singleton<Player> {
         }
     }
 
-    private void HandleTeleportCooldown() {
-        if (Time.time >= lastTeleportTime + teleportCooldownTime) {
-            lastTeleportTime = Time.time;
-            teleported = false;
-        }
-    }
 
     private void UpdateMoveDirection() {
         if (newMoveDirection != moveDirection) {
             moveDirection = newMoveDirection;
-            Debug.Log(moveDirection);
+            // Debug.Log(moveDirection);
         }
         if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
             moveDirection = swipeDetection.GetSwipeDirection();
@@ -120,11 +110,7 @@ public class Player : Singleton<Player> {
     }
     private bool CheckTeleportPointCollision(RaycastHit2D raycastHit) {
         if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
-            if (!teleported) {
-                teleported = true;
-                raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
-            }
-
+            raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
             return true; // Teleportation happened
         }
 
@@ -168,7 +154,7 @@ public class Player : Singleton<Player> {
         float _angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -_angle));
     }
-    private void RotateAwayFromCollision(Vector2 collisionPoint) {
+    public void RotateAwayFromCollision(Vector2 collisionPoint) {
         Vector2 directionAwayFromCollision = (Vector2)transform.position - collisionPoint;
         float angle = Mathf.Atan2(directionAwayFromCollision.x, directionAwayFromCollision.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));

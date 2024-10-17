@@ -4110,11 +4110,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wallColour: 0
---- !u!1 &490705461 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1445552181108485301, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-  m_PrefabInstance: {fileID: 7687366462688770642}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -6883,18 +6878,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5479690642101069293, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-      propertyPath: raycastLength
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5479690642101069293, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-      propertyPath: playerMeshes.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5479690642101069293, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-      propertyPath: playerMeshes.Array.data[3]
-      value: 
-      objectReference: {fileID: 490705461}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
