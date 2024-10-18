@@ -16,7 +16,7 @@ public class Player : Singleton<Player> {
     [SerializeField] private LayerMask collisionLayer;
 
 
-    private bool generated = false;
+    private bool generated = false; //
     private bool canMove;
     [SerializeField] private Colour currentColour;
 
@@ -38,13 +38,17 @@ public class Player : Singleton<Player> {
 
 
     private void UpdateMoveDirection() {
-        if (newMoveDirection != moveDirection) {
+        if (newMoveDirection != moveDirection && newMoveDirection != Vector2.zero) {
             moveDirection = newMoveDirection;
-            // Debug.Log(moveDirection);
+            newMoveDirection = Vector2.zero;
         }
-        if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
-            moveDirection = swipeDetection.GetSwipeDirection();
+        else {
+            if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
+                moveDirection = swipeDetection.GetSwipeDirection();
+            }
         }
+
+        Debug.Log(moveDirection);
 
     }
     private bool CanMove() {
@@ -73,10 +77,8 @@ public class Player : Singleton<Player> {
         return CheckWinPointProximity();
     }
     private bool CheckWallCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.GetComponent<Wall>() != null) {
+        if (raycastHit.collider.TryGetComponent<Wall>(out Wall collidedWall)) {
             RotateAwayFromCollision(raycastHit.point);
-
-            Wall collidedWall = raycastHit.collider.GetComponent<Wall>();
             bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
 
             if (WallColourDifferent) {
@@ -90,8 +92,7 @@ public class Player : Singleton<Player> {
         return false;
     }
     private bool CheckPaintCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.GetComponent<Paint>() != null) {
-            Paint collidedPaint = raycastHit.collider.GetComponent<Paint>();
+        if (raycastHit.collider.TryGetComponent<Paint>(out Paint collidedPaint)) {
             bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
 
             if (switchColour) {
@@ -103,26 +104,32 @@ public class Player : Singleton<Player> {
                 generated = true;
             }
 
-            return true;
+            return true; // Return true as player can move and will not stop at paint collisions
         }
 
         return false;
     }
     private bool CheckTeleportPointCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.GetComponent<TeleportPoint>() != null) {
-            raycastHit.collider.GetComponent<TeleportPoint>().TeleportPlayer(this.transform, out newMoveDirection);
-            return true; // Teleportation happened
+        if (raycastHit.collider.TryGetComponent<TeleportPoint>(out TeleportPoint teleportPoint)) {
+            if (!teleportPoint.Teleported) {
+                // Teleport cooldown logic is implemented in TeleportPoint script
+                teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
+            }
+            
+            return true; // Return true as player can move and will not stop at teleport point
         }
 
         return false;
     }
     private bool CheckWinPointProximity() {
+        // Winpoint detection is not implemented by raycast but by distance
+        // Singleton reference is taken as there will be only one winpoint per scene
         float distanceToWinPoint = Vector2.Distance(transform.position, WinPoint.Instance.transform.position);
 
         if (distanceToWinPoint <= 0.5f) {
-            UIController.Instance.ShowWinMenu();
+            UIController.Instance.ShowWinMenu(); 
             HideSelf();
-            return false;
+            return false; // Return false as player should stop when it reaches win point   
         }
 
         return true;
@@ -133,6 +140,8 @@ public class Player : Singleton<Player> {
         Destroy(gameObject);
     }
     public void HideMeshWithColour(Colour hideColour) {
+        // All the required meshes are a child of the player
+        // Cycles through the children and hides all children
         foreach (GameObject playerMesh in playerMeshes) {
             if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() ==  hideColour) {
                 playerMesh.gameObject.SetActive(false);
@@ -140,9 +149,11 @@ public class Player : Singleton<Player> {
         }
     }
     public void ShowMeshWithColour(Colour showColour) {
+        // All the required meshes are a child of the player
+        // Cycles through the children and shows all children
+
         foreach (GameObject playerMesh in playerMeshes) {
             if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() == showColour) {
-
                 playerMesh.gameObject.SetActive(true);
             }
         }
