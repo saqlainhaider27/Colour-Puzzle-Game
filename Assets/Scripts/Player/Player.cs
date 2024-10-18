@@ -120,6 +120,7 @@ public class Player : Singleton<Player> {
             if (!teleportPoint.Teleported) {
                 // Teleport cooldown logic is implemented in TeleportPoint script
                 StopPlayer();
+                //gameObject.GetComponentInChildren<TrailRenderer>().Clear();
                 teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
                 // Move player towards modifedMoveDirection from TeleportPoint
                 
