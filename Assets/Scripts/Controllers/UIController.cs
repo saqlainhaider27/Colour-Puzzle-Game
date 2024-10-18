@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class UIController : Singleton<UIController> {
@@ -11,6 +12,9 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
+
+    public event EventHandler OnMenuEnter;
+    public event EventHandler OnMenuExit;
 
     private void Awake() {
         HideUIBlur();
@@ -32,6 +36,9 @@ public class UIController : Singleton<UIController> {
     public void ShowWinMenu() {
         ShowUIBlur();
         winMenu.SetActive(true);
+
+        OnMenuEnter?.Invoke(this, EventArgs.Empty);
+
     }
     public void HideWinMenu() { 
         HideUIBlur();
@@ -44,19 +51,34 @@ public class UIController : Singleton<UIController> {
         blur.SetActive(false);
     }
     public void LoadNextLevel() {
-        OnLoadNextLevel?.Invoke(this, EventArgs.Empty);
+        HideUIBlur();
+        OnMenuExit?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(InvokeAfterDelay(OnLoadNextLevel, 0.5f));
     }
+
     public void BackToHome() {
-        OnHomeButtonPressed?.Invoke(this, EventArgs.Empty);
+        HideUIBlur();
+        OnMenuExit?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(InvokeAfterDelay(OnHomeButtonPressed, 0.5f));
     }
+
     public void ReplayCurrentLevel() {
-        OnReplayButtonPressed?.Invoke(this, EventArgs.Empty);
+        HideUIBlur();
+        OnMenuExit?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
+    }
+
+    private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
+        yield return new WaitForSeconds(delay);  // Wait for 'delay' seconds
+        eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay
     }
 
     public void ShowLoseMenu() {
-
         ShowUIBlur();
         loseMenu.SetActive(true);
+
+        OnMenuEnter?.Invoke(this, EventArgs.Empty);
+
     }
 }
 
