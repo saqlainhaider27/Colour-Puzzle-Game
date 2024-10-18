@@ -24,7 +24,6 @@ public class SwipeDetection : MonoBehaviour {
     private void Awake() {
         inputManager = InputManager.Instance;
     }
-
     private void OnEnable() {
         inputManager.OnStartTouch += SwipeStart;
         inputManager.OnEndTouch += SwipeEnd;
@@ -34,7 +33,6 @@ public class SwipeDetection : MonoBehaviour {
         inputManager.OnStartTouch -= SwipeStart;
         inputManager.OnEndTouch -= SwipeEnd;
     }
-
 
     private void SwipeStart(Vector2 position, float time) {
         startPosition = position;
@@ -70,7 +68,11 @@ public class SwipeDetection : MonoBehaviour {
             swipeDirection = new Vector2(1f, 0f);
         }
     }
+
     public Vector2 GetSwipeDirection() {
         return swipeDirection;
+    }
+    public void SetSwipeDirection(Vector2 _newSwipeDirection) {
+        swipeDirection = _newSwipeDirection;
     }
 }

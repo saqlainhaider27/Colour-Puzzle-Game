@@ -5,7 +5,7 @@ public class Player : Singleton<Player> {
 
     [Header("Player Settings")]
     [SerializeField] private float moveSpeed;
-    private Vector2 moveDirection;
+    private Vector2 moveDirection ;
     private Vector2 newMoveDirection;
 
     [SerializeField] private float raycastLength = 0.5f;
@@ -16,7 +16,7 @@ public class Player : Singleton<Player> {
     [SerializeField] private LayerMask collisionLayer;
 
 
-    private bool generated = false; //
+    private bool generated = false; 
     private bool canMove;
     [SerializeField] private Colour currentColour;
 
@@ -24,7 +24,9 @@ public class Player : Singleton<Player> {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
     }
     private void Update() {
-        UpdateMoveDirection();
+
+
+        // UpdateMoveDirection();
         canMove = CanMove();
 
         if (canMove) {
@@ -33,6 +35,10 @@ public class Player : Singleton<Player> {
         }
         else {
             StopPlayer();
+        }
+
+        if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
+            moveDirection = swipeDetection.GetSwipeDirection();
         }
     }
 
@@ -83,7 +89,7 @@ public class Player : Singleton<Player> {
 
             if (WallColourDifferent) {
                 DestroySelf();
-                UIController.Instance.ShowLoseMenu();
+                GameManager.Instance.State = GameStates.Lose;
             }
 
             return true; // Collision with wall detected
@@ -113,7 +119,13 @@ public class Player : Singleton<Player> {
         if (raycastHit.collider.TryGetComponent<TeleportPoint>(out TeleportPoint teleportPoint)) {
             if (!teleportPoint.Teleported) {
                 // Teleport cooldown logic is implemented in TeleportPoint script
+                StopPlayer();
                 teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
+                // Move player towards modifedMoveDirection from TeleportPoint
+                
+                moveDirection = newMoveDirection;
+                swipeDetection.SetSwipeDirection(moveDirection);
+                MovePlayer();
             }
             
             return true; // Return true as player can move and will not stop at teleport point
@@ -127,9 +139,9 @@ public class Player : Singleton<Player> {
         float distanceToWinPoint = Vector2.Distance(transform.position, WinPoint.Instance.transform.position);
 
         if (distanceToWinPoint <= 0.5f) {
-            UIController.Instance.ShowWinMenu(); 
+            GameManager.Instance.State = GameStates.Win;
             HideSelf();
-            return false; // Return false as player should stop when it reaches win point   
+            return false; // Return false as the player should stop when it reaches win point   
         }
 
         return true;

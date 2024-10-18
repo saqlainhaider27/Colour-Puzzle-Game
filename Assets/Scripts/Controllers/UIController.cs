@@ -4,6 +4,8 @@ using UnityEngine;
 public class UIController : Singleton<UIController> {
 
     [SerializeField] private GameObject winMenu;
+    [SerializeField] private GameObject loseMenu;
+
     [SerializeField] private GameObject blur;
 
     public event EventHandler OnLoadNextLevel;
@@ -12,8 +14,21 @@ public class UIController : Singleton<UIController> {
 
     private void Awake() {
         HideUIBlur();
-        HideWinMenu();    
+        HideWinMenu();
+
+
+        GameManager.Instance.OnWinState += GameManager_OnWinState;
+        GameManager.Instance.OnLoseState += GameManager_OnLoseState;    
     }
+
+    private void GameManager_OnLoseState(object sender, EventArgs e) {
+        ShowLoseMenu();
+    }
+
+    private void GameManager_OnWinState(object sender, EventArgs e) {
+        ShowWinMenu();
+    }
+
     public void ShowWinMenu() {
         ShowUIBlur();
         winMenu.SetActive(true);
@@ -39,7 +54,9 @@ public class UIController : Singleton<UIController> {
     }
 
     public void ShowLoseMenu() {
-        
+
+        ShowUIBlur();
+        loseMenu.SetActive(true);
     }
 }
 
