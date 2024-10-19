@@ -19,7 +19,7 @@ public class Player : Singleton<Player> {
 
     private TrailRenderer[] trailRenderers;
 
-
+    public event EventHandler OnWinPointReached;
     public event EventHandler<OnPaintChangedEventArgs> OnPaintChanged;
     public class OnPaintChangedEventArgs : EventArgs{
         public Paint paint;
@@ -38,6 +38,9 @@ public class Player : Singleton<Player> {
     private void Update() {
 
 
+        if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
+            moveDirection = swipeDetection.GetSwipeDirection();
+        }
         // UpdateMoveDirection();
         canMove = CanMove();
 
@@ -49,9 +52,6 @@ public class Player : Singleton<Player> {
             StopPlayer();
         }
 
-        if (swipeDetection.GetSwipeDirection() != Vector2.zero) {
-            moveDirection = swipeDetection.GetSwipeDirection();
-        }
     }
 
 
@@ -78,14 +78,19 @@ public class Player : Singleton<Player> {
     }
 
     private void StopPlayer() {
+
         moveDirection = Vector2.zero; // Stop player movement
+        swipeDetection.SetSwipeDirection(moveDirection);
     }
     private bool CheckForCollidersInPath() {
         RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
         if (raycastHit) {
-            if (CheckWallCollision(raycastHit))
+            if (CheckWallCollision(raycastHit)) {
+                //GetComponentInChildren<ParticleSystem>().Play();
                 return false;
+            }
+
             if (CheckPaintCollision(raycastHit))
                 return true;
             if (CheckTeleportPointCollision(raycastHit))
@@ -99,18 +104,36 @@ public class Player : Singleton<Player> {
     private bool CheckWallCollision(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<Wall>(out Wall collidedWall)) {
             RotateAwayFromCollision(raycastHit.point);
-            bool WallColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
+            StopPlayer();
 
-            if (WallColourDifferent) {
-                DestroySelf();
+            bool isColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
+
+            if (!isColourDifferent) {
+                // The player's color matches the wall's color; play particle effec
+
+                if (moveDirection == Vector2.zero) {
+
+                    PlayWallCollisionParticles();
+
+                }
+            }
+            else {
+                DestroySelf(); // Player loses when colliding with a different color wall
                 GameManager.Instance.State = GameStates.Lose;
             }
 
-            return true; // Collision with wall detected
+            return true; // A valid collision with a wall occurred
         }
 
-        return false;
+        return false; // No wall collision detected
     }
+
+    private void PlayWallCollisionParticles() {
+        // Ensure particles are played only during actual collision
+        ParticleSystem particles = GetComponentInChildren<ParticleSystem>();
+        particles.Play();
+    }
+
     private bool CheckPaintCollision(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<Paint>(out Paint collidedPaint)) {
             bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
@@ -187,6 +210,7 @@ public class Player : Singleton<Player> {
 
         if (distanceToWinPoint <= 0.5f) {
             GameManager.Instance.State = GameStates.Win;
+            OnWinPointReached?.Invoke(this, EventArgs.Empty);
             HideSelf();
             return false; // Return false as the player should stop when it reaches win point   
         }
