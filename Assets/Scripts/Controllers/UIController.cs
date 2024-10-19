@@ -7,6 +7,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private GameObject winMenu;
     [SerializeField] private GameObject loseMenu;
 
+
     [SerializeField] private GameObject blur;
 
     public event EventHandler OnLoadNextLevel;
@@ -16,14 +17,16 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnMenuEnter;
     public event EventHandler OnMenuExit;
 
+
     private void Awake() {
         HideUIBlur();
         HideWinMenu();
-
+        HideLoseMenu();
 
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;    
     }
+
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
         ShowLoseMenu();
@@ -40,6 +43,18 @@ public class UIController : Singleton<UIController> {
         OnMenuEnter?.Invoke(this, EventArgs.Empty);
 
     }
+    public void ShowLoseMenu() {
+        ShowUIBlur();
+        loseMenu.SetActive(true);
+
+        OnMenuEnter?.Invoke(this, EventArgs.Empty);
+
+    }
+    private void HideLoseMenu() {
+        loseMenu.SetActive(false);
+    }
+
+
     public void HideWinMenu() { 
         HideUIBlur();
         winMenu.SetActive(false);
@@ -67,18 +82,15 @@ public class UIController : Singleton<UIController> {
         OnMenuExit?.Invoke(this, EventArgs.Empty);
         StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
     }
+    public void PauseGame() {
+    
+    }
 
     private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSeconds(delay);  // Wait for 'delay' seconds
         eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay
     }
 
-    public void ShowLoseMenu() {
-        ShowUIBlur();
-        loseMenu.SetActive(true);
 
-        OnMenuEnter?.Invoke(this, EventArgs.Empty);
-
-    }
 }
 

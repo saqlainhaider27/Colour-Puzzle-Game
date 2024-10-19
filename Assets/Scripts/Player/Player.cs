@@ -19,6 +19,12 @@ public class Player : Singleton<Player> {
 
     private TrailRenderer[] trailRenderers;
 
+
+    public event EventHandler<OnPaintChangedEventArgs> OnPaintChanged;
+    public class OnPaintChangedEventArgs : EventArgs{
+        public Paint paint;
+    };
+
     private bool generated = false; 
     private bool canMove;
     [SerializeField] private Colour currentColour;
@@ -115,6 +121,12 @@ public class Player : Singleton<Player> {
 
             if (!generated) {
                 ColourSwitcher.Instance.SwitchColour(collidedPaint);
+
+                OnPaintChanged?.Invoke(this, new OnPaintChangedEventArgs {
+                    paint = collidedPaint
+                });
+
+                //collidedPaint.PlayPartciles();
                 generated = true;
             }
 

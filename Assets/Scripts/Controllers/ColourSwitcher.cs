@@ -17,7 +17,9 @@ public class ColourSwitcher : Singleton<ColourSwitcher> {
         player.HideMeshWithColour(player.GetPlayerColour());
         player.ShowMeshWithColour(paint.GetPaintColour());
         player.SetCurrentPlayerColour(paint.GetPaintColour());
-        paint.DestroySelf();
+        
+        paint.DisablePaintAndDestroy();
+        //paint.DestroySelf();
     }
 
 }

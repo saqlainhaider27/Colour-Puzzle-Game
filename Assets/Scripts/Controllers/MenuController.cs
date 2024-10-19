@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,13 +7,11 @@ public class MenuController : MonoBehaviour {
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject levelsMenu;
 
-    private InputManager inputManager;
 
     private void Start() {
         ShowMainMenu();
         HideLevelMenu();
-        inputManager= InputManager.Instance;
-        inputManager.OnGameStart += InputManager_OnGameStart;
+        InputManager.Instance.OnGameStart += InputManager_OnGameStart;
     }
 
     private void InputManager_OnGameStart(object sender, System.EventArgs e) {
@@ -32,8 +31,8 @@ public class MenuController : MonoBehaviour {
     public void HideLevelMenu() { 
         levelsMenu.SetActive(false);
     }
-    public void LoadLevel(int level) {
-        SceneManager.LoadScene(level);
+    public void LoadLevel(int _level) {
+        SceneManager.LoadScene(_level);
     }
     public void QuitGame() {
         Application.Quit();
