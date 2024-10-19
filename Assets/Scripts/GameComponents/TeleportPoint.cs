@@ -53,7 +53,6 @@ public class TeleportPoint : MonoBehaviour {
 
         // Move player to the target teleport point's position
         playerTransform.position = toTeleportPoint.transform.position;
-
         // Set new movement direction after teleportation
         modifiedMoveDirection = moveDirVector;
 

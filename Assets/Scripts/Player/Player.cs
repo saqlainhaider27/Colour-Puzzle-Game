@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +17,7 @@ public class Player : Singleton<Player> {
     [SerializeField] private SwipeDetection swipeDetection;
     [SerializeField] private LayerMask collisionLayer;
 
+    private TrailRenderer[] trailRenderers;
 
     private bool generated = false; 
     private bool canMove;
@@ -22,6 +25,9 @@ public class Player : Singleton<Player> {
 
     private void Start() {
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
+
+        trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
+
     }
     private void Update() {
 
@@ -61,8 +67,10 @@ public class Player : Singleton<Player> {
         return CheckForCollidersInPath() && moveDirection != Vector2.zero;
     }
     private void MovePlayer() {
+        // Move the player
         transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
     }
+
     private void StopPlayer() {
         moveDirection = Vector2.zero; // Stop player movement
     }
@@ -120,20 +128,46 @@ public class Player : Singleton<Player> {
             if (!teleportPoint.Teleported) {
                 // Teleport cooldown logic is implemented in TeleportPoint script
                 StopPlayer();
-                //gameObject.GetComponentInChildren<TrailRenderer>().Clear();
+                // Started teleport so set trail to false
+                PauseTrail();
+
                 teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
-                // Move player towards modifedMoveDirection from TeleportPoint
-                
+                // Move player towards modifiedMoveDirection from TeleportPoint
+                // Player teleported so set trail to true
                 moveDirection = newMoveDirection;
                 swipeDetection.SetSwipeDirection(moveDirection);
                 MovePlayer();
             }
-            
+
+
             return true; // Return true as player can move and will not stop at teleport point
         }
 
         return false;
     }
+
+    public void PauseTrail() {
+        // Disable all trails in children
+        foreach (TrailRenderer trail in trailRenderers) {
+            trail.enabled = false;
+            trail.Clear();
+        }
+
+        float resetDelay = 0.2f;
+        StartCoroutine(TrailResetDelay(resetDelay));
+    }
+
+    private IEnumerator TrailResetDelay(float delay) {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Enable all trails after the delay
+        foreach (TrailRenderer trail in trailRenderers) {
+            trail.enabled = true;
+        }
+    }
+
+
     private bool CheckWinPointProximity() {
         // Winpoint detection is not implemented by raycast but by distance
         // Singleton reference is taken as there will be only one winpoint per scene
