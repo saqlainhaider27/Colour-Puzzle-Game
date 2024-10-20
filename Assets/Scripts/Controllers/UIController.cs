@@ -15,30 +15,56 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
+    public event EventHandler OnMenuAppeared;
 
-    public event EventHandler OnMenuEnter;
-    public event EventHandler OnMenuExit;
+    public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
+    public class OnMenuEnterEventArgs : EventArgs {
+        public Menu menu;
+    }
+
+    public event EventHandler<OnMenuExitEventArgs> OnMenuExit;
+    public class OnMenuExitEventArgs : EventArgs {
+        public Menu menu;
+    }
 
 
     private void Awake() {
         HideUIBlur();
-
         winMenu.HideMenu();
         loseMenu.HideMenu();
-        //settingsMenu.HideMenu();
-        //pauseMenu.HideMenu();
+        pauseMenu.HideMenu();
+        settingsMenu.HideMenu();
+        gameMenu.HideMenu();
 
+        GameManager.Instance.OnGameStart += GameManager_OnGameStart;
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;    
     }
 
+    private void GameManager_OnGameStart(object sender, EventArgs e) {
+        gameMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = gameMenu
+        });
+    }
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
+        ShowUIBlur();
         loseMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
+            menu = loseMenu
+        });
+
+        gameMenu.HideMenu();
     }
 
     private void GameManager_OnWinState(object sender, EventArgs e) {
+        ShowUIBlur();
+        gameMenu.HideMenu();
         winMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
+            menu = winMenu
+        });
     }
 
     
@@ -51,35 +77,86 @@ public class UIController : Singleton<UIController> {
 
    
 
-    public void LoadNextLevel() {
+    public void Next() {
         HideUIBlur();
-        OnMenuExit?.Invoke(this, EventArgs.Empty);
+        InvokeOnExitEvent(CheckActiveMenu());
         StartCoroutine(InvokeAfterDelay(OnLoadNextLevel, 0.5f));
     }
 
-    public void BackToHome() {
+    public void Home() {
+        if (GameManager.Instance.State == GameStates.Paused) {
+            Resume();
+        }
         HideUIBlur();
-        OnMenuExit?.Invoke(this, EventArgs.Empty);
         StartCoroutine(InvokeAfterDelay(OnHomeButtonPressed, 0.5f));
     }
 
-    public void ReplayCurrentLevel() {
+    public void Replay() {
         HideUIBlur();
-        OnMenuExit?.Invoke(this, EventArgs.Empty);
+        InvokeOnExitEvent(CheckActiveMenu());
         StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
     }
-    public void PauseGame() {
+    public void Pause() {
+        GameManager.Instance.State = GameStates.Paused;
+
         ShowUIBlur();
         pauseMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = pauseMenu
+        });
         Time.timeScale = 0f;
 
     }
     public void Resume() {
         Time.timeScale = 1f;
+        InvokeOnExitEvent(CheckActiveMenu());
         HideUIBlur();
         pauseMenu.HideMenu();
     }
+    public void Settings() {
+        if (GameManager.Instance.State == GameStates.Paused) {
+            Resume();
+            InvokeOnExitEvent(CheckActiveMenu());
+            GameManager.Instance.State = GameStates.Setting;
+            pauseMenu.HideMenu();
+        }
+        ShowUIBlur();
+        settingsMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = settingsMenu
+        });
+        Pause();
+    }
+    private Menu CheckActiveMenu() {
+        
+        switch (GameManager.Instance.State) {
+            case GameStates.Win:
+            return winMenu;
+            case GameStates.Lose:
+            return loseMenu;
+            case GameStates.Paused:
+            return pauseMenu;
+            case GameStates.Setting:
+            return settingsMenu;
+            default:
+            return gameMenu;
+        }
 
+    }
+
+    private void InvokeOnExitEvent(Menu currentActiveMenu) {
+        Debug.Log("Hiding " + currentActiveMenu.name);
+        OnMenuExit?.Invoke(this, new OnMenuExitEventArgs {
+            menu = currentActiveMenu
+        });
+    }
+    public void SaveSetting() {
+    
+    }
+
+    public void CancelSettings() {
+    
+    }
     private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSeconds(delay);  // Wait for 'delay' seconds
         eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay

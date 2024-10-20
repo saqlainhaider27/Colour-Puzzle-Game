@@ -5,6 +5,11 @@ public class GameManager : Singleton<GameManager> {
 
     public event EventHandler OnWinState;
     public event EventHandler OnLoseState;
+    public event EventHandler OnGameStart;
+
+    private void Start() {
+        State = GameStates.Start;
+    }
 
     public GameStates State {
         get {
@@ -14,6 +19,9 @@ public class GameManager : Singleton<GameManager> {
             _state = value;
 
             switch (_state) {
+                case GameStates.Start:
+                OnGameStart?.Invoke(this, EventArgs.Empty);
+                break;
                 case GameStates.Win:
                 OnWinState?.Invoke(this, EventArgs.Empty);
                 break;

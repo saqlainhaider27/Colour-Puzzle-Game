@@ -223,6 +223,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6717905397990557984}
   - component: {fileID: 7773329262175306711}
+  - component: {fileID: 2808924609422185792}
+  - component: {fileID: -4193429041053250559}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -260,6 +262,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32bf9031cb2da194db045da723684e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &2808924609422185792
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891648273930775392}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 676f063d5b5fb7141b0dcba9434ad062, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-4193429041053250559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891648273930775392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 252141261e210a6419439d1f85c96bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2929792465463038572
@@ -383,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 5285502207235308322, guid: 236587ec711348a4792e0060efb1bf73, type: 3}
     - target: {fileID: 2688818282470339643, guid: b724608dc1dfaec4481be6318ea195db, type: 3}
       propertyPath: m_Name
-      value: Replay
+      value: Settings
       objectReference: {fileID: 0}
     - target: {fileID: 5653136406794550346, guid: b724608dc1dfaec4481be6318ea195db, type: 3}
       propertyPath: m_Pivot.x

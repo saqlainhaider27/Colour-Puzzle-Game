@@ -701,6 +701,7 @@ GameObject:
   - component: {fileID: 8541582620662110993}
   - component: {fileID: 3359272872784384517}
   - component: {fileID: 1565963283721618810}
+  - component: {fileID: 7687366901917414889}
   m_Layer: 0
   m_Name: Timer
   m_TagString: Untagged
@@ -824,6 +825,18 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7687366901917414889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8577013725964159246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01b61ea5818ca648a255479cabc7f05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8741491308946565041
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +991,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2861209909285465893, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}
       propertyPath: m_Name
-      value: NextLevel
+      value: Settings
       objectReference: {fileID: 0}
     - target: {fileID: 5304546841095447774, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}
       propertyPath: m_Pivot.x
