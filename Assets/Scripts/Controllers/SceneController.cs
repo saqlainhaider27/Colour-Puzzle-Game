@@ -7,9 +7,9 @@ public class SceneController : MonoBehaviour {
         UIController.Instance.OnLoadNextLevel += UIController_OnLoadNextLevel;
         UIController.Instance.OnReplayButtonPressed += UIController_OnReplayButtonPressed;
         UIController.Instance.OnHomeButtonPressed += UIController_OnHomeButtonPressed;
-        
 
     }
+
 
     private void UIController_OnHomeButtonPressed(object sender, System.EventArgs e) {
         LoadMainMenuScene();

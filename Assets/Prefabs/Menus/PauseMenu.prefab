@@ -222,6 +222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6717905397990557984}
+  - component: {fileID: 7773329262175306711}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -249,6 +250,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7773329262175306711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891648273930775392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32bf9031cb2da194db045da723684e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2929792465463038572
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -259,7 +272,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2861209909285465893, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}
       propertyPath: m_Name
-      value: NextLevel
+      value: Resume
       objectReference: {fileID: 0}
     - target: {fileID: 5304546841095447774, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}
       propertyPath: m_Pivot.x
@@ -344,7 +357,7 @@ PrefabInstance:
     - target: {fileID: 7271184361309367089, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -7288830450054573953, guid: 236587ec711348a4792e0060efb1bf73, type: 3}
+      objectReference: {fileID: 1446739911195838820, guid: 236587ec711348a4792e0060efb1bf73, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7106902192900982326, guid: c0da49fff5ec3f74f96d1e3c7679d142, type: 3}

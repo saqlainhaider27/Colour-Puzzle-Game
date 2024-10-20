@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5026513427171544362}
   - component: {fileID: 460900689885373204}
-  - component: {fileID: 164682688080116918}
   - component: {fileID: 7959715340013001012}
   - component: {fileID: 2350966108446673366}
   - component: {fileID: 7415582899562835659}
@@ -50,21 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14583452fd185347a86f28cb61d5fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &164682688080116918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3077965628337132230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 636ac30fa715f1e49b467424e5d5e7c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  winMenu: {fileID: 0}
-  loseMenu: {fileID: 0}
-  blur: {fileID: 0}
 --- !u!114 &7959715340013001012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fffa38ca98fdfa04fbc2da1e88830342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetFrameRate: 120
+  TargetFrameRate: 60
 --- !u!114 &3729174276544659898
 MonoBehaviour:
   m_ObjectHideFlags: 0

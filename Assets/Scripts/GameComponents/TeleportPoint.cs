@@ -65,7 +65,7 @@ public class TeleportPoint : MonoBehaviour {
     }
 
     private IEnumerator ResetTeleportCoolDown() {
-        const float TELEPORT_COOLDOWN = 0.5f;
+        const float TELEPORT_COOLDOWN = 0.3f;
         yield return new WaitForSeconds(TELEPORT_COOLDOWN);
 
         // Reset the teleported status after the cooldown

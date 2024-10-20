@@ -74,20 +74,20 @@ public class Player : Singleton<Player> {
     }
     private void MovePlayer() {
         // Move the player
+        moveSpeed = 8f;
         transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
     }
 
     private void StopPlayer() {
-
-        moveDirection = Vector2.zero; // Stop player movement
-        swipeDetection.SetSwipeDirection(moveDirection);
+        moveSpeed = 0;
+        //moveDirection = Vector2.zero; // Stop player movement
+        //swipeDetection.SetSwipeDirection(moveDirection);
     }
     private bool CheckForCollidersInPath() {
         RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
         if (raycastHit) {
             if (CheckWallCollision(raycastHit)) {
-                //GetComponentInChildren<ParticleSystem>().Play();
                 return false;
             }
 
@@ -109,7 +109,7 @@ public class Player : Singleton<Player> {
             bool isColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
 
             if (!isColourDifferent) {
-                // The player's color matches the wall's color; play particle effec
+                // The player's color matches the wall's color; play particle effect
 
                 if (moveDirection == Vector2.zero) {
 
@@ -149,7 +149,6 @@ public class Player : Singleton<Player> {
                     paint = collidedPaint
                 });
 
-                //collidedPaint.PlayPartciles();
                 generated = true;
             }
 

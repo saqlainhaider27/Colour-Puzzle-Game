@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class UIController : Singleton<UIController> {
 
-    [SerializeField] private GameObject winMenu;
-    [SerializeField] private GameObject loseMenu;
-
+    [SerializeField] private Menu winMenu;
+    [SerializeField] private Menu loseMenu;
+    [SerializeField] private Menu pauseMenu;
+    [SerializeField] private Menu settingsMenu;
+    [SerializeField] private Menu gameMenu;
 
     [SerializeField] private GameObject blur;
 
@@ -20,8 +22,11 @@ public class UIController : Singleton<UIController> {
 
     private void Awake() {
         HideUIBlur();
-        HideWinMenu();
-        HideLoseMenu();
+
+        winMenu.HideMenu();
+        loseMenu.HideMenu();
+        //settingsMenu.HideMenu();
+        //pauseMenu.HideMenu();
 
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;    
@@ -29,42 +34,23 @@ public class UIController : Singleton<UIController> {
 
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
-        ShowLoseMenu();
+        loseMenu.ShowMenu();
     }
 
     private void GameManager_OnWinState(object sender, EventArgs e) {
-        ShowWinMenu();
+        winMenu.ShowMenu();
     }
 
-    public void ShowWinMenu() {
-        ShowUIBlur();
-        winMenu.SetActive(true);
-
-        OnMenuEnter?.Invoke(this, EventArgs.Empty);
-
-    }
-    public void ShowLoseMenu() {
-        ShowUIBlur();
-        loseMenu.SetActive(true);
-
-        OnMenuEnter?.Invoke(this, EventArgs.Empty);
-
-    }
-    private void HideLoseMenu() {
-        loseMenu.SetActive(false);
-    }
-
-
-    public void HideWinMenu() { 
-        HideUIBlur();
-        winMenu.SetActive(false);
-    }
+    
     private void ShowUIBlur() {
         blur.SetActive(true);
     }
     private void HideUIBlur() {
         blur.SetActive(false);
     }
+
+   
+
     public void LoadNextLevel() {
         HideUIBlur();
         OnMenuExit?.Invoke(this, EventArgs.Empty);
@@ -83,7 +69,15 @@ public class UIController : Singleton<UIController> {
         StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
     }
     public void PauseGame() {
-    
+        ShowUIBlur();
+        pauseMenu.ShowMenu();
+        Time.timeScale = 0f;
+
+    }
+    public void Resume() {
+        Time.timeScale = 1f;
+        HideUIBlur();
+        pauseMenu.HideMenu();
     }
 
     private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
