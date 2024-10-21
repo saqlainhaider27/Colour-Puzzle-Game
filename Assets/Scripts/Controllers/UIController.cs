@@ -15,6 +15,10 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
+    public event EventHandler OnPauseButtonPressed;
+    public event EventHandler OnResumeButtonPressed;
+    public event EventHandler OnSettingsButtonPressed;
+
     public event EventHandler OnMenuAppeared;
 
     public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
@@ -38,7 +42,25 @@ public class UIController : Singleton<UIController> {
 
         GameManager.Instance.OnGameStart += GameManager_OnGameStart;
         GameManager.Instance.OnWinState += GameManager_OnWinState;
-        GameManager.Instance.OnLoseState += GameManager_OnLoseState;    
+        GameManager.Instance.OnLoseState += GameManager_OnLoseState;
+
+
+        OnPauseButtonPressed += UIController_OnPauseButtonPressed;
+        OnResumeButtonPressed += UIController_OnResumeButtonPressed;
+        OnSettingsButtonPressed += UIController_OnSettingsButtonPressed;
+    }
+
+    private void UIController_OnSettingsButtonPressed(object sender, EventArgs e) {
+        CheckActiveMenu().HideMenu();
+    }
+
+    private void UIController_OnResumeButtonPressed(object sender, EventArgs e) {
+        pauseMenu.HideMenu();
+        Time.timeScale = 1f;
+    }
+
+    private void UIController_OnPauseButtonPressed(object sender, EventArgs e) {
+        Time.timeScale = 0f;
     }
 
     private void GameManager_OnGameStart(object sender, EventArgs e) {
@@ -50,12 +72,12 @@ public class UIController : Singleton<UIController> {
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
         ShowUIBlur();
+        gameMenu.HideMenu();
         loseMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
             menu = loseMenu
         });
-
-        gameMenu.HideMenu();
+        StartCoroutine(InvokeAfterDelay(OnMenuAppeared, 0.5f));
     }
 
     private void GameManager_OnWinState(object sender, EventArgs e) {
@@ -88,13 +110,15 @@ public class UIController : Singleton<UIController> {
             Resume();
         }
         HideUIBlur();
+        InvokeOnExitEvent(CheckActiveMenu());
+
         StartCoroutine(InvokeAfterDelay(OnHomeButtonPressed, 0.5f));
     }
 
     public void Replay() {
-        HideUIBlur();
-        InvokeOnExitEvent(CheckActiveMenu());
         StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
+        InvokeOnExitEvent(CheckActiveMenu());
+        HideUIBlur();
     }
     public void Pause() {
         GameManager.Instance.State = GameStates.Paused;
@@ -104,28 +128,25 @@ public class UIController : Singleton<UIController> {
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
             menu = pauseMenu
         });
-        Time.timeScale = 0f;
+        StartCoroutine(InvokeAfterDelay(OnPauseButtonPressed, 0.5f));
 
     }
     public void Resume() {
-        Time.timeScale = 1f;
+        StartCoroutine(InvokeAfterDelay(OnResumeButtonPressed, 0.5f));
         InvokeOnExitEvent(CheckActiveMenu());
         HideUIBlur();
-        pauseMenu.HideMenu();
+
     }
     public void Settings() {
-        if (GameManager.Instance.State == GameStates.Paused) {
-            Resume();
-            InvokeOnExitEvent(CheckActiveMenu());
-            GameManager.Instance.State = GameStates.Setting;
-            pauseMenu.HideMenu();
-        }
+        InvokeOnExitEvent(CheckActiveMenu());
+        InvokeAfterDelay(OnSettingsButtonPressed, 0.5f);
         ShowUIBlur();
+        GameManager.Instance.State = GameStates.Setting;
+
         settingsMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
             menu = settingsMenu
         });
-        Pause();
     }
     private Menu CheckActiveMenu() {
         
@@ -158,9 +179,10 @@ public class UIController : Singleton<UIController> {
     
     }
     private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
-        yield return new WaitForSeconds(delay);  // Wait for 'delay' seconds
+        yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
         eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay
     }
+
 
 
 }

@@ -2,19 +2,20 @@ using TMPro;
 using UnityEngine;
 
 public class ReviveTimer : MonoBehaviour {
-    private float maxReviveTime = 3f;
+    private readonly float maxReviveTime = 3f;
     private float currentTime;
     private bool isTimerRunning = false;
 
     private TextMeshProUGUI timerText;
 
     private void Awake() {
-        UIController.Instance.OnMenuAppeared += UIController_OnMenuAppeared;
+        timerText = GetComponent<TextMeshProUGUI>();
 
-        // Ensure the TextMeshProUGUI reference is assigned
+        UIController.Instance.OnMenuAppeared += UIController_OnMenuAppeared;
     }
 
     private void UIController_OnMenuAppeared(object sender, System.EventArgs e) {
+        // Debug.Log("MenuAppeared");
         if (GameManager.Instance.State == GameStates.Lose) {
             // Start the timer
             currentTime = maxReviveTime; // Reset the timer
@@ -30,17 +31,14 @@ public class ReviveTimer : MonoBehaviour {
             if (currentTime <= 0f) {
                 currentTime = 0f; // Clamp the timer to zero when it reaches below 0
                 isTimerRunning = false; // Stop the timer
-                Debug.Log("Revive timer completed.");
             }
-            Debug.Log("Revive timer: " + currentTime.ToString("F2")); // Shows float value with 2 decimal places
+            // Debug.Log("Revive timer: " + currentTime.ToString("F2")); // Shows float value with 2 decimal places
             // Update the TMP text with the current timer value
             UpdateTimerText();
         }
     }
 
     private void UpdateTimerText() {
-        if (timerText != null) {
-            timerText.text = currentTime.ToString("F2") + "s"; // Format the time with 2 decimal places and 's' for seconds
-        }
+        timerText.text = currentTime.ToString("F1") + "s"; // Format the time with 2 decimal places and 's' for seconds
     }
 }
