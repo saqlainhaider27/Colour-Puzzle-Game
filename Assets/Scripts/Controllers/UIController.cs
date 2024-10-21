@@ -60,20 +60,21 @@ public class UIController : Singleton<UIController> {
     }
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
-        HideAllMenus();
+        //HideAllMenus();
+        gameMenu.HideMenu();
         ShowUIBlur();
-        loseMenu.ShowMenu();
 
+        // OnMenuAppeared is an event to reset the revive timer of the lose menu
+        loseMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
             menu = loseMenu
         });
-
-        // OnMenuAppeared is an event to reset the revive timer of the lose menu
         StartCoroutine(InvokeEventAfterDelay(OnMenuAppeared, 0.5f));
     }
 
     private void GameManager_OnWinState(object sender, EventArgs e) {
-        HideAllMenus();
+        //HideAllMenus();
+        gameMenu.HideMenu();
         ShowUIBlur();
         winMenu.ShowMenu();
 
@@ -97,11 +98,14 @@ public class UIController : Singleton<UIController> {
         StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
 
-    private void ExitMenu() {
+    private void ExitMenu(float delay = 0.5f) {
+        if (CheckActiveMenu() == gameMenu) {
+            return;
+        }
         HideUIBlur();
         InvokeOnExitEvent(CheckActiveMenu());
         // Disable object after delay
-        StartCoroutine(DisableMenuAfterDelay(CheckActiveMenu(), 0.5f));
+        StartCoroutine(DisableMenuAfterDelay(CheckActiveMenu(), delay));
 
     }
 
@@ -119,7 +123,7 @@ public class UIController : Singleton<UIController> {
         StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }
     public void Pause() {
-        HideAllMenus();
+        gameMenu.HideMenu();
         ShowUIBlur();
         pauseMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
@@ -139,17 +143,14 @@ public class UIController : Singleton<UIController> {
     public void Settings() {
         previousMenu = CheckActiveMenu();
         previousState = GameManager.Instance.State;
-        Debug.Log(previousMenu.name);
         ExitMenu();
 
         GameManager.Instance.State = GameStates.Setting;
 
         //HideAllMenus();
         ShowUIBlur();
-        settingsMenu.ShowMenu();
-        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
-            menu = settingsMenu
-        });
+        StartCoroutine(ShowMenuAfterDelay(settingsMenu, 0.5f));
+
     }
 
 
@@ -186,12 +187,9 @@ public class UIController : Singleton<UIController> {
         // If entered from losemenu that back to lose menu
 
         ShowUIBlur();
-        previousMenu.ShowMenu();
-        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
-            menu = previousMenu
-        });
+        StartCoroutine(ShowMenuAfterDelay(previousMenu, 0.5f));
         ExitMenu();
-        GameManager.Instance.State = previousState;
+        StartCoroutine(ChangeStateAfterDelay(previousState, 0.5f));
     }
     private IEnumerator InvokeEventAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
@@ -200,6 +198,17 @@ public class UIController : Singleton<UIController> {
     private IEnumerator DisableMenuAfterDelay(Menu menu,float delay) {
         yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
         menu.HideMenu();
+    }
+    private IEnumerator ShowMenuAfterDelay(Menu menu, float delay) {
+        yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
+        menu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = menu
+        });
+    }
+    private IEnumerator ChangeStateAfterDelay(GameStates state, float delay) {
+        yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
+        GameManager.Instance.State = state;
     }
 
 
