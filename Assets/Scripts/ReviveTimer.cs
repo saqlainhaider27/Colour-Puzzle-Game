@@ -6,8 +6,8 @@ public class ReviveTimer : MonoBehaviour {
     private readonly float maxReviveTime = 3f;
     private float currentTime;
     private bool isTimerRunning = false;
+    private bool timeComplete = false; 
 
-    public event EventHandler OnReviveTimerComplete;
     [SerializeField] private GameObject reviveButton;
 
     private TextMeshProUGUI timerText;
@@ -22,10 +22,13 @@ public class ReviveTimer : MonoBehaviour {
         // Debug.Log("MenuAppeared");
         if (GameManager.Instance.State == GameStates.Lose) {
             // Start the timer
-            currentTime = maxReviveTime; // Reset the timer
-            reviveButton.SetActive(true);
-            isTimerRunning = true;
-            UpdateTimerText(); // Immediately update the text when the timer starts
+            if (!isTimerRunning && !timeComplete) {
+                currentTime = maxReviveTime; // Reset the timer
+                reviveButton.SetActive(true);
+                isTimerRunning = true;
+                timeComplete = true;
+                UpdateTimerText(); // Immediately update the text when the timer starts
+            }
         }
     }
 
@@ -36,7 +39,7 @@ public class ReviveTimer : MonoBehaviour {
             if (currentTime <= 0f) {
                 currentTime = 0f; // Clamp the timer to zero when it reaches below 0
                 isTimerRunning = false; // Stop the timer
-                
+                timeComplete = true;
                 // OnReviveTimerComplete?.Invoke(this, new EventArgs());
 
                 reviveButton.SetActive(false);

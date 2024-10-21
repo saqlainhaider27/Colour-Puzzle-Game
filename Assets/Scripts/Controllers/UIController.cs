@@ -13,14 +13,12 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private GameObject blur;
 
     private Menu previousMenu;
+    private GameStates previousState;
 
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
-    public event EventHandler OnPauseButtonPressed;
-    public event EventHandler OnResumeButtonPressed;
-    public event EventHandler OnSettingsButtonPressed;
-    public event EventHandler OnCancelButtonPressed;
+
     public event EventHandler OnMenuAppeared;
     public event EventHandler OnMenuDisappeared;
 
@@ -36,73 +34,49 @@ public class UIController : Singleton<UIController> {
 
 
     private void Awake() {
-        HideUIBlur();
-        winMenu.HideMenu();
-        loseMenu.HideMenu();
-        pauseMenu.HideMenu();
-        settingsMenu.HideMenu();
-        gameMenu.HideMenu();
 
         GameManager.Instance.OnGameStart += GameManager_OnGameStart;
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
 
 
-        OnPauseButtonPressed += UIController_OnPauseButtonPressed;
-        OnResumeButtonPressed += UIController_OnResumeButtonPressed;
-        OnSettingsButtonPressed += UIController_OnSettingsButtonPressed;
-        OnCancelButtonPressed += UIController_OnCancelButtonPressed;
-
     }
 
-    private void UIController_OnCancelButtonPressed(object sender, EventArgs e) {
-        // If entered from pausemenu than back to win menu
-        // If entered from winmenu than back to win menu
-        // If entered from losemenu that back to lose menu
-
-        ShowUIBlur();
-        previousMenu.ShowMenu();
-        Debug.Log(previousMenu.name);
-        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
-            menu = previousMenu
-        });
-        settingsMenu.HideMenu();
-    }
-
-    private void UIController_OnSettingsButtonPressed(object sender, EventArgs e) {
-        CheckActiveMenu().HideMenu();
-    }
-
-    private void UIController_OnResumeButtonPressed(object sender, EventArgs e) {
-        pauseMenu.HideMenu();
-        Time.timeScale = 1f;
-    }
-
-    private void UIController_OnPauseButtonPressed(object sender, EventArgs e) {
-        Time.timeScale = 0f;
-    }
 
     private void GameManager_OnGameStart(object sender, EventArgs e) {
+        HideAllMenus();
         gameMenu.ShowMenu();
-        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
-            menu = gameMenu
-        });
+        GameManager.Instance.State = GameStates.Play;
+    }
+
+    private void HideAllMenus() {
+        gameMenu.HideMenu();
+        loseMenu.HideMenu();
+        pauseMenu.HideMenu();
+        settingsMenu.HideMenu();
+        winMenu.HideMenu();
+        HideUIBlur();
+
     }
 
     private void GameManager_OnLoseState(object sender, EventArgs e) {
+        HideAllMenus();
         ShowUIBlur();
-        gameMenu.HideMenu();
         loseMenu.ShowMenu();
+
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
             menu = loseMenu
         });
-        StartCoroutine(InvokeAfterDelay(OnMenuAppeared, 0.5f));
+
+        // OnMenuAppeared is an event to reset the revive timer of the lose menu
+        StartCoroutine(InvokeEventAfterDelay(OnMenuAppeared, 0.5f));
     }
 
     private void GameManager_OnWinState(object sender, EventArgs e) {
+        HideAllMenus();
         ShowUIBlur();
-        gameMenu.HideMenu();
         winMenu.ShowMenu();
+
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs { 
             menu = winMenu
         });
@@ -119,45 +93,59 @@ public class UIController : Singleton<UIController> {
    
 
     public void Next() {
-        ExitMenu(OnLoadNextLevel);
+        ExitMenu();
+        StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
 
-    private void ExitMenu(EventHandler eventHandler) {
+    private void ExitMenu() {
         HideUIBlur();
         InvokeOnExitEvent(CheckActiveMenu());
-        StartCoroutine(InvokeAfterDelay(eventHandler, 0.5f));
+        // Disable object after delay
+        StartCoroutine(DisableMenuAfterDelay(CheckActiveMenu(), 0.5f));
+
     }
 
     public void Home() {
         if (GameManager.Instance.State == GameStates.Paused) {
             Resume();
         }
-        ExitMenu(OnHomeButtonPressed);
+        ExitMenu();
+        StartCoroutine(InvokeEventAfterDelay(OnHomeButtonPressed, 0.5f));
+
     }
 
     public void Replay() {
-        ExitMenu(OnReplayButtonPressed);
+        ExitMenu();
+        StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }
     public void Pause() {
-        GameManager.Instance.State = GameStates.Paused;
+        HideAllMenus();
         ShowUIBlur();
         pauseMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
             menu = pauseMenu
         });
-        StartCoroutine(InvokeAfterDelay(OnPauseButtonPressed, 0.5f));
+
+        GameManager.Instance.State = GameStates.Paused;
+        Time.timeScale = 0f;
 
     }
     public void Resume() {
-        ExitMenu(OnResumeButtonPressed);
+        ExitMenu();
+        Time.timeScale = 1f;
+        GameManager.Instance.State = GameStates.Play;
+        gameMenu.ShowMenu();
     }
     public void Settings() {
         previousMenu = CheckActiveMenu();
-        InvokeOnExitEvent(CheckActiveMenu());
-        InvokeAfterDelay(OnSettingsButtonPressed, 0.5f);
-        ShowUIBlur();
+        previousState = GameManager.Instance.State;
+        Debug.Log(previousMenu.name);
+        ExitMenu();
+
         GameManager.Instance.State = GameStates.Setting;
 
+        //HideAllMenus();
+        ShowUIBlur();
         settingsMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
             menu = settingsMenu
@@ -193,15 +181,25 @@ public class UIController : Singleton<UIController> {
     }
 
     public void CancelSettings() {
-        ExitMenu(OnCancelButtonPressed);
-        
+        // If entered from pausemenu than back to win menu
+        // If entered from winmenu than back to win menu
+        // If entered from losemenu that back to lose menu
+
+        ShowUIBlur();
+        previousMenu.ShowMenu();
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = previousMenu
+        });
+        ExitMenu();
+        GameManager.Instance.State = previousState;
     }
-    private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
+    private IEnumerator InvokeEventAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
         eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay
     }
-    public void ShowAfterDelay(EventHandler eventHandler) {
-        StartCoroutine(InvokeAfterDelay(eventHandler, 0.5f));
+    private IEnumerator DisableMenuAfterDelay(Menu menu,float delay) {
+        yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
+        menu.HideMenu();
     }
 
 
