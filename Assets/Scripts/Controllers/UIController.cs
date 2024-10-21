@@ -12,14 +12,17 @@ public class UIController : Singleton<UIController> {
 
     [SerializeField] private GameObject blur;
 
+    private Menu previousMenu;
+
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
     public event EventHandler OnPauseButtonPressed;
     public event EventHandler OnResumeButtonPressed;
     public event EventHandler OnSettingsButtonPressed;
-
+    public event EventHandler OnCancelButtonPressed;
     public event EventHandler OnMenuAppeared;
+    public event EventHandler OnMenuDisappeared;
 
     public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
     public class OnMenuEnterEventArgs : EventArgs {
@@ -48,6 +51,22 @@ public class UIController : Singleton<UIController> {
         OnPauseButtonPressed += UIController_OnPauseButtonPressed;
         OnResumeButtonPressed += UIController_OnResumeButtonPressed;
         OnSettingsButtonPressed += UIController_OnSettingsButtonPressed;
+        OnCancelButtonPressed += UIController_OnCancelButtonPressed;
+
+    }
+
+    private void UIController_OnCancelButtonPressed(object sender, EventArgs e) {
+        // If entered from pausemenu than back to win menu
+        // If entered from winmenu than back to win menu
+        // If entered from losemenu that back to lose menu
+
+        ShowUIBlur();
+        previousMenu.ShowMenu();
+        Debug.Log(previousMenu.name);
+        OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
+            menu = previousMenu
+        });
+        settingsMenu.HideMenu();
     }
 
     private void UIController_OnSettingsButtonPressed(object sender, EventArgs e) {
@@ -100,29 +119,27 @@ public class UIController : Singleton<UIController> {
    
 
     public void Next() {
+        ExitMenu(OnLoadNextLevel);
+    }
+
+    private void ExitMenu(EventHandler eventHandler) {
         HideUIBlur();
         InvokeOnExitEvent(CheckActiveMenu());
-        StartCoroutine(InvokeAfterDelay(OnLoadNextLevel, 0.5f));
+        StartCoroutine(InvokeAfterDelay(eventHandler, 0.5f));
     }
 
     public void Home() {
         if (GameManager.Instance.State == GameStates.Paused) {
             Resume();
         }
-        HideUIBlur();
-        InvokeOnExitEvent(CheckActiveMenu());
-
-        StartCoroutine(InvokeAfterDelay(OnHomeButtonPressed, 0.5f));
+        ExitMenu(OnHomeButtonPressed);
     }
 
     public void Replay() {
-        StartCoroutine(InvokeAfterDelay(OnReplayButtonPressed, 0.5f));
-        InvokeOnExitEvent(CheckActiveMenu());
-        HideUIBlur();
+        ExitMenu(OnReplayButtonPressed);
     }
     public void Pause() {
         GameManager.Instance.State = GameStates.Paused;
-
         ShowUIBlur();
         pauseMenu.ShowMenu();
         OnMenuEnter?.Invoke(this, new OnMenuEnterEventArgs {
@@ -132,12 +149,10 @@ public class UIController : Singleton<UIController> {
 
     }
     public void Resume() {
-        StartCoroutine(InvokeAfterDelay(OnResumeButtonPressed, 0.5f));
-        InvokeOnExitEvent(CheckActiveMenu());
-        HideUIBlur();
-
+        ExitMenu(OnResumeButtonPressed);
     }
     public void Settings() {
+        previousMenu = CheckActiveMenu();
         InvokeOnExitEvent(CheckActiveMenu());
         InvokeAfterDelay(OnSettingsButtonPressed, 0.5f);
         ShowUIBlur();
@@ -148,6 +163,9 @@ public class UIController : Singleton<UIController> {
             menu = settingsMenu
         });
     }
+
+
+
     private Menu CheckActiveMenu() {
         
         switch (GameManager.Instance.State) {
@@ -166,23 +184,25 @@ public class UIController : Singleton<UIController> {
     }
 
     private void InvokeOnExitEvent(Menu currentActiveMenu) {
-        Debug.Log("Hiding " + currentActiveMenu.name);
         OnMenuExit?.Invoke(this, new OnMenuExitEventArgs {
             menu = currentActiveMenu
         });
     }
     public void SaveSetting() {
-    
+        CancelSettings(); // Place holder for now
     }
 
     public void CancelSettings() {
-    
+        ExitMenu(OnCancelButtonPressed);
+        
     }
     private IEnumerator InvokeAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
         eventHandler?.Invoke(this, EventArgs.Empty);  // Invoke event after delay
     }
-
+    public void ShowAfterDelay(EventHandler eventHandler) {
+        StartCoroutine(InvokeAfterDelay(eventHandler, 0.5f));
+    }
 
 
 }

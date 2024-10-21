@@ -414,6 +414,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Next
       objectReference: {fileID: 0}
+    - target: {fileID: 969145558749929593, guid: 0dcebc3832f515e4898f63bd9127dc9f, type: 3}
+      propertyPath: m_Name
+      value: Settings
+      objectReference: {fileID: 0}
     - target: {fileID: 1204922049300498500, guid: 0dcebc3832f515e4898f63bd9127dc9f, type: 3}
       propertyPath: m_Name
       value: WinMenu
@@ -520,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 6489251072718399399}
     - target: {fileID: 7873745485919660059, guid: 0dcebc3832f515e4898f63bd9127dc9f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Replay
+      value: Settings
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -639,6 +643,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6489251072718399399}
+    - target: {fileID: 2880584724656596589, guid: 920895ca46b94da4a9a4cc7d2e3c40f2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SaveSetting
+      objectReference: {fileID: 0}
     - target: {fileID: 4326741616144184383, guid: 920895ca46b94da4a9a4cc7d2e3c40f2, type: 3}
       propertyPath: m_Name
       value: SettingsMenu
@@ -651,6 +659,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6489251072718399399}
+    - target: {fileID: 4753051767479489632, guid: 920895ca46b94da4a9a4cc7d2e3c40f2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CancelSettings
+      objectReference: {fileID: 0}
     - target: {fileID: 7056011203629768743, guid: 920895ca46b94da4a9a4cc7d2e3c40f2, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -690,7 +702,7 @@ PrefabInstance:
       objectReference: {fileID: 6489251072718399399}
     - target: {fileID: 274606803200192074, guid: 4ec0c6609b66a2b4f9cd3d0981683360, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Replay
+      value: Settings
       objectReference: {fileID: 0}
     - target: {fileID: 2747419427938460308, guid: 4ec0c6609b66a2b4f9cd3d0981683360, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
