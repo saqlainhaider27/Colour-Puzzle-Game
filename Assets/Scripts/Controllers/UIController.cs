@@ -185,11 +185,12 @@ public class UIController : Singleton<UIController> {
         // If entered from pausemenu than back to win menu
         // If entered from winmenu than back to win menu
         // If entered from losemenu that back to lose menu
-
-        ShowUIBlur();
-        StartCoroutine(ShowMenuAfterDelay(previousMenu, 0.5f));
         ExitMenu();
+
+        StartCoroutine(ShowMenuAfterDelay(previousMenu, 0.5f));
         StartCoroutine(ChangeStateAfterDelay(previousState, 0.5f));
+        ShowUIBlur();
+
     }
     private IEnumerator InvokeEventAfterDelay(EventHandler eventHandler, float delay) {
         yield return new WaitForSecondsRealtime(delay);  // Use WaitForSecondsRealtime to work with Time.timeScale = 0
