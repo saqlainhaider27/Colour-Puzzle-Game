@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fffa38ca98fdfa04fbc2da1e88830342, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetFrameRate: 60
+  TargetFrameRate: 120
 --- !u!114 &3729174276544659898
 MonoBehaviour:
   m_ObjectHideFlags: 0
