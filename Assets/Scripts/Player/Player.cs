@@ -47,6 +47,11 @@ public class Player : Singleton<Player> {
         // Debug.Log(moveDirection);
         canMove = CanMove();
 
+
+
+    }
+    private void FixedUpdate() {
+
         if (!canMove) {
             // Debug.Log("CanMove");
             StopPlayer();
@@ -58,9 +63,7 @@ public class Player : Singleton<Player> {
             RotateInMoveDirection(); // Rotate object in move direction
 
         }
-
     }
-
 
     private void OnEnable() {
         InputManager.Instance.OnStartTouch += SwipeStart;
