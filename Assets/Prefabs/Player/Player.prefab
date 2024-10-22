@@ -51,14 +51,12 @@ MonoBehaviour:
   minimumDistance: 0.2
   maximumTime: 1
   directionThreshold: 0.9
-  moveSpeed: 8
-  raycastLength: 0.3
+  moveSpeed: 6
   playerMeshes:
   - {fileID: 260083841579568714}
   - {fileID: 1980022700397334840}
   - {fileID: 4111782186634066684}
   - {fileID: 1445552181108485301}
-  swipeDetection: {fileID: 0}
   collisionLayer:
     serializedVersion: 2
     m_Bits: 64

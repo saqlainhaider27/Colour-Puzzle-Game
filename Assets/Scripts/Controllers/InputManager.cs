@@ -16,8 +16,6 @@ public class InputManager : Singleton<InputManager> {
 
     private InputActions inputActions;
 
-    public event EventHandler OnGameStart;
-
 
     private void Awake() {
         inputActions = new InputActions();
@@ -26,14 +24,8 @@ public class InputManager : Singleton<InputManager> {
     private void Start() {
         inputActions.Touch.PrimaryContact.started += ctx => PrimaryContact_started(ctx);
         inputActions.Touch.PrimaryContact.canceled += ctx => PrimaryContact_canceled(ctx);
-        inputActions.Touch.GameStart.performed += GameStart_performed;
 
     }
-
-    private void GameStart_performed(InputAction.CallbackContext obj) {
-        OnGameStart?.Invoke(this,EventArgs.Empty);
-    }
-
     private void PrimaryContact_started(InputAction.CallbackContext context) {
         if (OnStartTouch != null) {
             OnStartTouch(Utils.ScreenToWorld(Camera.main, inputActions.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.startTime);

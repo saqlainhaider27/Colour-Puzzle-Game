@@ -47,14 +47,16 @@ public class Player : Singleton<Player> {
         // Debug.Log(moveDirection);
         canMove = CanMove();
 
-        if (canMove) {
+        if (!canMove) {
             // Debug.Log("CanMove");
-            MovePlayer();
-            RotateInMoveDirection(); // Rotate object in move direction
+            StopPlayer();
+
         }
         else {
             // Debug.Log("Cant Move");
-            StopPlayer();
+            MovePlayer();
+            RotateInMoveDirection(); // Rotate object in move direction
+
         }
 
     }
@@ -110,10 +112,9 @@ public class Player : Singleton<Player> {
     }
     private void MovePlayer() {
         // Move the player
-        moveSpeed = 8f;
+        moveSpeed = 7f;
         transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
     }
-
     private void StopPlayer() {
         moveSpeed = 0;
         moveDirection = Vector3.zero;
@@ -121,14 +122,12 @@ public class Player : Singleton<Player> {
     
     private bool CheckForCollidersInPath() {
 
-        // Use squarecast or something
         Vector2 size = new Vector2(0.4f, 0.4f);
         float length = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
         //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
         if (raycastHit) {
-            Debug.Log(raycastHit.collider.name);
             if (CheckWallCollision(raycastHit)) {
                 return false;
             }
