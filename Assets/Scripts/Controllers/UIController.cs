@@ -20,7 +20,7 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnHomeButtonPressed;
 
     public event EventHandler OnMenuAppeared;
-    public event EventHandler OnMenuDisappeared;
+    // public event EventHandler OnMenuDisappeared;
 
     public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
     public class OnMenuEnterEventArgs : EventArgs {

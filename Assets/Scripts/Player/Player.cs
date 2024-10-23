@@ -122,7 +122,7 @@ public class Player : Singleton<Player> {
     }
     private void MovePlayer() {
         // Move the player
-        moveSpeed = 7f;
+        moveSpeed = 5f;
         transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
     }
     private void StopPlayer() {

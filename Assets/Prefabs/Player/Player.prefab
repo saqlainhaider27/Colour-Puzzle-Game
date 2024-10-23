@@ -51,7 +51,7 @@ MonoBehaviour:
   minimumDistance: 0.2
   maximumTime: 1
   directionThreshold: 0.9
-  moveSpeed: 7
+  moveSpeed: 5
   playerMeshes:
   - {fileID: 260083841579568714}
   - {fileID: 1980022700397334840}
@@ -127,7 +127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2791574658602014599, guid: 3ef8db820ebb74747b5e545344485c3f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8599385941347936918, guid: 3ef8db820ebb74747b5e545344485c3f, type: 3}
       propertyPath: player
@@ -195,7 +195,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Time: 0.3
-  m_PreviewTimeScale: 0
+  m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -5195,7 +5195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3824648202434009805, guid: 4b7521e0af0dba44f9defef5c04a9fbb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
