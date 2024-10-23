@@ -23,6 +23,7 @@ public class ScoreController : Singleton<ScoreController> {
 
         maxScoreAchieved = PlayerPrefs.GetInt(MAX_SCORE_ACHIEVED);
         completedLevels = PlayerPrefs.GetInt(COMPLETED_LEVELS);
+        Debug.Log(completedLevels);
     }
 
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
@@ -41,7 +42,7 @@ public class ScoreController : Singleton<ScoreController> {
 
         // Also set this level to completed
         // Just updating the completed levels int value will set all the previous levels to complete
-        if (completedLevels > SceneController.Instance.GetCurrentSceneIndex()) {
+        if (completedLevels < SceneController.Instance.GetCurrentSceneIndex()) {
             // Only set a value that is already greater then the already completed levels
             PlayerPrefs.SetInt(COMPLETED_LEVELS, SceneController.Instance.GetCurrentSceneIndex());
         }
