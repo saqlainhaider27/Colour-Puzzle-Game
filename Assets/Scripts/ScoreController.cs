@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ScoreController : Singleton<ScoreController> {
@@ -27,21 +28,18 @@ public class ScoreController : Singleton<ScoreController> {
     }
 
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
+        int updateScore;
         if (maxScoreAchieved < currentLevelScore) {
             maxScoreAchieved = currentLevelScore;
-            OnScoreChanged?.Invoke(this, new OnScoreChangedEventArgs {
-                score = maxScoreAchieved
-            });
+            updateScore = maxScoreAchieved;
             PlayerPrefs.SetInt(MAX_SCORE_ACHIEVED, maxScoreAchieved);
         }
         else {
+            updateScore = currentLevelScore;
+            // Debug.Log("CurrentLevelScore: " + currentLevelScore);
 
-            Debug.Log("CurrentLevelScore: " + currentLevelScore);
-            OnScoreChanged?.Invoke(this, new OnScoreChangedEventArgs {
-                score = currentLevelScore
-            });
         }
-
+        StartCoroutine(InvokeUpdateEventAfterDelay(updateScore));
         // Also set this level to completed
         // Just updating the completed levels int value will set all the previous levels to complete
         if (completedLevels < SceneController.Instance.GetCurrentSceneIndex()) {
@@ -50,6 +48,14 @@ public class ScoreController : Singleton<ScoreController> {
         }
     }
 
+    private IEnumerator InvokeUpdateEventAfterDelay( int updateScore, float delay = 0.5f) {
+        yield return new WaitForSecondsRealtime(delay);
+        OnScoreChanged?.Invoke(this, new OnScoreChangedEventArgs {
+            score = updateScore
+        });
+    }
+
+    
 
     private void Player_OnStarCollected(object sender, System.EventArgs e) {
         if (currentLevelScore < maxScore) {
