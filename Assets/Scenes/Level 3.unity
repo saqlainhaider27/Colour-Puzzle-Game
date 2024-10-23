@@ -939,11 +939,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &200847525 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4281857306568367857, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-  m_PrefabInstance: {fileID: 7687366462688770642}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &211397730
 GameObject:
   m_ObjectHideFlags: 0
@@ -4192,30 +4187,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 1906424778004936208, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: m_AssetsPPU
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: 1906424778004936208, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: m_GridSnapping
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1906424778004936208, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: m_RefResolutionX
-      value: 320
-      objectReference: {fileID: 0}
-    - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: orthographic size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: m_NormalizedViewPortRect.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
-      propertyPath: m_NormalizedViewPortRect.height
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4710258438061277178, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -5653,43 +5624,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4281857306568367857, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7687366462688770645}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
 --- !u!4 &7687366462688770643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3084461576486066263, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
   m_PrefabInstance: {fileID: 7687366462688770642}
   m_PrefabAsset: {fileID: 0}
---- !u!50 &7687366462688770645
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 200847525}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

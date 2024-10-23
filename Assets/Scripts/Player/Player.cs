@@ -31,6 +31,13 @@ public class Player : Singleton<Player> {
     private TrailRenderer[] trailRenderers;
 
     public event EventHandler OnWinPointReached;
+
+    public event EventHandler<OnStarCollectedEventArgs> OnStarCollected;
+    public class OnStarCollectedEventArgs : EventArgs {
+        public Star collidedStar;
+    }
+
+
     public event EventHandler<OnPaintChangedEventArgs> OnPaintChanged;
     public class OnPaintChangedEventArgs : EventArgs{
         public Paint paint;
@@ -44,21 +51,21 @@ public class Player : Singleton<Player> {
         trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
     }
     private void Update() {
-        // Debug.Log(moveDirection);
         canMove = CanMove();
 
 
-
+        
     }
     private void FixedUpdate() {
+        //Debug.Log(moveDirection);
 
         if (!canMove) {
-            // Debug.Log("CanMove");
+            //Debug.Log("CanMove");
             StopPlayer();
 
         }
         else {
-            // Debug.Log("Cant Move");
+            //Debug.Log("Cant Move");
             MovePlayer();
             RotateInMoveDirection(); // Rotate object in move direction
 
@@ -143,12 +150,26 @@ public class Player : Singleton<Player> {
                 return true;
             }
 
+            if (CheckStarCollision(raycastHit)) {
+                return true;
+            }
 
             return false;
         }
 
         return CheckWinPointProximity(); 
     }
+
+    private bool CheckStarCollision(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.TryGetComponent<Star>(out Star _collidedStar)) {
+            OnStarCollected?.Invoke(this, new OnStarCollectedEventArgs {
+                collidedStar = _collidedStar
+            });
+            return true;
+        }
+        return false;
+    }
+
     private bool CheckWallCollision(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<Wall>(out Wall collidedWall)) {
             RotateAwayFromCollision(raycastHit.point);
