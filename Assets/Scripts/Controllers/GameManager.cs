@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 
 public class GameManager : Singleton<GameManager> {
     private GameStates _state;

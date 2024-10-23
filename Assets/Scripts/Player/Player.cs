@@ -183,6 +183,7 @@ public class Player : Singleton<Player> {
                 if (moveDirection == Vector2.zero) {
                     PlayWallCollisionParticles();
                 }
+
             }
             else {
                 DestroySelf(); // Player loses when colliding with a different color wall

@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneController : MonoBehaviour {
-
+public class SceneController : Singleton<SceneController> {
     private void Awake() {
         UIController.Instance.OnLoadNextLevel += UIController_OnLoadNextLevel;
         UIController.Instance.OnReplayButtonPressed += UIController_OnReplayButtonPressed;
@@ -33,5 +32,8 @@ public class SceneController : MonoBehaviour {
 
     private static void LoadNextScene() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+    public int GetCurrentSceneIndex() {
+        return SceneManager.GetActiveScene().buildIndex;
     }
 }

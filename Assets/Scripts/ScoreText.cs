@@ -4,11 +4,12 @@ using UnityEngine;
 public class ScoreText : MonoBehaviour {
 
     private TextMeshProUGUI text;
-
     private void Awake() {
         ScoreController.Instance.OnScoreChanged += ScoreController_OnScoreChanged;
+        text = GetComponent<TextMeshProUGUI>();
     }
 
-    private void ScoreController_OnScoreChanged(object sender, SceneController.OnScoreChangedEventArgs e) {
+    private void ScoreController_OnScoreChanged(object sender, ScoreController.OnScoreChangedEventArgs e) {
+        text.text = e.score.ToString();
     }
 }
