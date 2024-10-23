@@ -17,7 +17,6 @@ public class LevelController : Singleton<LevelController> {
         if (!PlayerPrefs.HasKey(COMPLETED_LEVELS)) {
             PlayerPrefs.SetInt(COMPLETED_LEVELS, 0);
         }
-        Debug.Log(PlayerPrefs.GetInt(COMPLETED_LEVELS).ToString());
         // Unlocks the levels that are completed and the next one along with it
         for (int i = 0; i < PlayerPrefs.GetInt(COMPLETED_LEVELS) + 1; i++) {
             OnLevelCompleted?.Invoke(this, new OnLevelCompletedEventArgs {

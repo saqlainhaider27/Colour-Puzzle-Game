@@ -10,6 +10,7 @@ public class ScoreText : MonoBehaviour {
     }
 
     private void ScoreController_OnScoreChanged(object sender, ScoreController.OnScoreChangedEventArgs e) {
+        Debug.Log("Event Ran");
         text.text = e.score.ToString();
     }
 }

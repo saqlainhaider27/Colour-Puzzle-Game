@@ -22,8 +22,8 @@ public class ScoreController : Singleton<ScoreController> {
         Player.Instance.OnStarCollected += Player_OnStarCollected;
 
         maxScoreAchieved = PlayerPrefs.GetInt(MAX_SCORE_ACHIEVED);
+
         completedLevels = PlayerPrefs.GetInt(COMPLETED_LEVELS);
-        Debug.Log(completedLevels);
     }
 
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
@@ -35,6 +35,8 @@ public class ScoreController : Singleton<ScoreController> {
             PlayerPrefs.SetInt(MAX_SCORE_ACHIEVED, maxScoreAchieved);
         }
         else {
+
+            Debug.Log("CurrentLevelScore: " + currentLevelScore);
             OnScoreChanged?.Invoke(this, new OnScoreChangedEventArgs {
                 score = currentLevelScore
             });
