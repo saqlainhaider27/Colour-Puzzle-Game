@@ -132,8 +132,8 @@ public class Player : Singleton<Player> {
     
     private bool CheckForCollidersInPath() {
 
-        Vector2 size = new Vector2(0.4f, 0.4f);
-        float length = 0.1f;
+        Vector2 size = new Vector2(0.3f, 0.3f);
+        float length = 0.2f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
         //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
@@ -317,8 +317,10 @@ public class Player : Singleton<Player> {
     public void RotateAwayFromCollision(Vector2 collisionPoint) {
         Vector2 directionAwayFromCollision = (Vector2)transform.position - collisionPoint;
         float angle = Mathf.Atan2(directionAwayFromCollision.x, directionAwayFromCollision.y) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
+        float snappedAngle = Mathf.Round(angle / 90) * 90;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, -snappedAngle));
     }
+
 
     public Colour GetPlayerColour() {
         return currentColour;

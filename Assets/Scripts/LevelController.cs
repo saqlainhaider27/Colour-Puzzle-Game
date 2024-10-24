@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelController : Singleton<LevelController> {
     private const string COMPLETED_LEVELS = "CompletedLevels";
@@ -23,6 +24,20 @@ public class LevelController : Singleton<LevelController> {
                 completedLevel = levels[i]
             });
         }
+
+        // Enable stars gained for each level
+
+        for (int i = 0; i < levels.Count; i++) {
+            // This value has the max stars collected in that level
+            int maxStars = PlayerPrefs.GetInt("Level" + (i + 1));
+            // Now we have the saved value of the levels
+            // We enable these amount of stars in the i level
+            for (int j = 0; j < maxStars; j++) {
+                List<Image> starImagesList = levels[i].GetLevelStarImageList();
+                starImagesList[j].enabled = true;
+            }
+        }
+
     }
 
 }

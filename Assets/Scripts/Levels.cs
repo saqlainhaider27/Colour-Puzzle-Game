@@ -1,7 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Levels : MonoBehaviour {
+
+    private int level;
+    [SerializeField] private List<Image> levelStars = new List<Image>();
 
     [SerializeField] private LockImage lockSprite;
     private Button button;
@@ -12,6 +16,11 @@ public class Levels : MonoBehaviour {
         ShowLockSprite();
         DisableButton();
 
+        // Disable all stars in star images list
+        foreach (Image level in levelStars) {
+            level.enabled = false;
+        }
+
         LevelController.Instance.OnLevelCompleted += LevelController_OnLevelCompleted;
     }
 
@@ -21,6 +30,7 @@ public class Levels : MonoBehaviour {
             EnableButton();
         }
     }
+
     public void EnableButton() {
         button.enabled = true;
     }
@@ -34,5 +44,11 @@ public class Levels : MonoBehaviour {
         lockSprite.enabled= false;
     }
 
+    public int GetLevel() {
+        return level;
+    }
+    public List<Image> GetLevelStarImageList() {
+        return levelStars;
+    }
 
 }

@@ -6,6 +6,7 @@ public class ScoreController : Singleton<ScoreController> {
 
     private const string MAX_SCORE_ACHIEVED = "MaxScoreAchieved";
     private const string COMPLETED_LEVELS = "CompletedLevels";
+    private const string LEVEL = "Level";
     private readonly int maxScore = 3;
     private int maxScoreAchieved;
     private int currentLevelScore;
@@ -22,31 +23,29 @@ public class ScoreController : Singleton<ScoreController> {
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         Player.Instance.OnStarCollected += Player_OnStarCollected;
 
-        maxScoreAchieved = PlayerPrefs.GetInt(MAX_SCORE_ACHIEVED);
-
+        maxScoreAchieved = PlayerPrefs.GetInt(LEVEL + SceneController.Instance.GetCurrentSceneIndex());
         completedLevels = PlayerPrefs.GetInt(COMPLETED_LEVELS);
     }
 
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
         int updateScore;
+        // Always store the score, regardless of its value
         if (maxScoreAchieved < currentLevelScore) {
             maxScoreAchieved = currentLevelScore;
-            updateScore = maxScoreAchieved;
-            PlayerPrefs.SetInt(MAX_SCORE_ACHIEVED, maxScoreAchieved);
         }
-        else {
-            updateScore = currentLevelScore;
-            // Debug.Log("CurrentLevelScore: " + currentLevelScore);
+        updateScore = currentLevelScore; // Store current score
 
-        }
+        // PlayerPrefs.SetInt(MAX_SCORE_ACHIEVED, maxScoreAchieved);
+        PlayerPrefs.SetInt(LEVEL + SceneController.Instance.GetCurrentSceneIndex(), maxScoreAchieved); // Store for current level
+
         StartCoroutine(InvokeUpdateEventAfterDelay(updateScore));
-        // Also set this level to completed
-        // Just updating the completed levels int value will set all the previous levels to complete
+
+        // Update completed levels
         if (completedLevels < SceneController.Instance.GetCurrentSceneIndex()) {
-            // Only set a value that is already greater then the already completed levels
             PlayerPrefs.SetInt(COMPLETED_LEVELS, SceneController.Instance.GetCurrentSceneIndex());
         }
     }
+
 
     private IEnumerator InvokeUpdateEventAfterDelay( int updateScore, float delay = 0.5f) {
         yield return new WaitForSecondsRealtime(delay);
