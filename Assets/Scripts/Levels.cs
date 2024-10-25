@@ -1,15 +1,18 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Levels : MonoBehaviour {
 
-    private int level;
+    [SerializeField] private int level;
     [SerializeField] private List<Image> levelStars = new List<Image>();
-
+    [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private LockImage lockSprite;
     private Button button;
     private void Awake() {
+
+        levelText.text = level.ToString();
         lockSprite = GetComponentInChildren<LockImage>();
         button = GetComponent<Button>();
 
@@ -44,9 +47,6 @@ public class Levels : MonoBehaviour {
         lockSprite.enabled= false;
     }
 
-    public int GetLevel() {
-        return level;
-    }
     public List<Image> GetLevelStarImageList() {
         return levelStars;
     }

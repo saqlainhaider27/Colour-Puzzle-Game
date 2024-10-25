@@ -31,8 +31,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 340117504158665527}
-  - {fileID: 685311468118614131}
   - {fileID: 5480264141585358532}
+  - {fileID: 685311468118614131}
   m_Father: {fileID: 2464691534885028775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3132680351456531002
@@ -49,8 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stars:
   - {fileID: 1153216710813126017}
-  - {fileID: 5819466393353344515}
   - {fileID: 7021765864879514744}
+  - {fileID: 5819466393353344515}
 --- !u!1 &92156225342783656
 GameObject:
   m_ObjectHideFlags: 0
