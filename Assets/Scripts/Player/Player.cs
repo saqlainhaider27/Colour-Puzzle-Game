@@ -30,18 +30,31 @@ public class Player : Singleton<Player> {
 
     private TrailRenderer[] trailRenderers;
 
-    public event EventHandler OnWinPointReached;
-
+    public event EventHandler<OnWinPointReachedEventArgs> OnWinPointReached;
+    public class  OnWinPointReachedEventArgs: EventArgs {
+        public Vector3 position;
+    }
     public event EventHandler<OnStarCollectedEventArgs> OnStarCollected;
     public class OnStarCollectedEventArgs : EventArgs {
         public Star collidedStar;
     }
-
+    public event EventHandler<OnPlayerLoseEventArgs> OnPlayerLose;
+    public class OnPlayerLoseEventArgs : EventArgs {
+        public Vector3 position;
+    }
 
     public event EventHandler<OnPaintChangedEventArgs> OnPaintChanged;
     public class OnPaintChangedEventArgs : EventArgs{
         public Paint paint;
     };
+    public event EventHandler<OnPlayerHitWallEventArgs> OnPlayerHitWall;
+    public class OnPlayerHitWallEventArgs : EventArgs {
+        public Vector3 position;
+    }
+    public event EventHandler<OnPlayerTeleportEventArgs> OnPlayerTeleport;
+    public class OnPlayerTeleportEventArgs : EventArgs {
+        public Vector3 position;
+    }
 
     private bool generated = false; 
     private bool canMove;
@@ -133,7 +146,7 @@ public class Player : Singleton<Player> {
     private bool CheckForCollidersInPath() {
 
         Vector2 size = new Vector2(0.3f, 0.3f);
-        float length = 0.2f;
+        float length = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
         //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
@@ -181,11 +194,18 @@ public class Player : Singleton<Player> {
                 // The player's color matches the wall's color; play particle effect
 
                 if (moveDirection == Vector2.zero) {
+                    OnPlayerHitWall?.Invoke(this, new OnPlayerHitWallEventArgs {
+                        position = transform.position
+                    });
                     PlayWallCollisionParticles();
                 }
 
             }
             else {
+                // Play lose sound before destory
+                OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
+                    position = transform.position
+                });
                 DestroySelf(); // Player loses when colliding with a different color wall
                 GameManager.Instance.State = GameStates.Lose;
             }
@@ -234,6 +254,9 @@ public class Player : Singleton<Player> {
                 PauseTrail();
 
                 teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
+                OnPlayerTeleport?.Invoke(this, new OnPlayerTeleportEventArgs {
+                    position = transform.position
+                });
                 // Move player towards modifiedMoveDirection from TeleportPoint
                 // Player teleported so set trail to true
                 moveDirection = newMoveDirection;
@@ -276,7 +299,9 @@ public class Player : Singleton<Player> {
 
         if (distanceToWinPoint <= 0.5f) {
             GameManager.Instance.State = GameStates.Win;
-            OnWinPointReached?.Invoke(this, EventArgs.Empty);
+            OnWinPointReached?.Invoke(this, new OnWinPointReachedEventArgs {
+                position = transform.position
+            });
             HideSelf();
             return false; // Return false as the player should stop when it reaches win point   
         }
@@ -336,8 +361,8 @@ public class Player : Singleton<Player> {
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawWireCube(transform.position, new Vector2(0.5f, 0.5f));
-        Vector3 endPoint =  (Vector2)transform.position+ moveDirection * 0.5f;
-        Gizmos.DrawWireCube(endPoint, new Vector2(0.5f, 0.5f));
+        Gizmos.DrawWireCube(transform.position, new Vector2(0.3f, 0.3f));
+        Vector3 endPoint =  (Vector2)transform.position+ moveDirection * 0.1f;
+        Gizmos.DrawWireCube(endPoint, new Vector2(0.3f, 0.3f));
     }
 }

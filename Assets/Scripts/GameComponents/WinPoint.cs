@@ -9,7 +9,7 @@ public class WinPoint : Singleton<WinPoint> {
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
     }
 
-    private void Player_OnWinPointReached(object sender, System.EventArgs e) {
+    private void Player_OnWinPointReached(object sender, Player.OnWinPointReachedEventArgs e) {
         particle.Play();
     }
 }
