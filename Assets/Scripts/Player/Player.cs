@@ -69,7 +69,7 @@ public class Player : Singleton<Player> {
 
         
     }
-    private void FixedUpdate() {
+    private void LateUpdate() {
         //Debug.Log(moveDirection);
 
         if (!canMove) {
@@ -146,7 +146,7 @@ public class Player : Singleton<Player> {
     private bool CheckForCollidersInPath() {
 
         Vector2 size = new Vector2(0.3f, 0.3f);
-        float length = 0.2f;
+        float length = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
         //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
