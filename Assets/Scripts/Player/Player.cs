@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : Singleton<Player> {
+
+
+    private Rigidbody2D rb;
 
     [Header("Swipe Settings")]
     [SerializeField] private float minimumDistance = .2f;
@@ -57,31 +60,26 @@ public class Player : Singleton<Player> {
     }
 
     private bool generated = false; 
-    private bool canMove;
-
+    private bool playerMoving = false;
     private void Start() {
+        rb = GetComponent<Rigidbody2D>();
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
         trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
     }
-    private void Update() {
-        canMove = CanMove();
-
-
-        
-    }
     private void FixedUpdate() {
-        //Debug.Log(moveDirection);
-        if (!canMove) {
-            //Debug.Log("CanMove");
-            StopPlayer();
-
+        // Perform collision check in FixedUpdate for consistent physics-based movement
+        bool isObjectInPath = CheckForCollidersInPath();
+        if (isObjectInPath && moveDirection != Vector2.zero) {
+            MovePlayer();
+            RotateInMoveDirection();
         }
         else {
-            //Debug.Log("Cant Move");
-            MovePlayer();
-            RotateInMoveDirection(); // Rotate object in move direction
-
+            StopPlayer();
         }
+    }
+    private void Update() {
+        // Detect swipe and set moveDirection in Update, caching the input
+        // Swipe detection logic here sets moveDirection accordingly
     }
 
     private void OnEnable() {
@@ -129,23 +127,23 @@ public class Player : Singleton<Player> {
             moveDirection = Vector2.right;
         }
     }
-    private bool CanMove() {
-        return CheckForCollidersInPath() && moveDirection != Vector2.zero;
-    }
     private void MovePlayer() {
-        // Move the player
+        // Set the Rigidbody2D velocity instead of directly modifying transform position
+        playerMoving = true;
         moveSpeed = 5f;
-        transform.position += (Vector3)moveDirection * Time.deltaTime * moveSpeed;
+        rb.linearVelocity = moveDirection * moveSpeed;
     }
+
     private void StopPlayer() {
-        moveSpeed = 0;
-        moveDirection = Vector3.zero;
+        playerMoving = false;
+        rb.linearVelocity = Vector2.zero;
+        moveDirection = Vector2.zero;
     }
-    
+
     private bool CheckForCollidersInPath() {
 
         Vector2 size = new Vector2(0.3f, 0.3f);
-        float length = 0.15f;
+        float length = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
         //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
 
@@ -351,7 +349,7 @@ public class Player : Singleton<Player> {
     }
 
     public bool CanPlayerMove() {
-        return canMove;
+        return playerMoving;
     }
     public void SetCurrentPlayerColour(Colour setColour) {
         currentColour = setColour;
