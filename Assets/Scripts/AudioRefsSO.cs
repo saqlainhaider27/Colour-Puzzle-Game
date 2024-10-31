@@ -8,6 +8,5 @@ public class AudioRefsSO : ScriptableObject {
     public AudioClip[] teleport;
     public AudioClip[] winPoint;
     public AudioClip[] lose;
-    public AudioClip[] menuAppear;
-    public AudioClip[] menuDisappear;
+    public AudioClip[] starUIEntry;
 }

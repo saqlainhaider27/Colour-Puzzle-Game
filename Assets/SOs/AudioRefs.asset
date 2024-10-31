@@ -24,7 +24,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e5ab9e3663bbbdf4a87f54397876902c, type: 3}
   lose:
   - {fileID: 8300000, guid: d4e0bd4a952a886409267fdc0ac31bed, type: 3}
-  menuAppear:
-  - {fileID: 8300000, guid: 069eaf5666a9628408f29dacec0756ce, type: 3}
-  menuDisappear:
-  - {fileID: 8300000, guid: 4d5ffa40e15ea40489b2b4326a295cb8, type: 3}
+  starUIEntry:
+  - {fileID: 8300000, guid: 6f9d67dbe726f4343aee680c1b5997cf, type: 3}

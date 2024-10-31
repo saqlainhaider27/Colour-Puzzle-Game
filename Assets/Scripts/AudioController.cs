@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AudioController : MonoBehaviour {
+public class AudioController : Singleton<AudioController> {
 
     [SerializeField] private AudioRefsSO audioRefs;
 
@@ -11,18 +11,8 @@ public class AudioController : MonoBehaviour {
         Player.Instance.OnPlayerTeleport += Player_OnPlayerTeleport;
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
-
-        UIController.Instance.OnMenuAppeared += UIController_OnMenuAppeared;
-        UIController.Instance.OnMenuDisappeared += UIController_OnMenuDisappeared;
     }
 
-    private void UIController_OnMenuDisappeared(object sender, System.EventArgs e) {
-        // PlaySound(audioRefs.menuDisappear, transform.position);
-    }
-
-    private void UIController_OnMenuAppeared(object sender, System.EventArgs e) {
-        // PlaySound(audioRefs.menuAppear, transform.position);
-    }
 
     private void Player_OnPlayerLose(object sender, Player.OnPlayerLoseEventArgs e) {
         PlaySound(audioRefs.lose, e.position);
@@ -49,6 +39,10 @@ public class AudioController : MonoBehaviour {
         // Star collected run audio of star collected
         PlaySound(audioRefs.starCollect, e.collidedStar.transform.position);
     }
+    public void PlayStarEntrySound() {
+        PlaySound(audioRefs.starUIEntry, transform.position);
+    }
+
 
     private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f) {
         PlaySound(audioClipArray[UnityEngine.Random.Range(0, audioClipArray.Length)], position, volume);
