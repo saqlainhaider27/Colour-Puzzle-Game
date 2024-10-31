@@ -11,6 +11,17 @@ public class AudioController : MonoBehaviour {
         Player.Instance.OnPlayerTeleport += Player_OnPlayerTeleport;
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
+
+        UIController.Instance.OnMenuAppeared += UIController_OnMenuAppeared;
+        UIController.Instance.OnMenuDisappeared += UIController_OnMenuDisappeared;
+    }
+
+    private void UIController_OnMenuDisappeared(object sender, System.EventArgs e) {
+        // PlaySound(audioRefs.menuDisappear, transform.position);
+    }
+
+    private void UIController_OnMenuAppeared(object sender, System.EventArgs e) {
+        // PlaySound(audioRefs.menuAppear, transform.position);
     }
 
     private void Player_OnPlayerLose(object sender, Player.OnPlayerLoseEventArgs e) {

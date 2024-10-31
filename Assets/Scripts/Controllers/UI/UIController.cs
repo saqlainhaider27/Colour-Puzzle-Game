@@ -20,7 +20,7 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnHomeButtonPressed;
 
     public event EventHandler OnMenuAppeared;
-    // public event EventHandler OnMenuDisappeared;
+    public event EventHandler OnMenuDisappeared;
 
     public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
     public class OnMenuEnterEventArgs : EventArgs {
@@ -102,6 +102,7 @@ public class UIController : Singleton<UIController> {
         if (CheckActiveMenu() == gameMenu) {
             return;
         }
+        OnMenuDisappeared?.Invoke(this, EventArgs.Empty);
         HideUIBlur();
         InvokeOnExitEvent(CheckActiveMenu());
         // Disable object after delay
@@ -119,6 +120,9 @@ public class UIController : Singleton<UIController> {
     }
 
     public void Replay() {
+        if (GameManager.Instance.State == GameStates.Paused) {
+            Resume();
+        }
         ExitMenu();
         StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }
