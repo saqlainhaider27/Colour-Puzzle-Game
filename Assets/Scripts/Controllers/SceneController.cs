@@ -1,7 +1,12 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneController : Singleton<SceneController> {
+
+    public event EventHandler OnSceneChanged;
+
     private void Awake() {
         UIController.Instance.OnLoadNextLevel += UIController_OnLoadNextLevel;
         UIController.Instance.OnReplayButtonPressed += UIController_OnReplayButtonPressed;
@@ -14,25 +19,35 @@ public class SceneController : Singleton<SceneController> {
         LoadMainMenuScene();
     }
 
-    private static void LoadMainMenuScene() {
-        SceneManager.LoadScene(0);
+    private void LoadMainMenuScene() {
+        int loadSceneIndex = 0;
+        StartCoroutine(LoadSceneWithTransition(loadSceneIndex));
     }
 
     private void UIController_OnReplayButtonPressed(object sender, System.EventArgs e) {
         ResetCurrentScene();
     }
 
-    private static void ResetCurrentScene() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    private void ResetCurrentScene() {
+        int loadSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        StartCoroutine(LoadSceneWithTransition(loadSceneIndex));
     }
 
     private void UIController_OnLoadNextLevel(object sender, System.EventArgs e) {
         LoadNextScene();
     }
 
-    private static void LoadNextScene() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    private void LoadNextScene() {
+        int loadSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        StartCoroutine(LoadSceneWithTransition(loadSceneIndex));
     }
+
+    private IEnumerator LoadSceneWithTransition(int index) {
+        OnSceneChanged?.Invoke(this, new EventArgs());
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(index);
+    }
+
     public int GetCurrentSceneIndex() {
         return SceneManager.GetActiveScene().buildIndex;
     }
