@@ -11,9 +11,14 @@ public class SceneController : Singleton<SceneController> {
         UIController.Instance.OnLoadNextLevel += UIController_OnLoadNextLevel;
         UIController.Instance.OnReplayButtonPressed += UIController_OnReplayButtonPressed;
         UIController.Instance.OnHomeButtonPressed += UIController_OnHomeButtonPressed;
-
+        UIController.Instance.OnLoadPreviousLevel += UIController_OnLoadPreviousLevel;
     }
 
+    private void UIController_OnLoadPreviousLevel(object sender, EventArgs e) {
+        int loadSceneIndex = SceneManager.GetActiveScene().buildIndex - 1;
+        StartCoroutine(LoadSceneWithTransition(loadSceneIndex));
+
+    }
 
     private void UIController_OnHomeButtonPressed(object sender, System.EventArgs e) {
         LoadMainMenuScene();

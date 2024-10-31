@@ -18,7 +18,6 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
 
     private void Start() {
-        HideSceneTransition();
         ShowMainMenu();
         HideLevelMenu();
     }
@@ -43,14 +42,6 @@ public class MenuController : Singleton<MenuController> {
         playerImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
     }
 
-    public void ShowSceneTransition() {
-        sceneTransition.SetActive(true);
-    }
-
-    public void HideSceneTransition() {
-        sceneTransition.SetActive(false);
-    }
-
     public void ShowMainMenu() {
         mainMenu.SetActive(true);
     }
@@ -72,7 +63,6 @@ public class MenuController : Singleton<MenuController> {
     }
 
     private IEnumerator LoadSceneWithTransition(int index) {
-        ShowSceneTransition();
         StartCoroutine(MusicFade()); // Start the music fade-out
         OnSceneChanged?.Invoke(this, EventArgs.Empty);
         yield return new WaitForSeconds(transitionDuration); // Wait for fade to complete before changing scenes

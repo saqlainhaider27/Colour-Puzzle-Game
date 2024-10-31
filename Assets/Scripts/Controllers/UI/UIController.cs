@@ -15,6 +15,7 @@ public class UIController : Singleton<UIController> {
     private Menu previousMenu;
     private GameStates previousState;
 
+    public event EventHandler OnLoadPreviousLevel;
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
@@ -97,7 +98,10 @@ public class UIController : Singleton<UIController> {
         ExitMenu();
         StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
-
+    public void PreviousLevel() {
+        ExitMenu();
+        StartCoroutine(InvokeEventAfterDelay(OnLoadPreviousLevel, 0.5f));
+    }
     private void ExitMenu(float delay = 0.5f) {
         if (CheckActiveMenu() == gameMenu) {
             return;
