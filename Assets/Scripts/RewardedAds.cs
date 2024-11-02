@@ -13,11 +13,12 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
 
 
     private void Awake() {
-#if UNITY_IOS
-    adUnitID = iosAdsUnitID;
-#elif UNITY_ANDROID
-    adUnitID = androidAdsUnitID;
-#endif
+        //#if UNITY_IOS
+        //    adUnitID = iosAdsUnitID;
+        //#elif UNITY_ANDROID
+        //    adUnitID = androidAdsUnitID;
+        //#endif
+        adUnitID = androidAdsUnitID;
     }
 
     public void LoadRewardedAds() {
