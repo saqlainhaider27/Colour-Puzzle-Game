@@ -340,7 +340,6 @@ public class Player : Singleton<Player> {
         this.gameObject.SetActive(false);
     }
     public void ShowSelf() {
-        Debug.Log("ShowSelf()");
         this.gameObject.SetActive(true);
     }
     private void RotateInMoveDirection() {

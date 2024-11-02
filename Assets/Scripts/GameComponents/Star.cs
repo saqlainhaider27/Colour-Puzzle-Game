@@ -2,18 +2,28 @@ using UnityEngine;
 
 public class Star : MonoBehaviour {
 
+    private ParticleSystem particle;
     private void Awake() {
+        particle = GetComponentInChildren<ParticleSystem>();
+
         Player.Instance.OnStarCollected += Player_OnStarCollected;
     }
 
     private void Player_OnStarCollected(object sender, Player.OnStarCollectedEventArgs e) {
-        if (e.collidedStar == this) {
-            DestroySelf();
+        if (this != e.collidedStar) {
+            return;
         }
+        particle.Play();
+        DisableStarAndDestroy();
     }
 
-    private void DestroySelf() {
-        this.gameObject.SetActive(false);
+    public void DisableStarAndDestroy() {
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        Invoke(nameof(DestroySelf), 1f);
     }
 
+    public void DestroySelf() {
+        Destroy(gameObject);
+    }
 }

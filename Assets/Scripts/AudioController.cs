@@ -11,8 +11,12 @@ public class AudioController : Singleton<AudioController> {
         Player.Instance.OnPlayerTeleport += Player_OnPlayerTeleport;
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
     }
 
+    private void RewardedAds_OnRewardedAdComplete(object sender, System.EventArgs e) {
+        PlaySound(audioRefs.revive, transform.position);
+    }
 
     private void Player_OnPlayerLose(object sender, Player.OnPlayerLoseEventArgs e) {
         PlaySound(audioRefs.lose, e.position);
@@ -51,4 +55,8 @@ public class AudioController : Singleton<AudioController> {
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) {
         AudioSource.PlayClipAtPoint(audioClip, position, volume);
     }
+
+
+
+
 }

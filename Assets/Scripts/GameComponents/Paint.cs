@@ -26,7 +26,7 @@ public class Paint : MonoBehaviour {
     public void DisablePaintAndDestroy() {
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
-        Invoke("DestroySelf", 1f);
+        Invoke(nameof(DestroySelf), 1f);
     }
 
     public void DestroySelf() {

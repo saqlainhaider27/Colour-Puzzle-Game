@@ -26,3 +26,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d4e0bd4a952a886409267fdc0ac31bed, type: 3}
   starUIEntry:
   - {fileID: 8300000, guid: 6f9d67dbe726f4343aee680c1b5997cf, type: 3}
+  revive:
+  - {fileID: 8300000, guid: 55bc219eadeabe441b184fcb9a76925f, type: 3}
