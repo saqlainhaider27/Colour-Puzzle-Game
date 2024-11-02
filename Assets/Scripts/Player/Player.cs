@@ -203,7 +203,7 @@ public class Player : Singleton<Player> {
                 OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
                     position = transform.position
                 });
-                DestroySelf(); // Player loses when colliding with a different color wall
+                HideSelf(); // Player loses when colliding to a wall
                 GameManager.Instance.State = GameStates.Lose;
             }
 
@@ -308,6 +308,12 @@ public class Player : Singleton<Player> {
 
 
     public void DestroySelf() {
+        // Save the information in revivePlayer script 
+        // 1. Position
+        // 2. Colour
+        RevivePlayer.Instance.Position = transform.position;
+        RevivePlayer.Instance.PreviousColour = currentColour;
+
         Destroy(gameObject);
     }
     public void HideMeshWithColour(Colour hideColour) {
@@ -330,7 +336,12 @@ public class Player : Singleton<Player> {
         }
     }
     public void HideSelf() {
+        StopPlayer();
         this.gameObject.SetActive(false);
+    }
+    public void ShowSelf() {
+        Debug.Log("ShowSelf()");
+        this.gameObject.SetActive(true);
     }
     private void RotateInMoveDirection() {
         float _angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;

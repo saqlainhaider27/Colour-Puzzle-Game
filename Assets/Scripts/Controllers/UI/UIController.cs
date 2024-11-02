@@ -11,7 +11,6 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private Menu gameMenu;
 
     [SerializeField] private GameObject blur;
-
     private Menu previousMenu;
     private GameStates previousState;
 
@@ -19,7 +18,6 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnLoadNextLevel;
     public event EventHandler OnReplayButtonPressed;
     public event EventHandler OnHomeButtonPressed;
-
     public event EventHandler OnMenuAppeared;
     public event EventHandler OnMenuDisappeared;
 
@@ -121,6 +119,11 @@ public class UIController : Singleton<UIController> {
         ExitMenu();
         StartCoroutine(InvokeEventAfterDelay(OnHomeButtonPressed, 0.5f));
 
+    }
+    public void ReviveButton() {
+        AdsManager.Instance.RewardedAds.ShowRewardedAds();
+        ExitMenu();
+        gameMenu.ShowMenu();
     }
 
     public void Replay() {

@@ -1590,6 +1590,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -62.5
       objectReference: {fileID: 0}
+    - target: {fileID: 3157688707814558686, guid: f87ae3e174802f64eb4d79426e418f3b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6489251072718399399}
+    - target: {fileID: 3157688707814558686, guid: f87ae3e174802f64eb4d79426e418f3b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReviveButton
+      objectReference: {fileID: 0}
     - target: {fileID: 3593911702027359324, guid: f87ae3e174802f64eb4d79426e418f3b, type: 3}
       propertyPath: m_Name
       value: LoseMenu
