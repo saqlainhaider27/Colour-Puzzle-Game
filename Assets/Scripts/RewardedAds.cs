@@ -11,6 +11,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
 
     public event EventHandler OnRewardedAdComplete;
 
+    public event EventHandler OnRewardedAdFailed;
 
     private void Awake() {
         //#if UNITY_IOS
@@ -30,6 +31,7 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) {
+        OnRewardedAdFailed?.Invoke(this, EventArgs.Empty);
     }
 
     public void OnUnityAdsShowStart(string placementId) {

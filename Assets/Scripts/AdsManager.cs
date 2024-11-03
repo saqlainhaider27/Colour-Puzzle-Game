@@ -15,13 +15,13 @@ public class AdsManager : Singleton<AdsManager>, IUnityAdsInitializationListener
 
 
     private void Awake() {
-        //#if UNITY_IOS
-        //        gameID = iosGameID;
-        //#elif UNITY_ANDROID
-        //        gameID = androidGameID;
-        //#elif UNITY_EDITOR
-        //        gameID = androidGameID;
-        //#endif
+#if UNITY_IOS
+            gameID = iosGameID;
+#elif UNITY_ANDROID
+        gameID = androidGameID;
+#elif UNITY_EDITOR
+            gameID = androidGameID; //Only for testing the functionality in the Editor
+#endif
         gameID = androidGameID;
         if (!Advertisement.isInitialized && Advertisement.isSupported) {
             Advertisement.Initialize(gameID, testing, this);

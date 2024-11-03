@@ -9,7 +9,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private Menu pauseMenu;
     [SerializeField] private Menu settingsMenu;
     [SerializeField] private Menu gameMenu;
-
+    [SerializeField] private Menu cantLoadAds;
     [SerializeField] private GameObject blur;
     private Menu previousMenu;
     private GameStates previousState;
@@ -38,9 +38,19 @@ public class UIController : Singleton<UIController> {
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
 
-
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        AdsManager.Instance.RewardedAds.OnRewardedAdFailed += RewardedAds_OnRewardedAdFailed;
     }
 
+    private void RewardedAds_OnRewardedAdFailed(object sender, EventArgs e) {
+        cantLoadAds.ShowMenu();
+        InvokeOnExitEvent(cantLoadAds);
+    }
+
+    private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
+        ExitMenu();
+        gameMenu.ShowMenu();
+    }
 
     private void GameManager_OnGameStart(object sender, EventArgs e) {
         HideAllMenus();
@@ -122,8 +132,7 @@ public class UIController : Singleton<UIController> {
     }
     public void ReviveButton() {
         AdsManager.Instance.RewardedAds.ShowRewardedAds();
-        ExitMenu();
-        gameMenu.ShowMenu();
+
     }
 
     public void Replay() {
