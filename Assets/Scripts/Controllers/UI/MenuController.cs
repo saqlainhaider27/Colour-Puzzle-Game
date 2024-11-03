@@ -18,10 +18,10 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private AudioSource musicSource;
 
     private void Start() {
-        //ShowMainMenu();
+        ShowMainMenu();
         HideLevelMenu();
         musicSource.volume = 0f;
-        musicSource.Pause();
+        StartCoroutine(MusicFadeIn());
     }
 
     public void Play() {
