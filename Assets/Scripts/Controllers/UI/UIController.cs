@@ -39,13 +39,8 @@ public class UIController : Singleton<UIController> {
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
 
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
-        AdsManager.Instance.RewardedAds.OnRewardedAdFailed += RewardedAds_OnRewardedAdFailed;
     }
 
-    private void RewardedAds_OnRewardedAdFailed(object sender, EventArgs e) {
-        cantLoadAds.ShowMenu();
-        InvokeOnExitEvent(cantLoadAds);
-    }
 
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
         ExitMenu();

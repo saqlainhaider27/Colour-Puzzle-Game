@@ -9,12 +9,17 @@ public class Levels : MonoBehaviour {
     [SerializeField] private List<Image> levelStars = new List<Image>();
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private LockImage lockSprite;
+
     private Button button;
     private void Awake() {
 
         levelText.text = level.ToString();
         lockSprite = GetComponentInChildren<LockImage>();
         button = GetComponent<Button>();
+
+        button.onClick.AddListener(() => {
+            MenuController.Instance.LoadLevel(level);
+        });
 
         ShowLockSprite();
         DisableButton();
@@ -26,14 +31,12 @@ public class Levels : MonoBehaviour {
 
         LevelController.Instance.OnLevelCompleted += LevelController_OnLevelCompleted;
     }
-
     private void LevelController_OnLevelCompleted(object sender, LevelController.OnLevelCompletedEventArgs e) {
         if (e.completedLevel == this) {
             HideLockSprite();
             EnableButton();
         }
     }
-
     public void EnableButton() {
         button.enabled = true;
     }
