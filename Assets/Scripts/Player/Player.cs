@@ -226,6 +226,9 @@ public class Player : Singleton<Player> {
             if (switchColour) {
                 generated = false;
             }
+            else {
+                return true;
+            }
 
             if (!generated) {
                 ColourSwitcher.Instance.SwitchColour(collidedPaint);
