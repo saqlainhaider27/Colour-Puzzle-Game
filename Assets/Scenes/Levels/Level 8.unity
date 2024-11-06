@@ -2357,10 +2357,10 @@ PrefabInstance:
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: toTeleportPoint
       value: 
-      objectReference: {fileID: 2027005694}
+      objectReference: {fileID: 1863457550}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: newMoveDirection
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5175734460121812628, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4549,13 +4549,13 @@ Transform:
   m_Children:
   - {fileID: 1228700064}
   - {fileID: 609027145}
-  - {fileID: 1863457549}
+  - {fileID: 2027005693}
   - {fileID: 2143551855}
   - {fileID: 1181293370}
   - {fileID: 622558081}
   - {fileID: 83742066}
   - {fileID: 354784059}
-  - {fileID: 2027005693}
+  - {fileID: 1863457549}
   - {fileID: 2050928906}
   - {fileID: 587407189}
   - {fileID: 699028666}
@@ -7422,10 +7422,10 @@ PrefabInstance:
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: toTeleportPoint
       value: 
-      objectReference: {fileID: 1863457550}
+      objectReference: {fileID: 2027005694}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: newMoveDirection
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5175734460121812628, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10788,15 +10788,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2595408346760918868, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_Name
-      value: TeleportPoint 1
+      value: TeleportPoint 4
       objectReference: {fileID: 0}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: toTeleportPoint
       value: 
-      objectReference: {fileID: 609027146}
+      objectReference: {fileID: 354784060}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: newMoveDirection
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5175734460121812628, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10917,15 +10917,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2595408346760918868, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_Name
-      value: TeleportPoint 4
+      value: TeleportPoint 1
       objectReference: {fileID: 0}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: toTeleportPoint
       value: 
-      objectReference: {fileID: 354784060}
+      objectReference: {fileID: 609027146}
     - target: {fileID: 3186506276808965678, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: newMoveDirection
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5175734460121812628, guid: bd258d24809ecd44683e12d11dc7f562, type: 3}
       propertyPath: m_LocalPosition.x
