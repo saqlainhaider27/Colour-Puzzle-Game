@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TeleportPoint : MonoBehaviour {
+public class TeleportPoint : NonCollideable {
 
     [System.Serializable]
     public enum MoveDirections {
@@ -42,7 +42,6 @@ public class TeleportPoint : MonoBehaviour {
             break;
         }
     }
-
     // Teleport the player and set the new movement direction
     public void TeleportPlayer(Transform playerTransform, out Vector2 modifiedMoveDirection) {
         if (Teleported) {

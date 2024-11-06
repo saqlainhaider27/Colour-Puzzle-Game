@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Paint : MonoBehaviour {
+public class Paint : NonCollideable {
 
     [SerializeField] private Colour currentPaintColour;
     private ParticleSystem particle;
@@ -12,7 +12,6 @@ public class Paint : MonoBehaviour {
 
         Player.Instance.OnPaintChanged += Player_OnPaintChanged;
     }
-
     private void Player_OnPaintChanged(object sender, Player.OnPaintChangedEventArgs e) {
         if (this != e.paint) {
             return;

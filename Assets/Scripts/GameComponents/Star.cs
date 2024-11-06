@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Star : MonoBehaviour {
+public class Star : NonCollideable {
 
     private ParticleSystem particle;
     private void Awake() {
@@ -8,7 +8,6 @@ public class Star : MonoBehaviour {
 
         Player.Instance.OnStarCollected += Player_OnStarCollected;
     }
-
     private void Player_OnStarCollected(object sender, Player.OnStarCollectedEventArgs e) {
         if (this != e.collidedStar) {
             return;

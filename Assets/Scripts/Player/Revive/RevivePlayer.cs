@@ -1,13 +1,6 @@
 using UnityEngine;
 
 public class RevivePlayer : Singleton<RevivePlayer> {
-    public Colour PreviousColour {
-        get; set;
-    }
-    public Vector3 Position {
-        get; set;
-    }
-
     private void Awake() {
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
     }

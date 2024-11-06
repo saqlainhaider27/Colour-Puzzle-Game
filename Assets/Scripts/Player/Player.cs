@@ -151,33 +151,38 @@ public class Player : Singleton<Player> {
             if (CheckWallCollision(raycastHit)) {
                 return false;
             }
-
-            if (CheckPaintCollision(raycastHit)) {
+            if (CheckForNonCollideables(raycastHit)) {
                 return true;
             }
-
-            if (CheckTeleportPointCollision(raycastHit)) {
-                return true;
-            }
-
-            if (CheckStarCollision(raycastHit)) {
-                return true;
-            }
-
             return false;
         }
 
         return CheckWinPointProximity(); 
     }
 
-    private bool CheckStarCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.TryGetComponent<Star>(out Star _collidedStar)) {
-            OnStarCollected?.Invoke(this, new OnStarCollectedEventArgs {
-                collidedStar = _collidedStar
-            });
-            return true;
+    private bool CheckForNonCollideables(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.TryGetComponent<NonCollideable>(out NonCollideable collidedItem)) {
+            collidedItem.OnCollided();
+            if (collidedItem is TeleportPoint) {
+                TeleportPoint teleportPoint = (TeleportPoint)collidedItem;
+                HandleTeleport(teleportPoint);
+            }
+            else if (collidedItem is Star) {
+                Star star = (Star)collidedItem;
+                HandleStarCollection(star);
+            } 
+            else if (collidedItem is Paint) {
+                Paint paint = (Paint)collidedItem;
+                HandlePaintCollection(paint);
+            }
         }
-        return false;
+        return true;
+    }
+
+    private void HandleStarCollection(Star _collidedStar) {
+        OnStarCollected?.Invoke(this, new OnStarCollectedEventArgs {
+            collidedStar = _collidedStar
+        });
     }
 
     private bool CheckWallCollision(RaycastHit2D raycastHit) {
@@ -213,81 +218,42 @@ public class Player : Singleton<Player> {
         return false; // No wall collision detected
     }
 
-    private void PlayWallCollisionParticles() {
-        // Ensure particles are played only during actual collision
-        ParticleSystem particles = GetComponentInChildren<ParticleSystem>();
-        particles.Play();
-    }
+    private void HandlePaintCollection(Paint collidedPaint) {
+        bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
 
-    private bool CheckPaintCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.TryGetComponent<Paint>(out Paint collidedPaint)) {
-            bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
-
-            if (switchColour) {
-                generated = false;
-            }
-            else {
-                return true;
-            }
-
-            if (!generated) {
-                ColourSwitcher.Instance.SwitchColour(collidedPaint);
-
-                OnPaintChanged?.Invoke(this, new OnPaintChangedEventArgs {
-                    paint = collidedPaint
-                });
-
-                generated = true;
-            }
-
-            return true; // Return true as player can move and will not stop at paint collisions
+        if (switchColour) {
+            generated = false;
+        }
+        else {
+            return;
         }
 
-        return false;
-    }
-    private bool CheckTeleportPointCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.TryGetComponent<TeleportPoint>(out TeleportPoint teleportPoint)) {
-            if (!teleportPoint.Teleported) {
-                // Teleport cooldown logic is implemented in TeleportPoint script
-                StopPlayer();
-                // Started teleport so set trail to false
-                PauseTrail();
+        if (!generated) {
+            ColourSwitcher.Instance.SwitchColour(collidedPaint);
 
-                teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
-                OnPlayerTeleport?.Invoke(this, new OnPlayerTeleportEventArgs {
-                    position = transform.position
-                });
-                // Move player towards modifiedMoveDirection from TeleportPoint
-                // Player teleported so set trail to true
-                moveDirection = newMoveDirection;
-                MovePlayer();
-            }
+            OnPaintChanged?.Invoke(this, new OnPaintChangedEventArgs {
+                paint = collidedPaint
+            });
 
-
-            return true; // Return true as player can move and will not stop at teleport point
+            generated = true;
         }
 
-        return false;
     }
+    private void HandleTeleport(TeleportPoint teleportPoint) {
+        if (!teleportPoint.Teleported) {
+            // Teleport cooldown logic is implemented in TeleportPoint script
+            StopPlayer();
+            // Started teleport so set trail to false
+            PauseTrail();
 
-    public void PauseTrail() {
-        // Disable all trails in children
-        foreach (TrailRenderer trail in trailRenderers) {
-            trail.enabled = false;
-            trail.Clear();
-        }
-
-        float resetDelay = 0.2f;
-        StartCoroutine(TrailResetDelay(resetDelay));
-    }
-
-    private IEnumerator TrailResetDelay(float delay) {
-        // Wait for the specified delay
-        yield return new WaitForSeconds(delay);
-
-        // Enable all trails after the delay
-        foreach (TrailRenderer trail in trailRenderers) {
-            trail.enabled = true;
+            teleportPoint.TeleportPlayer(this.transform, out newMoveDirection);
+            OnPlayerTeleport?.Invoke(this, new OnPlayerTeleportEventArgs {
+                position = transform.position
+            });
+            // Move player towards modifiedMoveDirection from TeleportPoint
+            // Player teleported so set trail to true
+            moveDirection = newMoveDirection;
+            MovePlayer();
         }
     }
 
@@ -309,16 +275,44 @@ public class Player : Singleton<Player> {
         return true;
     }
 
+    private void PlayWallCollisionParticles() {
+        // Ensure particles are played only during actual collision
+        ParticleSystem particles = GetComponentInChildren<ParticleSystem>();
+        particles.Play();
+    }
+
+
+
+    public void PauseTrail() {
+        // Disable all trails in children
+        foreach (TrailRenderer trail in trailRenderers) {
+            trail.enabled = false;
+            trail.Clear();
+        }
+
+        float resetDelay = 0.2f;
+        StartCoroutine(TrailResetDelay(resetDelay));
+    }
+
+
+    private IEnumerator TrailResetDelay(float delay) {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Enable all trails after the delay
+        foreach (TrailRenderer trail in trailRenderers) {
+            trail.enabled = true;
+        }
+    }
+
+
 
     public void DestroySelf() {
-        // Save the information in revivePlayer script 
-        // 1. Position
-        // 2. Colour
-        RevivePlayer.Instance.Position = transform.position;
-        RevivePlayer.Instance.PreviousColour = currentColour;
 
         Destroy(gameObject);
     }
+
+
     public void HideMeshWithColour(Colour hideColour) {
         // All the required meshes are a child of the player
         // Cycles through the children and hides all children
@@ -338,6 +332,8 @@ public class Player : Singleton<Player> {
             }
         }
     }
+
+
     public void HideSelf() {
         StopPlayer();
         this.gameObject.SetActive(false);
@@ -345,6 +341,8 @@ public class Player : Singleton<Player> {
     public void ShowSelf() {
         this.gameObject.SetActive(true);
     }
+
+
     private void RotateInMoveDirection() {
         float _angle = Mathf.Atan2(moveDirection.x, moveDirection.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -_angle));
@@ -366,13 +364,5 @@ public class Player : Singleton<Player> {
     }
     public void SetCurrentPlayerColour(Colour setColour) {
         currentColour = setColour;
-    }
-
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.red;
-
-        Gizmos.DrawWireCube(transform.position, new Vector2(0.3f, 0.3f));
-        Vector3 endPoint =  (Vector2)transform.position+ moveDirection * 0.1f;
-        Gizmos.DrawWireCube(endPoint, new Vector2(0.3f, 0.3f));
     }
 }
