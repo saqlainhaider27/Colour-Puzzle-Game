@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class Star : NonCollideable {
-
     private ParticleSystem particle;
     private void Awake() {
         particle = GetComponentInChildren<ParticleSystem>();

@@ -126,6 +126,7 @@ public class Player : Singleton<Player> {
         else if (Vector2.Dot(Vector2.right, direction) > directionThreshold) {
             moveDirection = Vector2.right;
         }
+        //Debug.Log(moveDirection);
     }
     private void MovePlayer() {
         // Set the Rigidbody2D velocity instead of directly modifying transform position
@@ -162,7 +163,7 @@ public class Player : Singleton<Player> {
 
     private bool CheckForNonCollideables(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<NonCollideable>(out NonCollideable collidedItem)) {
-            collidedItem.OnCollided();
+            // collidedItem.OnCollided();
             if (collidedItem is TeleportPoint) {
                 TeleportPoint teleportPoint = (TeleportPoint)collidedItem;
                 HandleTeleport(teleportPoint);
