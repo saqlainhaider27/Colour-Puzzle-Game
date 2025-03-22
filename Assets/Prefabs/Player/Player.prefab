@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimumDistance: 0.2
-  maximumTime: 0.5
-  directionThreshold: 0.9
+  maximumTime: 1
+  directionThreshold: 0.8
   moveSpeed: 5
   playerMeshes:
   - {fileID: 260083841579568714}
