@@ -4313,7 +4313,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 506872357393794109, guid: 9a12e1019ab3beb468f502150f7be2a9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.05
+      value: 0.049999952
       objectReference: {fileID: 0}
     - target: {fileID: 506872357393794109, guid: 9a12e1019ab3beb468f502150f7be2a9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4391,7 +4391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: orthographic size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
@@ -5056,7 +5056,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 506872357393794109, guid: 9a12e1019ab3beb468f502150f7be2a9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.7
+      value: -3.7
       objectReference: {fileID: 0}
     - target: {fileID: 506872357393794109, guid: 9a12e1019ab3beb468f502150f7be2a9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5599,6 +5599,10 @@ PrefabInstance:
       propertyPath: moveSpeed
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 5479690642101069293, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
+      propertyPath: directionThreshold
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 7833808253453285974, guid: 7343ce12a897f864682cc935bfc24fa9, type: 3}
       propertyPath: m_PreviewTimeScale
       value: 1
@@ -5641,7 +5645,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

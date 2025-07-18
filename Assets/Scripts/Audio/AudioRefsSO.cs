@@ -10,4 +10,5 @@ public class AudioRefsSO : ScriptableObject {
     public AudioClip[] lose;
     public AudioClip[] starUIEntry;
     public AudioClip[] revive;
+    public AudioClip[] coinCollect;
 }

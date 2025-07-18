@@ -21,10 +21,16 @@ public class ScoreController : Singleton<ScoreController> {
     private void Awake() {
 
         GameManager.Instance.OnWinState += GameManager_OnWinState;
-        Player.Instance.OnStarCollected += Player_OnStarCollected;
+        EventController.OnStarCollected += EventController_OnStarCollected;
 
         maxScoreAchieved = PlayerPrefs.GetInt(LEVEL + SceneController.Instance.GetCurrentSceneIndex());
         completedLevels = PlayerPrefs.GetInt(COMPLETED_LEVELS);
+    }
+
+    private void EventController_OnStarCollected(Vector2 vector) {
+        if (currentLevelScore < maxScore) {
+            currentLevelScore++;
+        }
     }
 
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
@@ -52,13 +58,5 @@ public class ScoreController : Singleton<ScoreController> {
         OnScoreChanged?.Invoke(this, new OnScoreChangedEventArgs {
             score = updateScore
         });
-    }
-
-    
-
-    private void Player_OnStarCollected(object sender, System.EventArgs e) {
-        if (currentLevelScore < maxScore) {
-            currentLevelScore++;
-        }
     }
 }

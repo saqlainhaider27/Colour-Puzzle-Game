@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class AudioController : Singleton<AudioController> {
@@ -5,13 +6,25 @@ public class AudioController : Singleton<AudioController> {
     [SerializeField] private AudioRefsSO audioRefs;
 
     private void Awake() {
-        Player.Instance.OnStarCollected += Player_OnStarCollected;
-        Player.Instance.OnPaintChanged += Player_OnPaintChanged;
-        Player.Instance.OnPlayerHitWall += Player_OnPlayerHitWall;
+        EventController.OnStarCollected += EventController_OnStarCollected;
+        EventController.OnPaintCollected += EventController_OnPaintCollected;
+        EventController.OnCoinCollected += EventController_OnCoinCollected;
+        EventController.OnWallCollision += EventController_OnWallCollision;
+
+
         Player.Instance.OnPlayerTeleport += Player_OnPlayerTeleport;
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
+
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+    }
+
+    private void EventController_OnWallCollision(Vector2 vector) {
+        PlaySound(audioRefs.hitWall, vector);
+    }
+
+    private void EventController_OnCoinCollected(Vector2 vector) {
+        PlaySound(audioRefs.coinCollect, vector);
     }
 
     private void RewardedAds_OnRewardedAdComplete(object sender, System.EventArgs e) {
@@ -29,19 +42,13 @@ public class AudioController : Singleton<AudioController> {
     private void Player_OnPlayerTeleport(object sender, Player.OnPlayerTeleportEventArgs e) {
         PlaySound(audioRefs.teleport, e.position);
     }
-
-    private void Player_OnPlayerHitWall(object sender, Player.OnPlayerHitWallEventArgs e) {
-        PlaySound(audioRefs.hitWall, e.position);
+    private void EventController_OnPaintCollected(Vector2 e) {
+        PlaySound(audioRefs.colourCollect, e);
     }
 
-    private void Player_OnPaintChanged(object sender, Player.OnPaintChangedEventArgs e) {
-        // Paint collected run audio of paint collected
-        PlaySound(audioRefs.colourCollect, e.paint.transform.position);
-    }
-
-    private void Player_OnStarCollected(object sender, Player.OnStarCollectedEventArgs e) {
+    private void EventController_OnStarCollected(Vector2 e) {
         // Star collected run audio of star collected
-        PlaySound(audioRefs.starCollect, e.collidedStar.transform.position);
+        PlaySound(audioRefs.starCollect, e);
     }
     public void PlayStarEntrySound() {
         PlaySound(audioRefs.starUIEntry, transform.position);

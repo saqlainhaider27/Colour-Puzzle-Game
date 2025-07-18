@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7750485349766200443}
   - component: {fileID: 8652283416445309426}
   - component: {fileID: 8984092640295951970}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WinPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7392662566023513381}
   - component: {fileID: 5750092377642412725}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: WinPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 7384270434608631785}
   - component: {fileID: 901884968257613682}
   - component: {fileID: 2168786746055338787}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

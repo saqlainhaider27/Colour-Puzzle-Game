@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Paint : NonCollideable {
+public class Paint : MonoBehaviour, ICollectable {
 
     [SerializeField] private Colour currentPaintColour;
     private ParticleSystem particle;
@@ -9,15 +9,6 @@ public class Paint : NonCollideable {
 
     private void Awake() {
         particle = GetComponentInChildren<ParticleSystem>();
-
-        Player.Instance.OnPaintChanged += Player_OnPaintChanged;
-    }
-    private void Player_OnPaintChanged(object sender, Player.OnPaintChangedEventArgs e) {
-        if (this != e.paint) {
-            return;
-        }
-        particle.Play();
-
     }
     public Colour GetPaintColour() {
         return currentPaintColour;
@@ -30,5 +21,15 @@ public class Paint : NonCollideable {
 
     public void DestroySelf() {
         Destroy(gameObject);
+    }
+
+    public void Collect() {
+        bool switchColour = ColourSwitcher.Instance.IsColourDifferent(this);
+        if (switchColour) {
+            ColourSwitcher.Instance.SwitchColour(this);
+            EventController.Invoke(EventController.OnPaintCollected, this.transform.position);
+            this.particle.Play();
+        }
+        
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TeleportPoint : NonCollideable {
+public class TeleportPoint : MonoBehaviour , ICollectable {
 
     [System.Serializable]
     public enum MoveDirections {
@@ -42,24 +42,18 @@ public class TeleportPoint : NonCollideable {
             break;
         }
     }
-    // Teleport the player and set the new movement direction
     public void TeleportPlayer(Transform playerTransform, out Vector2 modifiedMoveDirection) {
         if (Teleported) {
-            // Prevent multiple teleportations
             modifiedMoveDirection = Vector2.zero;
             return;
         }
 
-        // Move player to the target teleport point's position
         playerTransform.position = toTeleportPoint.transform.position;
-        // Set new movement direction after teleportation
         modifiedMoveDirection = moveDirVector;
 
-        // Mark both teleport points as "used"
         this.Teleported = true;
         toTeleportPoint.Teleported = true;
 
-        // Start cooldown to prevent immediate teleporting again
         StartCoroutine(ResetTeleportCoolDown());
     }
 
@@ -67,8 +61,17 @@ public class TeleportPoint : NonCollideable {
         const float TELEPORT_COOLDOWN = 0.1f;
         yield return new WaitForSeconds(TELEPORT_COOLDOWN);
 
-        // Reset the teleported status after the cooldown
         this.Teleported = false;
         toTeleportPoint.Teleported = false;
+    }
+
+    public void Collect() {
+        if (!Teleported) {
+            //Player.Instance.transform.position = toTeleportPoint.transform.position;
+            //this.Teleported = true;
+            //toTeleportPoint.Teleported = true;
+            //EventController.Invoke(EventController.OnTeleport, moveDirVector);
+            //StartCoroutine(ResetTeleportCoolDown());
+        }
     }
 }

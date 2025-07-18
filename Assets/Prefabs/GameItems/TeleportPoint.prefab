@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5433665626188493844}
   - component: {fileID: 7546767330875679489}
   - component: {fileID: 6509310561158817803}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: TeleportPointMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 5175734460121812628}
   - component: {fileID: 4232058156048135276}
   - component: {fileID: 3186506276808965678}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: TeleportPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

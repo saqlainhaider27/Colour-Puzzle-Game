@@ -7,7 +7,7 @@ public class WallColourController : Singleton<WallColourController> {
     }
 
     public bool IsColourDifferent(Wall wall) {
-        if (player.GetPlayerColour() != wall.GetWallColour()) {
+        if (player.GetColour() != wall.GetColour()) {
             return true;
         }
         return false;

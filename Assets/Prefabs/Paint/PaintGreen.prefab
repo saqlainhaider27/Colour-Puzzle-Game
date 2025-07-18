@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 462849834507908038}
   - component: {fileID: 3102280299898976401}
   - component: {fileID: 7014550842239615037}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4904,7 +4904,7 @@ GameObject:
   - component: {fileID: 2402347050454872412}
   - component: {fileID: 9062385246291179794}
   - component: {fileID: -6658361163055103173}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: PaintGreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4950,7 +4950,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

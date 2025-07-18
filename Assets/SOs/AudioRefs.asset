@@ -28,3 +28,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6f9d67dbe726f4343aee680c1b5997cf, type: 3}
   revive:
   - {fileID: 8300000, guid: 55bc219eadeabe441b184fcb9a76925f, type: 3}
+  coinCollect:
+  - {fileID: 8300000, guid: bb4da9a9e3ee81148a8f3143ec5971dd, type: 3}

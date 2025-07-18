@@ -53,7 +53,7 @@ MonoBehaviour:
   minimumDistance: 0.2
   maximumTime: 1
   directionThreshold: 0.8
-  moveSpeed: 5
+  speed: 5
   playerMeshes:
   - {fileID: 260083841579568714}
   - {fileID: 1980022700397334840}
@@ -63,6 +63,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentColour: 2
+  collectableLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!50 &7087831327156291239
 Rigidbody2D:
   serializedVersion: 5
@@ -204,6 +207,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7718333642948029036, guid: 3ef8db820ebb74747b5e545344485c3f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 8599385941347936918, guid: 3ef8db820ebb74747b5e545344485c3f, type: 3}
       propertyPath: player
       value: 
@@ -5278,6 +5285,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4135331629613012521, guid: 4b7521e0af0dba44f9defef5c04a9fbb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10352,6 +10363,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 5479690642101069293}
+    - target: {fileID: 8068779201982791958, guid: e5d528dccb4c68643842087dfed5c308, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15358,6 +15373,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3084461576486066263}
     m_Modifications:
+    - target: {fileID: 4104275235381157824, guid: f79dd1c59e8644d40907a20432da62e3, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 4684124674220787569, guid: f79dd1c59e8644d40907a20432da62e3, type: 3}
       propertyPath: m_Name
       value: PlayerMeshOrange

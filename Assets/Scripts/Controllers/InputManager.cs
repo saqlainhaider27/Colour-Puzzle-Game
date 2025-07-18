@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,21 +23,16 @@ public class InputManager : Singleton<InputManager> {
     private void Start() {
         inputActions.Touch.PrimaryContact.started += ctx => PrimaryContact_started(ctx);
         inputActions.Touch.PrimaryContact.canceled += ctx => PrimaryContact_canceled(ctx);
-
     }
     private void PrimaryContact_started(InputAction.CallbackContext context) {
-        if (OnStartTouch != null) {
-            OnStartTouch(Utils.ScreenToWorld(Camera.main, inputActions.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.startTime);
-        }
+        OnStartTouch?.Invoke(inputActions.Touch.PrimaryPosition.ReadValue<Vector2>(), (float)context.startTime);
+
     }
 
     private void PrimaryContact_canceled(InputAction.CallbackContext context) {
-        if (OnEndTouch != null) {
-            OnEndTouch(Utils.ScreenToWorld(Camera.main, inputActions.Touch.PrimaryPosition.ReadValue<Vector2>()), (float)context.time);
-        }
+        OnEndTouch?.Invoke(inputActions.Touch.PrimaryPosition.ReadValue<Vector2>(), (float)context.time);
+
     }
-
-
     private void OnEnable() {
         inputActions.Enable();
     }

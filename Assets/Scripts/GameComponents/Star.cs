@@ -1,18 +1,9 @@
 using UnityEngine;
 
-public class Star : NonCollideable {
+public class Star : MonoBehaviour, ICollectable {
     private ParticleSystem particle;
     private void Awake() {
         particle = GetComponentInChildren<ParticleSystem>();
-
-        Player.Instance.OnStarCollected += Player_OnStarCollected;
-    }
-    private void Player_OnStarCollected(object sender, Player.OnStarCollectedEventArgs e) {
-        if (this != e.collidedStar) {
-            return;
-        }
-        particle.Play();
-        DisableStarAndDestroy();
     }
 
     public void DisableStarAndDestroy() {
@@ -23,5 +14,11 @@ public class Star : NonCollideable {
 
     public void DestroySelf() {
         Destroy(gameObject);
+    }
+
+    public void Collect() {
+        this.particle.Play();
+        DisableStarAndDestroy();
+        EventController.Invoke(EventController.OnStarCollected, this.transform.position);
     }
 }

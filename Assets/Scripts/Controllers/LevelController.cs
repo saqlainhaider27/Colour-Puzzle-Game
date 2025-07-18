@@ -19,7 +19,10 @@ public class LevelController : Singleton<LevelController> {
             PlayerPrefs.SetInt(COMPLETED_LEVELS, 0);
         }
         // Unlocks the levels that are completed and the next one along with it
-        for (int i = 0; i < PlayerPrefs.GetInt(COMPLETED_LEVELS) + 1; i++) {
+        for (int i = 0; i <= PlayerPrefs.GetInt(COMPLETED_LEVELS); i++) {
+            if (i == levels.Count) {
+                break;
+            }
             OnLevelCompleted?.Invoke(this, new OnLevelCompletedEventArgs {
                 completedLevel = levels[i]
             });

@@ -1,57 +1,31 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TechJuego.InputControl;
 using UnityEngine;
-[RequireComponent(typeof(Rigidbody2D))]
+using UnityEngine.XR;
+
 public class Player : Singleton<Player> {
 
-
-    private Rigidbody2D rb;
-
-    [Header("Swipe Settings")]
-    [SerializeField] private float minimumDistance = .2f;
-    [SerializeField] private float maximumTime = 1f;
-    [SerializeField, Range(0f, 1f)] private float directionThreshold = .9f;
-
-    private Vector2 startPosition;
-    private float startTime;
-
-    private Vector2 endPosition;
-    private float endTime;
-
-    private Vector2 direction2D;
-
     [Header("Player Settings")]
-    [SerializeField] private float moveSpeed;
-    private Vector2 moveDirection ;
-    private Vector2 newMoveDirection; // As player changes direction after coming out of teleport point this is the new direction on teleport
+    [SerializeField] private float speed = 5f;
+    private Vector2 moveDirection;
+    private Vector2 newMoveDirection;
     [SerializeField] private List<GameObject> playerMeshes = new List<GameObject>();
 
     [Header("References")]
     [SerializeField] private LayerMask collisionLayer;
+    [SerializeField] private LayerMask collectableLayer;
     [SerializeField] private Colour currentColour;
-
+    
     private TrailRenderer[] trailRenderers;
 
     public event EventHandler<OnWinPointReachedEventArgs> OnWinPointReached;
-    public class  OnWinPointReachedEventArgs: EventArgs {
+    public class OnWinPointReachedEventArgs : EventArgs {
         public Vector3 position;
-    }
-    public event EventHandler<OnStarCollectedEventArgs> OnStarCollected;
-    public class OnStarCollectedEventArgs : EventArgs {
-        public Star collidedStar;
     }
     public event EventHandler<OnPlayerLoseEventArgs> OnPlayerLose;
     public class OnPlayerLoseEventArgs : EventArgs {
-        public Vector3 position;
-    }
-
-    public event EventHandler<OnPaintChangedEventArgs> OnPaintChanged;
-    public class OnPaintChangedEventArgs : EventArgs{
-        public Paint paint;
-    };
-    public event EventHandler<OnPlayerHitWallEventArgs> OnPlayerHitWall;
-    public class OnPlayerHitWallEventArgs : EventArgs {
         public Vector3 position;
     }
     public event EventHandler<OnPlayerTeleportEventArgs> OnPlayerTeleport;
@@ -59,85 +33,69 @@ public class Player : Singleton<Player> {
         public Vector3 position;
     }
 
-    private bool generated = false; 
     private bool playerMoving = false;
     private void Start() {
-        rb = GetComponent<Rigidbody2D>();
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
         trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
     }
-    private void FixedUpdate() {
-        // Perform collision check in FixedUpdate for consistent physics-based movement
+    private void Update() {
         bool isObjectInPath = CheckForCollidersInPath();
         if (isObjectInPath && moveDirection != Vector2.zero) {
             MovePlayer();
             RotateInMoveDirection();
-        }
-        else {
+        } else {
             StopPlayer();
         }
     }
-    private void Update() {
-        // Detect swipe and set moveDirection in Update, caching the input
-        // Swipe detection logic here sets moveDirection accordingly
+    private void OnEnable() {
+        SwipeController.Instance.OnSwipeUp += SwipeController_OnSwipeUp;
+        SwipeController.Instance.OnSwipeDown += SwipeController_OnSwipeDown;
+        SwipeController.Instance.OnSwipeLeft += SwipeController_OnSwipeLeft;
+        SwipeController.Instance.OnSwipeRight += SwipeController_OnSwipeRight;
+
+        EventController.OnTeleport += EventController_OnTeleport;
     }
 
-    private void OnEnable() {
-        InputManager.Instance.OnStartTouch += SwipeStart;
-        InputManager.Instance.OnEndTouch += SwipeEnd;
+    private void EventController_OnTeleport(Vector2 vector) {
+        PauseTrail();
+        StopPlayer();
+        this.moveDirection = vector;
+        MovePlayer();
     }
 
     private void OnDisable() {
-        InputManager.Instance.OnStartTouch -= SwipeStart;
-        InputManager.Instance.OnEndTouch -= SwipeEnd;
+        SwipeController.Instance.OnSwipeUp -= SwipeController_OnSwipeUp;
+        SwipeController.Instance.OnSwipeDown -= SwipeController_OnSwipeDown;
+        SwipeController.Instance.OnSwipeLeft -= SwipeController_OnSwipeLeft;
+        SwipeController.Instance.OnSwipeRight -= SwipeController_OnSwipeRight;
     }
 
-    private void SwipeStart(Vector2 position, float time) {
-        startPosition = position;
-        startTime = time;
+    private void SwipeController_OnSwipeRight() {
+        moveDirection = Vector2.right;
     }
 
-    private void SwipeEnd(Vector2 position, float time) {
-        endPosition = position;
-        endTime = time;
-        DetectSwipe();
+    private void SwipeController_OnSwipeLeft() {
+        moveDirection = Vector2.left;
     }
 
-    private void DetectSwipe() {
-        if (Vector3.Distance(startPosition, endPosition) >= minimumDistance && (endTime - startTime) <= maximumTime) {
-            Debug.DrawLine(startPosition, endPosition, Color.red, 5f);
-            Vector3 direction = endPosition - startPosition;
-            direction2D = (Vector2)direction.normalized;
-            // direction2D = new Vector2(direction.x, direction.y).normalized;
-            SwipeDirection(direction2D);
-        }
+    private void SwipeController_OnSwipeDown() {
+        moveDirection = Vector2.down;
     }
 
-    private void SwipeDirection(Vector2 direction) {
-        if (Vector2.Dot(Vector2.up, direction) > directionThreshold) {
-            moveDirection = Vector2.up;
-        }
-        else if (Vector2.Dot(Vector2.down, direction) > directionThreshold) {
-            moveDirection = Vector2.down;
-        }
-        else if (Vector2.Dot(Vector2.left, direction) > directionThreshold) {
-            moveDirection = Vector2.left;
-        }
-        else if (Vector2.Dot(Vector2.right, direction) > directionThreshold) {
-            moveDirection = Vector2.right;
-        }
-        //Debug.Log(moveDirection);
+    private void SwipeController_OnSwipeUp() {
+        moveDirection = Vector2.up;
     }
+
+
+
     private void MovePlayer() {
-        // Set the Rigidbody2D velocity instead of directly modifying transform position
         playerMoving = true;
-        moveSpeed = 5f;
-        rb.linearVelocity = moveDirection * moveSpeed;
+        transform.position += (Vector3)(moveDirection * speed * Time.deltaTime);
+
     }
 
     private void StopPlayer() {
         playerMoving = false;
-        rb.linearVelocity = Vector2.zero;
         moveDirection = Vector2.zero;
     }
 
@@ -146,99 +104,53 @@ public class Player : Singleton<Player> {
         Vector2 size = new Vector2(0.3f, 0.3f);
         float length = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collisionLayer);
-        //RaycastHit2D raycastHit = Physics2D.Raycast(transform.position, moveDirection, raycastLength, collisionLayer);
-
+        RaycastHit2D collectableHit = Physics2D.BoxCast(transform.position, size, 0, moveDirection, length, collectableLayer);
         if (raycastHit) {
-            if (CheckWallCollision(raycastHit)) {
-                return false;
-            }
-            if (CheckForNonCollideables(raycastHit)) {
-                return true;
-            }
+            CheckWallCollision(raycastHit);
             return false;
         }
+        if (collectableHit) {
+            CheckForCollectables(collectableHit);
+            return true;
+        }
 
-        return CheckWinPointProximity(); 
+
+        return CheckWinPointProximity();
     }
 
-    private bool CheckForNonCollideables(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.TryGetComponent<NonCollideable>(out NonCollideable collidedItem)) {
-            // collidedItem.OnCollided();
-            if (collidedItem is TeleportPoint) {
-                TeleportPoint teleportPoint = (TeleportPoint)collidedItem;
-                HandleTeleport(teleportPoint);
-            }
-            else if (collidedItem is Star) {
-                Star star = (Star)collidedItem;
-                HandleStarCollection(star);
-            } 
-            else if (collidedItem is Paint) {
-                Paint paint = (Paint)collidedItem;
-                HandlePaintCollection(paint);
+    private void CheckForCollectables(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.TryGetComponent<ICollectable>(out ICollectable collectable)) {
+            collectable.Collect();
+            if (collectable is TeleportPoint) {
+                HandleTeleport((TeleportPoint) collectable);
             }
         }
-        return true;
     }
 
-    private void HandleStarCollection(Star _collidedStar) {
-        OnStarCollected?.Invoke(this, new OnStarCollectedEventArgs {
-            collidedStar = _collidedStar
-        });
-    }
-
-    private bool CheckWallCollision(RaycastHit2D raycastHit) {
-        if (raycastHit.collider.TryGetComponent<Wall>(out Wall collidedWall)) {
+    private void CheckWallCollision(RaycastHit2D raycastHit) {
+        if (raycastHit.collider.TryGetComponent<ICollidable>(out ICollidable collidable)) {
+            collidable.Collide();
             RotateAwayFromCollision(raycastHit.point);
             StopPlayer();
 
-            bool isColourDifferent = WallColourController.Instance.IsColourDifferent(collidedWall);
+            bool isColourDifferent = WallColourController.Instance.IsColourDifferent((Wall)collidable);
 
             if (!isColourDifferent) {
                 // The player's color matches the wall's color; play particle effect
-
                 if (moveDirection == Vector2.zero) {
-                    OnPlayerHitWall?.Invoke(this, new OnPlayerHitWallEventArgs {
-                        position = transform.position
-                    });
                     PlayWallCollisionParticles();
                 }
 
-            }
-            else {
-                // Play lose sound before destory
+            } else {
+                // Play lose sound before destroy
                 OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
                     position = transform.position
                 });
+                StopPlayer();
                 HideSelf(); // Player loses when colliding to a wall
                 GameManager.Instance.State = GameStates.Lose;
             }
-
-            return true; // A valid collision with a wall occurred
         }
-
-        return false; // No wall collision detected
-    }
-
-    private void HandlePaintCollection(Paint collidedPaint) {
-        bool switchColour = ColourSwitcher.Instance.IsColourDifferent(collidedPaint);
-
-        if (switchColour) {
-            generated = false;
-        }
-        else {
-            return;
-        }
-
-        if (!generated) {
-            ColourSwitcher.Instance.SwitchColour(collidedPaint);
-
-            OnPaintChanged?.Invoke(this, new OnPaintChangedEventArgs {
-                paint = collidedPaint
-            });
-
-            generated = true;
-        }
-
     }
     private void HandleTeleport(TeleportPoint teleportPoint) {
         if (!teleportPoint.Teleported) {
@@ -269,6 +181,7 @@ public class Player : Singleton<Player> {
             OnWinPointReached?.Invoke(this, new OnWinPointReachedEventArgs {
                 position = transform.position
             });
+            StopPlayer();
             HideSelf();
             return false; // Return false as the player should stop when it reaches win point   
         }
@@ -306,19 +219,11 @@ public class Player : Singleton<Player> {
         }
     }
 
-
-
-    public void DestroySelf() {
-
-        Destroy(gameObject);
-    }
-
-
     public void HideMeshWithColour(Colour hideColour) {
         // All the required meshes are a child of the player
         // Cycles through the children and hides all children
         foreach (GameObject playerMesh in playerMeshes) {
-            if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() ==  hideColour) {
+            if (playerMesh.gameObject.GetComponent<PlayerColour>().GetCurrentPlayerMeshColour() == hideColour) {
                 playerMesh.gameObject.SetActive(false);
             }
         }
@@ -336,7 +241,6 @@ public class Player : Singleton<Player> {
 
 
     public void HideSelf() {
-        StopPlayer();
         this.gameObject.SetActive(false);
     }
     public void ShowSelf() {
@@ -355,8 +259,7 @@ public class Player : Singleton<Player> {
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, -snappedAngle));
     }
 
-
-    public Colour GetPlayerColour() {
+    public Colour GetColour() {
         return currentColour;
     }
 

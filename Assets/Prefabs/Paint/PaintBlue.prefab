@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6219372374754431856}
   - component: {fileID: 6616977281664586748}
   - component: {fileID: -2191376007214095732}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: PaintBlue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4493948275654491370}
   - component: {fileID: 1935144277408130169}
   - component: {fileID: 9166447309212703331}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
