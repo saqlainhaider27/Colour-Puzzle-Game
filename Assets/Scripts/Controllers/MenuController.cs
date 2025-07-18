@@ -28,6 +28,10 @@ public class MenuController : Singleton<MenuController> {
         HideMainMenu();
         ShowLevelMenu();
     }
+    public void Back() {
+        HideLevelMenu();
+        ShowMainMenu();
+    }
 
     public void Quit() {
 #if UNITY_EDITOR

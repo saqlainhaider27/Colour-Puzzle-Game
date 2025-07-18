@@ -9,7 +9,6 @@ public class Levels : MonoBehaviour {
     [SerializeField] private List<Image> levelStars = new List<Image>();
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private LockImage lockSprite;
-
     private Button button;
     private void Awake() {
 
@@ -18,6 +17,7 @@ public class Levels : MonoBehaviour {
         button = GetComponent<Button>();
 
         button.onClick.AddListener(() => {
+            EventController.Invoke(EventController.OnNextLevelStarted);
             MenuController.Instance.LoadLevel(level);
         });
 

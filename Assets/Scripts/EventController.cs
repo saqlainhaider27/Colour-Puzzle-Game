@@ -7,6 +7,7 @@ public static class EventController {
     public static Action<Vector2> OnPaintCollected;
     public static Action<Vector2> OnTeleport;
     public static Action<Vector2> OnWallCollision;
+    public static Action OnNextLevelStarted;
     public static void Invoke(Action action) {
         action.Invoke();
     }

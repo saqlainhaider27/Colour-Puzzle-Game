@@ -99,10 +99,12 @@ public class UIController : Singleton<UIController> {
 
     public void Next() {
         ExitMenu();
+        EventController.Invoke(EventController.OnNextLevelStarted);
         StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
     public void PreviousLevel() {
         ExitMenu();
+        EventController.Invoke(EventController.OnNextLevelStarted);
         StartCoroutine(InvokeEventAfterDelay(OnLoadPreviousLevel, 0.5f));
     }
     private void ExitMenu(float delay = 0.5f) {
@@ -135,6 +137,7 @@ public class UIController : Singleton<UIController> {
             Resume();
         }
         ExitMenu();
+        EventController.Invoke(EventController.OnNextLevelStarted);
         StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }
     public void Pause() {
