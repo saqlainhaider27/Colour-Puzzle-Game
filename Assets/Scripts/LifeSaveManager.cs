@@ -2,13 +2,15 @@ using System;
 using UnityEngine;
 
 public class LifeSaveManager : Singleton<LifeSaveManager> {
-    private int lifes = 5;
-    private float lifeTimer = 0f;
+    private int lifes;
     private const int maxLifes = 5;
-    private const float lifeIncrementInterval = 10f; // 5 minutes in seconds
+    public float LifeIncrementInterval { get; private set; } = 300f; // 5 minutes = 300 seconds
+
     private const string LifesKey = "Lifes";
-    private const string LastQuitTimeKey = "LastQuitTime";
-    private const string LifeTimerKey = "LifeTimer";
+    private const string LastTimeKey = "LastLifeUpdateTime";
+    private const string UnprocessedTimeKey = "UnprocessedLifeTime";
+    private bool unlimitedLifes = false;
+    public event Action<int> OnLifeValueChanged;
 
     public int Lifes {
         get {
@@ -21,78 +23,74 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
             return lifes;
         }
         set {
-            lifes = value;
+            lifes = Mathf.Clamp(value, 0, maxLifes);
             PlayerPrefs.SetInt(LifesKey, lifes);
+            OnLifeValueChanged?.Invoke(lifes);
         }
     }
 
-    private void Start() {
-        RecoverLifesOnResume();
-        EventController.OnNextLevelStarted += EventController_OnNextLevelStarted;
-    }
+    private float unprocessedTime;
 
-    private void Update() {
-        if (Lifes < maxLifes) {
-            lifeTimer += Time.deltaTime;
-            if (lifeTimer >= lifeIncrementInterval) {
-                Lifes = Mathf.Min(maxLifes, Lifes + 1);
-                lifeTimer = 0f;
-            }
-        } else {
-            lifeTimer = 0f;
-        }
-    }
-
-    private void OnApplicationPause(bool pause) {
-        if (pause) {
-            SaveLifeState();
-        } else {
-            RecoverLifesOnResume();
-        }
+    private void Awake() {
+        DontDestroyOnLoad(this);
+        RestoreLifeFromBackground();
     }
 
     private void OnApplicationQuit() {
-        SaveLifeState();
+        SaveTimeData();
     }
 
-    private void SaveLifeState() {
-        PlayerPrefs.SetString(LastQuitTimeKey, DateTime.UtcNow.ToString("o"));
-        PlayerPrefs.SetFloat(LifeTimerKey, lifeTimer);
-    }
+    private void Update() {
+        if (Lifes == maxLifes) return;
 
-    private void RecoverLifesOnResume() {
-        if (PlayerPrefs.HasKey(LastQuitTimeKey)) {
-            string lastQuitTimeStr = PlayerPrefs.GetString(LastQuitTimeKey, "");
-            if (DateTime.TryParse(lastQuitTimeStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out DateTime lastQuitTime)) {
-                TimeSpan timeAway = DateTime.UtcNow - lastQuitTime;
-                int lifesToRecover = (int)(timeAway.TotalSeconds / lifeIncrementInterval);
+        unprocessedTime += Time.deltaTime;
 
-                if (Lifes < maxLifes && lifesToRecover > 0) {
-                    int newLifes = Mathf.Min(maxLifes, Lifes + lifesToRecover);
-                    Lifes = newLifes;
-                }
-
-                // Calculate leftover time for timer
-                float leftoverSeconds = (float)(timeAway.TotalSeconds % lifeIncrementInterval);
-
-                // If lifes are maxed, reset timer, else continue from leftover
-                if (Lifes >= maxLifes) {
-                    lifeTimer = 0f;
-                } else {
-                    lifeTimer = PlayerPrefs.GetFloat(LifeTimerKey, 0f) + leftoverSeconds;
-                    if (lifeTimer >= lifeIncrementInterval) {
-                        Lifes = Mathf.Min(maxLifes, Lifes + 1);
-                        lifeTimer = 0f;
-                    }
-                }
-            }
-        } else {
-            lifeTimer = 0f;
+        if (unprocessedTime >= LifeIncrementInterval) {
+            int livesToAdd = Mathf.FloorToInt(unprocessedTime / LifeIncrementInterval);
+            Lifes += livesToAdd;
+            unprocessedTime -= livesToAdd * LifeIncrementInterval;
         }
     }
 
-    private void EventController_OnNextLevelStarted() {
+    private void SaveTimeData() {
+        PlayerPrefs.SetFloat(UnprocessedTimeKey, unprocessedTime);
+        PlayerPrefs.SetString(LastTimeKey, DateTime.Now.ToString("o")); // ISO 8601 format
+    }
+
+    private void RestoreLifeFromBackground() {
+        if (!PlayerPrefs.HasKey(LastTimeKey)) return;
+
+        DateTime lastTime = DateTime.Parse(PlayerPrefs.GetString(LastTimeKey));
+        Debug.Log(lastTime.ToString());
+        Debug.Log(DateTime.Now.ToString());
+        TimeSpan timePassed = DateTime.Now - lastTime;
+        float savedUnprocessed = PlayerPrefs.GetFloat(UnprocessedTimeKey, 0f);
+        float totalElapsedSeconds = (float)timePassed.TotalSeconds + savedUnprocessed;
+        Debug.Log(totalElapsedSeconds);
+        int livesToAdd = (int)(totalElapsedSeconds / LifeIncrementInterval);
+        totalElapsedSeconds -= livesToAdd * LifeIncrementInterval;
+        unprocessedTime = totalElapsedSeconds;
+        Lifes += livesToAdd;
+        if (Lifes > maxLifes ) {
+            Lifes = maxLifes;
+            unprocessedTime = 0f;
+        }
+
+    }
+
+    private void DecrementLife() {
+        if (unlimitedLifes) {
+            return;
+        }
         Lifes = Mathf.Max(0, Lifes - 1);
-        Debug.Log("Lives: " + Lifes);
+        EventController.OnLevelChanged -= DecrementLife;
+    }
+
+    public void SubscribeToOnLevelChanged() {
+        EventController.OnLevelChanged += DecrementLife;
+    }
+
+    public float GetCurrentTimer() {
+        return unprocessedTime;
     }
 }

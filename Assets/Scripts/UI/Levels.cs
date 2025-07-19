@@ -17,7 +17,12 @@ public class Levels : MonoBehaviour {
         button = GetComponent<Button>();
 
         button.onClick.AddListener(() => {
-            EventController.Invoke(EventController.OnNextLevelStarted);
+            if (LifeSaveManager.Instance.Lifes == 0) {
+                EventController.Invoke(EventController.OnZeroLifes);
+                return;
+            }
+            LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+            EventController.Invoke(EventController.OnLevelChanged);
             MenuController.Instance.LoadLevel(level);
         });
 
@@ -30,6 +35,10 @@ public class Levels : MonoBehaviour {
         }
 
         LevelController.Instance.OnLevelCompleted += LevelController_OnLevelCompleted;
+    }
+    
+    private void OnDisable() {
+        button.onClick.RemoveAllListeners();
     }
     private void LevelController_OnLevelCompleted(object sender, LevelController.OnLevelCompletedEventArgs e) {
         if (e.completedLevel == this) {

@@ -50,10 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9bc54c7798388344a4077c983bf2feb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumDistance: 0.2
-  maximumTime: 1
-  directionThreshold: 0.8
-  speed: 5
+  speed: 8
   playerMeshes:
   - {fileID: 260083841579568714}
   - {fileID: 1980022700397334840}
@@ -62,10 +59,10 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 64
-  currentColour: 2
   collectableLayer:
     serializedVersion: 2
     m_Bits: 128
+  currentColour: 2
 --- !u!50 &7087831327156291239
 Rigidbody2D:
   serializedVersion: 5
@@ -91,7 +88,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &670640328498885766
 BoxCollider2D:

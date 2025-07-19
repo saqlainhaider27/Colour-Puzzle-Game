@@ -16,6 +16,10 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private GameObject sceneTransition;
     [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
     [SerializeField] private AudioSource musicSource;
+    [SerializeField] private GameObject lifesMenu;
+    [SerializeField] private GameObject UIBlur;
+
+    public bool HasLevelStarted { get; internal set; } = false;
 
     private void Start() {
         ShowMainMenu();
@@ -67,7 +71,17 @@ public class MenuController : Singleton<MenuController> {
     public void LoadLevel(int _level) {
         StartCoroutine(LoadSceneWithTransition(_level));
     }
-
+    public void Lifes() {
+        UIBlur.SetActive(true);
+        lifesMenu.SetActive(true);
+    }
+    public void GetLife() {
+        LifeSaveManager.Instance.Lifes += 1;
+    }
+    public void CloseLifesMenu() {
+        UIBlur.SetActive(false);
+        lifesMenu.SetActive(false);
+    }
     private IEnumerator LoadSceneWithTransition(int index) {
         StartCoroutine(MusicFadeOut()); // Start the music fade-out
         OnSceneChanged?.Invoke(this, EventArgs.Empty);

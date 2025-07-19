@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TechJuego.InputControl;
 using UnityEngine;
-using UnityEngine.XR;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Player : Singleton<Player> {
+    private Rigidbody2D rb;
+
 
     [Header("Player Settings")]
     [SerializeField] private float speed = 5f;
@@ -34,11 +36,14 @@ public class Player : Singleton<Player> {
     }
 
     private bool playerMoving = false;
+    private bool canMove = true;
     private void Start() {
+        rb = GetComponent<Rigidbody2D>();
+
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
         trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
     }
-    private void Update() {
+    private void FixedUpdate() {
         bool isObjectInPath = CheckForCollidersInPath();
         if (isObjectInPath && moveDirection != Vector2.zero) {
             MovePlayer();
@@ -47,6 +52,12 @@ public class Player : Singleton<Player> {
             StopPlayer();
         }
     }
+    //private void FixedUpdate() {
+    //    if (Physics2D.OverlapBox(transform.position, new Vector2(0.3f, 0.3f), 0, collisionLayer)) {
+    //        canMove = true;
+    //        StopPlayer(); // or snap out
+    //    }
+    //}
     private void OnEnable() {
         SwipeController.Instance.OnSwipeUp += SwipeController_OnSwipeUp;
         SwipeController.Instance.OnSwipeDown += SwipeController_OnSwipeDown;
@@ -54,6 +65,12 @@ public class Player : Singleton<Player> {
         SwipeController.Instance.OnSwipeRight += SwipeController_OnSwipeRight;
 
         EventController.OnTeleport += EventController_OnTeleport;
+        UIController.Instance.OnMenuExit += UIController_OnMenuExit;
+    }
+
+    private void UIController_OnMenuExit(object sender, UIController.OnMenuExitEventArgs e) {
+        moveDirection = Vector2.zero;
+        canMove = true;
     }
 
     private void EventController_OnTeleport(Vector2 vector) {
@@ -62,7 +79,6 @@ public class Player : Singleton<Player> {
         this.moveDirection = vector;
         MovePlayer();
     }
-
     private void OnDisable() {
         SwipeController.Instance.OnSwipeUp -= SwipeController_OnSwipeUp;
         SwipeController.Instance.OnSwipeDown -= SwipeController_OnSwipeDown;
@@ -71,28 +87,41 @@ public class Player : Singleton<Player> {
     }
 
     private void SwipeController_OnSwipeRight() {
-        moveDirection = Vector2.right;
+        if (canMove) {
+            moveDirection = Vector2.right;
+            canMove = false;
+        }
     }
 
     private void SwipeController_OnSwipeLeft() {
-        moveDirection = Vector2.left;
+        if (canMove) {
+            moveDirection = Vector2.left;
+            canMove = false;
+        }
     }
 
     private void SwipeController_OnSwipeDown() {
-        moveDirection = Vector2.down;
+        if (canMove) {
+            moveDirection = Vector2.down;
+            canMove = false;
+        }
     }
 
     private void SwipeController_OnSwipeUp() {
-        moveDirection = Vector2.up;
+        if (canMove) {
+            moveDirection = Vector2.up;
+            canMove = false;
+        }
     }
 
 
 
     private void MovePlayer() {
         playerMoving = true;
-        transform.position += (Vector3)(moveDirection * speed * Time.deltaTime);
-
+        Vector2 newPosition = rb.position + moveDirection * speed * Time.deltaTime;
+        rb.MovePosition(newPosition);
     }
+
 
     private void StopPlayer() {
         playerMoving = false;
@@ -137,12 +166,13 @@ public class Player : Singleton<Player> {
 
             if (!isColourDifferent) {
                 // The player's color matches the wall's color; play particle effect
+                canMove = true;
                 if (moveDirection == Vector2.zero) {
                     PlayWallCollisionParticles();
                 }
 
             } else {
-                // Play lose sound before destroy
+                // Play lose sound before destroy;
                 OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
                     position = transform.position
                 });

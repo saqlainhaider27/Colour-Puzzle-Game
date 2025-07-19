@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class LifesVisual : MonoBehaviour {
-    [SerializeField] private float lifeGiveCoolDown = 5f;
     private Life[] lifes;
     private int savedLifes;
     private void Awake() {
@@ -10,13 +9,26 @@ public class LifesVisual : MonoBehaviour {
         savedLifes = LifeSaveManager.Instance.Lifes;
         UpdateLivesVisual();
     }
+    private void Start() {
+        LifeSaveManager.Instance.OnLifeValueChanged += LifeSaveManager_OnLifeValueChanged;
+
+    }
+    private void OnDestroy() {
+        LifeSaveManager.Instance.OnLifeValueChanged -= LifeSaveManager_OnLifeValueChanged;
+    }
+
+    private void LifeSaveManager_OnLifeValueChanged(int obj) {
+        lifes = GetComponentsInChildren<Life>();
+        savedLifes = obj;
+        UpdateLivesVisual();
+    }
+
     private void UpdateLivesVisual() {
-        for (int i = 0; i < lifes.Length; i++) {
-            if (i < savedLifes) {
-                lifes[i].GiveLife();
-            } else {
-                lifes[i].TakeLife();
-            }
+        for (int i = 0; i < savedLifes; i++) {
+            lifes[i].GiveLife();
+        }
+        for (int i = savedLifes; i < lifes.Length; i++) {
+            lifes[i].TakeLife();
         }
     }
 }

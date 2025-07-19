@@ -98,13 +98,23 @@ public class UIController : Singleton<UIController> {
    
 
     public void Next() {
+        if (LifeSaveManager.Instance.Lifes == 0) {
+            EventController.Invoke(EventController.OnZeroLifes);
+            return;
+        }
         ExitMenu();
-        EventController.Invoke(EventController.OnNextLevelStarted);
+        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
     public void PreviousLevel() {
+        if (LifeSaveManager.Instance.Lifes == 0) {
+            EventController.Invoke(EventController.OnZeroLifes);
+            return;
+        }
         ExitMenu();
-        EventController.Invoke(EventController.OnNextLevelStarted);
+        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnLoadPreviousLevel, 0.5f));
     }
     private void ExitMenu(float delay = 0.5f) {
@@ -133,11 +143,16 @@ public class UIController : Singleton<UIController> {
     }
 
     public void Replay() {
+        if (LifeSaveManager.Instance.Lifes == 0) {
+            EventController.Invoke(EventController.OnZeroLifes);
+            return;
+        }
         if (GameManager.Instance.State == GameStates.Paused) {
             Resume();
         }
         ExitMenu();
-        EventController.Invoke(EventController.OnNextLevelStarted);
+        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }
     public void Pause() {

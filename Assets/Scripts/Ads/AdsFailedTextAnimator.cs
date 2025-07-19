@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class AdsFailedTextAnimator : MonoBehaviour {
-    private const string ADS_FAILED = "AdsFailed";
+    private const string PLAY = "PLAY";
     private Animator animator;
 
     private void Awake() {
@@ -11,7 +11,7 @@ public class AdsFailedTextAnimator : MonoBehaviour {
     }
 
     private void RewardedAds_OnRewardedAdFailed(object sender, System.EventArgs e) {
-        animator.SetTrigger(ADS_FAILED);
+        animator.SetTrigger(PLAY);
     }
 }
 
