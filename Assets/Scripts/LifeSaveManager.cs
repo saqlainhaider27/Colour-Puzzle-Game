@@ -9,7 +9,7 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
     private const string LifesKey = "Lifes";
     private const string LastTimeKey = "LastLifeUpdateTime";
     private const string UnprocessedTimeKey = "UnprocessedLifeTime";
-    private bool unlimitedLifes = false;
+    public bool UnlimitedLifes = false;
     public event Action<int> OnLifeValueChanged;
 
     public int Lifes {
@@ -33,6 +33,14 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
 
     private void Awake() {
         DontDestroyOnLoad(this);
+        if ( PlayerPrefs.HasKey("UnlimitedLifes")) {
+            int i = PlayerPrefs.GetInt("UnlimitedLifes");
+            if (i == 0) {
+                UnlimitedLifes = false;
+            } else {
+                UnlimitedLifes = true;
+            }
+        }
         RestoreLifeFromBackground();
     }
 
@@ -55,6 +63,11 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
     private void SaveTimeData() {
         PlayerPrefs.SetFloat(UnprocessedTimeKey, unprocessedTime);
         PlayerPrefs.SetString(LastTimeKey, DateTime.Now.ToString("o")); // ISO 8601 format
+    }
+    private void OnApplicationPause(bool pause) {
+        if (pause) {
+            SaveTimeData();
+        }
     }
 
     private void RestoreLifeFromBackground() {
@@ -79,7 +92,7 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
     }
 
     private void DecrementLife() {
-        if (unlimitedLifes) {
+        if (UnlimitedLifes) {
             return;
         }
         Lifes = Mathf.Max(0, Lifes - 1);
@@ -92,5 +105,10 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
 
     public float GetCurrentTimer() {
         return unprocessedTime;
+    }
+    public void GetUnlimitedLifes() {
+        Lifes = maxLifes;
+        UnlimitedLifes = true;
+        PlayerPrefs.SetInt("UnlimitedLifes", UnlimitedLifes ? 1 : 0);
     }
 }

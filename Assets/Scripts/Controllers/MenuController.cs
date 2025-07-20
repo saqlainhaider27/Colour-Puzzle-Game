@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,27 +15,41 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject levelsMenu;
     [SerializeField] private GameObject sceneTransition;
-    [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
-    [SerializeField] private AudioSource musicSource;
     [SerializeField] private GameObject lifesMenu;
     [SerializeField] private GameObject UIBlur;
-
-    public bool HasLevelStarted { get; internal set; } = false;
+    [SerializeField] private GameObject shop;
+    [SerializeField] private GameObject settings;
+    [SerializeField] private AudioSource buttonClick;
+    [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
+    [SerializeField] private AudioSource musicSource;
+    public event Action OnMenuExit;
 
     private void Start() {
+        HideShop();
         ShowMainMenu();
         HideLevelMenu();
+        HideSettings();
         musicSource.volume = 0f;
         StartCoroutine(MusicFadeIn());
     }
-
+    public void PlayButtonClick() {
+        buttonClick.Play();
+    }
     public void Play() {
+        HideShop();
         HideMainMenu();
         ShowLevelMenu();
     }
     public void Back() {
+        HideShop();
         HideLevelMenu();
         ShowMainMenu();
+
+    }
+    public void Shop() {
+        HideMainMenu();
+        HideLevelMenu();
+        ShowShop();
     }
 
     public void Quit() {
@@ -50,6 +65,20 @@ public class MenuController : Singleton<MenuController> {
 
     public void Player() {
         playerImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
+    }
+    public void ShowSettings() {
+        UIBlur.SetActive(true);
+        settings.SetActive(true);
+    }
+    public void HideSettings() {
+        OnMenuExit?.Invoke();
+        StartCoroutine(HideSettingsAfterDelay());
+    }
+
+    private IEnumerator HideSettingsAfterDelay(float delay = 0.5f) {
+        yield return new WaitForSeconds(delay);
+        UIBlur.SetActive(false);
+        settings.SetActive(false);
     }
 
     public void ShowMainMenu() {
@@ -67,6 +96,12 @@ public class MenuController : Singleton<MenuController> {
     public void HideLevelMenu() {
         levelsMenu.SetActive(false);
     }
+    public void ShowShop() {
+        shop.SetActive(true);
+    }
+    public void HideShop() {
+        shop.SetActive(false);
+    }
 
     public void LoadLevel(int _level) {
         StartCoroutine(LoadSceneWithTransition(_level));
@@ -79,6 +114,12 @@ public class MenuController : Singleton<MenuController> {
         LifeSaveManager.Instance.Lifes += 1;
     }
     public void CloseLifesMenu() {
+        OnMenuExit.Invoke();
+        StartCoroutine(HideLifesMenuAfterDelay());
+    }
+
+    private IEnumerator HideLifesMenuAfterDelay(float delay = 0.5f) {
+        yield return new WaitForSeconds(delay);
         UIBlur.SetActive(false);
         lifesMenu.SetActive(false);
     }

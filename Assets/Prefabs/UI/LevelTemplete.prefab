@@ -465,7 +465,7 @@ GameObject:
   - component: {fileID: 5405814143653387307}
   - component: {fileID: 8844862151775619354}
   - component: {fileID: 3637980422129397451}
-  - component: {fileID: 5223289123193070340}
+  - component: {fileID: 8776693898629698389}
   m_Layer: 5
   m_Name: LevelTemplete
   m_TagString: Untagged
@@ -611,7 +611,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5223289123193070340
+--- !u!114 &8776693898629698389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -620,7 +620,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5474434925867730833}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 503c8bdbc8324f94e9257309e38255f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 5843689d628b7a748b4595029fb502b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   level: 0
@@ -629,7 +629,7 @@ MonoBehaviour:
   - {fileID: 2949469653503190108}
   - {fileID: 124358588480828050}
   levelText: {fileID: 5426720576878603831}
-  lockSprite: {fileID: 0}
+  lockSprite: {fileID: 5626915293932016393}
 --- !u!1 &6638792276679026783
 GameObject:
   m_ObjectHideFlags: 0

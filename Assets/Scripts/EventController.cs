@@ -9,6 +9,7 @@ public static class EventController {
     public static Action<Vector2> OnWallCollision;
     public static Action OnLevelChanged;
     public static Action OnZeroLifes;
+    public static Action OnInsufficientFunds;
     public static void Invoke(Action action) {
         action?.Invoke();
     }
@@ -21,4 +22,5 @@ public static class EventController {
     public static void Invoke(Action<int> action, int a) {
         action?.Invoke(a);
     }
+
 }

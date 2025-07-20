@@ -7,7 +7,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private Menu winMenu;
     [SerializeField] private Menu loseMenu;
     [SerializeField] private Menu pauseMenu;
-    [SerializeField] private Menu settingsMenu;
+    // [SerializeField] private Menu settingsMenu;
     [SerializeField] private Menu gameMenu;
     [SerializeField] private Menu cantLoadAds;
     [SerializeField] private GameObject blur;
@@ -57,7 +57,7 @@ public class UIController : Singleton<UIController> {
         gameMenu.HideMenu();
         loseMenu.HideMenu();
         pauseMenu.HideMenu();
-        settingsMenu.HideMenu();
+        // settingsMenu.HideMenu();
         winMenu.HideMenu();
         HideUIBlur();
 
@@ -182,7 +182,7 @@ public class UIController : Singleton<UIController> {
 
         //HideAllMenus();
         ShowUIBlur();
-        StartCoroutine(ShowMenuAfterDelay(settingsMenu, 0.5f));
+        // StartCoroutine(ShowMenuAfterDelay(settingsMenu, 0.5f));
 
     }
 
@@ -197,8 +197,8 @@ public class UIController : Singleton<UIController> {
             return loseMenu;
             case GameStates.Paused:
             return pauseMenu;
-            case GameStates.Setting:
-            return settingsMenu;
+            //case GameStates.Setting:
+            //return settingsMenu;
             default:
             return gameMenu;
         }

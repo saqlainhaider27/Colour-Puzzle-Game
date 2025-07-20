@@ -14,7 +14,7 @@ public class Player : Singleton<Player> {
     private Vector2 moveDirection;
     private Vector2 newMoveDirection;
     [SerializeField] private List<GameObject> playerMeshes = new List<GameObject>();
-
+    [SerializeField] private GameObject shield;
     [Header("References")]
     [SerializeField] private LayerMask collisionLayer;
     [SerializeField] private LayerMask collectableLayer;
@@ -37,6 +37,8 @@ public class Player : Singleton<Player> {
 
     private bool playerMoving = false;
     private bool canMove = true;
+    private bool hasShield = false;
+
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
 
@@ -72,7 +74,10 @@ public class Player : Singleton<Player> {
         moveDirection = Vector2.zero;
         canMove = true;
     }
-
+    public void UseShield() {
+        shield.SetActive(true);
+        hasShield = true;
+    }
     private void EventController_OnTeleport(Vector2 vector) {
         PauseTrail();
         StopPlayer();
@@ -172,6 +177,12 @@ public class Player : Singleton<Player> {
                 }
 
             } else {
+                if (hasShield) {
+                    shield.SetActive(false);
+                    hasShield = false;
+                    canMove = true;
+                    return;
+                }
                 // Play lose sound before destroy;
                 OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
                     position = transform.position

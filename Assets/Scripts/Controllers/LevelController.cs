@@ -9,10 +9,10 @@ public class LevelController : Singleton<LevelController> {
     public event EventHandler<OnLevelCompletedEventArgs> OnLevelCompleted;
     public class OnLevelCompletedEventArgs : EventArgs {
         
-        public Levels completedLevel;
+        public Level completedLevel;
     }
 
-    [SerializeField] private List<Levels> levels = new List<Levels>();
+    [SerializeField] private List<Level> levels = new List<Level>();
 
     private void Update() {
         if (!PlayerPrefs.HasKey(COMPLETED_LEVELS)) {
