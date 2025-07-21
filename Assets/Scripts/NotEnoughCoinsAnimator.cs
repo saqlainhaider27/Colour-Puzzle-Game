@@ -8,18 +8,16 @@ public class NotEnoughCoinsAnimator : MonoBehaviour {
     private void Awake() {
         animator = GetComponent<Animator>();
     }
-    private void Start() {
+    private void OnEnable() {
         EventController.OnInsufficientFunds += EventController_OnInsufficientFunds;
     }
-
+    private void OnDisable() {
+        EventController.OnInsufficientFunds -= EventController_OnInsufficientFunds;
+    }
     private void EventController_OnInsufficientFunds() {
-        MenuController.Instance.PlayFailedSound();
+        GetComponent<AudioSource>().Play();
         HapticFeedbacks.Instance.WarningHaptic();
         animator.SetTrigger(PLAY);
-    }
-
-    private void OnDestroy() {
-        EventController.OnZeroLifes -= EventController_OnInsufficientFunds;
     }
     
 }

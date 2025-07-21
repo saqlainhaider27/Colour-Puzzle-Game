@@ -5,7 +5,7 @@ public class AudioController : Singleton<AudioController> {
 
     [SerializeField] private AudioRefsSO audioRefs;
     private float vol;
-
+    [SerializeField] private AudioSource clickSource;
     private void Awake() {
         EventController.OnStarCollected += EventController_OnStarCollected;
         EventController.OnPaintCollected += EventController_OnPaintCollected;
@@ -23,7 +23,9 @@ public class AudioController : Singleton<AudioController> {
         vol = PlayerPrefs.GetFloat("SFX", 1);
         UIController.Instance.SetSFXSliderValue(vol);
     }
-
+    public void PlayClick() {
+        clickSource.Play();
+    }
     private void Player_OnShieldBreak() {
         PlaySound(audioRefs.shieldBreak, Player.Instance.transform.position);
     }

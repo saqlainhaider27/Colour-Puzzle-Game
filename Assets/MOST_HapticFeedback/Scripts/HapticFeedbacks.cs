@@ -16,13 +16,25 @@ namespace Solo.MOST_IN_ONE
         public Most_HapticFeedback.CustomHapticPattern CustomHapticPatternA;
         public Most_HapticFeedback.CustomHapticPattern CustomHapticPatternB;
 
+        private bool enableNotifications;
         public bool EnableNotifications {
-            get;
-            set;
+            get { 
+                return enableNotifications;
+            }
+            set { 
+                enableNotifications = value;
+                PlayerPrefs.SetInt("Notifications", enableNotifications ? 1 : 0);
+                ToggleHaptics(enableNotifications);
+            }
         }
 
         private void Awake() {
             DontDestroyOnLoad(this);
+            if (PlayerPrefs.GetInt("Notifications", 1) == 1) {
+                enableNotifications = true;
+            } else { 
+                enableNotifications = false;
+            }
         }
         public void GenerateBasicHaptic(Most_HapticFeedback.HapticTypes type)
         {

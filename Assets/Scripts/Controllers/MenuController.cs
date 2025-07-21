@@ -1,3 +1,4 @@
+using Solo.MOST_IN_ONE;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,20 +24,41 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private Slider slider;
+    [SerializeField] private Toggle vibrationsToggle;
     public event Action OnMenuExit;
     private float volume;
     [SerializeField] private AudioSource failedSource;
+    [SerializeField] private AudioSource clickSource;
 
     private void Start() {
         HideShop();
         ShowMainMenu();
         HideLevelMenu();
         HideSettings();
+        NotificationsController.Instance.EnableNotifications = true;
         musicSource.volume = 0f;
-        volume = PlayerPrefs.GetFloat("Music", 0.1f);        
+        volume = PlayerPrefs.GetFloat("Music", 0.1f);
+        vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
         StartCoroutine(MusicFadeIn());
         slider.value = volume * 10;
         slider.onValueChanged.AddListener(OnSliderValueChanged);
+    }
+    private void OnEnable() {
+        vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
+    }
+    private void OnDisable() {
+        vibrationsToggle.onValueChanged.RemoveAllListeners();
+    }
+
+    private void OnVibrationToggle(bool arg0) {
+        if (arg0) {
+            HapticFeedbacks.Instance.EnableNotifications = true;
+        } else {
+            HapticFeedbacks.Instance.EnableNotifications = false;
+        }
+        PlayerPrefs.Save();
+        clickSource.Play();
+        HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
     }
 
     private void OnSliderValueChanged(float arg0) {

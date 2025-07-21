@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class LifeSaveManager : Singleton<LifeSaveManager> {
     private int lifes;
-    private const int maxLifes = 5;
+    public int MaxLifes{
+        get;
+        private set;
+    } = 5; // Default maximum number of lifes
     public float LifeIncrementInterval { get; private set; } = 300f; // 5 minutes = 300 seconds
 
     private const string LifesKey = "Lifes";
@@ -17,13 +20,13 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
             if (PlayerPrefs.HasKey(LifesKey)) {
                 lifes = PlayerPrefs.GetInt(LifesKey);
             } else {
-                lifes = maxLifes;
+                lifes = MaxLifes;
                 PlayerPrefs.SetInt(LifesKey, lifes);
             }
             return lifes;
         }
         set {
-            lifes = Mathf.Clamp(value, 0, maxLifes);
+            lifes = Mathf.Clamp(value, 0, MaxLifes);
             PlayerPrefs.SetInt(LifesKey, lifes);
             OnLifeValueChanged?.Invoke(lifes);
         }
@@ -49,7 +52,7 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
     }
 
     private void Update() {
-        if (Lifes == maxLifes) return;
+        if (Lifes == MaxLifes) return;
 
         unprocessedTime += Time.deltaTime;
 
@@ -74,18 +77,18 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
         if (!PlayerPrefs.HasKey(LastTimeKey)) return;
 
         DateTime lastTime = DateTime.Parse(PlayerPrefs.GetString(LastTimeKey));
-        Debug.Log(lastTime.ToString());
-        Debug.Log(DateTime.Now.ToString());
+        //Debug.Log(lastTime.ToString());
+        //Debug.Log(DateTime.Now.ToString());
         TimeSpan timePassed = DateTime.Now - lastTime;
         float savedUnprocessed = PlayerPrefs.GetFloat(UnprocessedTimeKey, 0f);
         float totalElapsedSeconds = (float)timePassed.TotalSeconds + savedUnprocessed;
-        Debug.Log(totalElapsedSeconds);
+        //Debug.Log(totalElapsedSeconds);
         int livesToAdd = (int)(totalElapsedSeconds / LifeIncrementInterval);
         totalElapsedSeconds -= livesToAdd * LifeIncrementInterval;
         unprocessedTime = totalElapsedSeconds;
         Lifes += livesToAdd;
-        if (Lifes > maxLifes ) {
-            Lifes = maxLifes;
+        if (Lifes > MaxLifes ) {
+            Lifes = MaxLifes;
             unprocessedTime = 0f;
         }
 
@@ -107,7 +110,7 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
         return unprocessedTime;
     }
     public void GetUnlimitedLifes() {
-        Lifes = maxLifes;
+        Lifes = MaxLifes;
         UnlimitedLifes = true;
         PlayerPrefs.SetInt("UnlimitedLifes", UnlimitedLifes ? 1 : 0);
     }

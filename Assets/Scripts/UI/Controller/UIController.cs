@@ -1,3 +1,4 @@
+using Solo.MOST_IN_ONE;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private Menu cantLoadAds;
     [SerializeField] private GameObject blur;
     [SerializeField] private Slider SFXslider;
+    [SerializeField] private Toggle vibrationsToggle;
     private Menu previousMenu;
     private GameStates previousState;
 
@@ -40,8 +42,24 @@ public class UIController : Singleton<UIController> {
 
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
         SFXslider.onValueChanged.AddListener(OnSliderValueChanged);
-
+        vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
+        vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
+        // vibrationsToggle.isOn = 1 == PlayerPrefs.GetInt("Vibrations", 1);
     }
+    private void OnDisable() {
+        vibrationsToggle.onValueChanged.RemoveAllListeners();
+    }
+    private void OnVibrationToggle(bool arg0) {
+        if (arg0) {
+            HapticFeedbacks.Instance.EnableNotifications = true;
+        } else {
+            HapticFeedbacks.Instance.EnableNotifications = false;
+        }
+        PlayerPrefs.Save();
+        AudioController.Instance.PlayClick();
+        HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
+    }
+
     private void OnSliderValueChanged(float arg0) {
         AudioController.Instance.SFXVolume(arg0);
     }

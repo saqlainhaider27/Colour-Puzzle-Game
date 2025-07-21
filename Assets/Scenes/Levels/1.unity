@@ -4646,11 +4646,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: orthographic size
-      value: 6.34375
+      value: 5.78125
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: 0.0008888889
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
@@ -4658,7 +4658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 0.99733335
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4079200190302205703, guid: f5ef5fc11e2d4004eaa363b32cc2c639, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
@@ -4992,15 +4992,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8078423080197797711, guid: e6d52f0125eddb947aa341868744a220, type: 3}
-      propertyPath: virtualCamera
+    - target: {fileID: 7614867780602794034, guid: e6d52f0125eddb947aa341868744a220, type: 3}
+      propertyPath: clickSource
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1546292654}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6d52f0125eddb947aa341868744a220, type: 3}
+--- !u!82 &1546292654 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 386208391332950438, guid: e6d52f0125eddb947aa341868744a220, type: 3}
+  m_PrefabInstance: {fileID: 1546292653}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1570328009
 PrefabInstance:
   m_ObjectHideFlags: 0

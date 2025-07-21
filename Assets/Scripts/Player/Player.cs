@@ -179,14 +179,14 @@ public class Player : Singleton<Player> {
                 canMove = true;
                 if (moveDirection == Vector2.zero) {
                     PlayWallCollisionParticles();
-                    HapticFeedbacks.Instance.LightImpactHaptic();
+                    HapticFeedbacks.Instance.SuccessHaptic();
                 }
 
             } else {
                 if (hasShield) {
                     StartCoroutine(HideShieldAfterDelay());
                     OnShieldBreak?.Invoke();
-                    HapticFeedbacks.Instance.HeavyImpactHaptic();
+                    HapticFeedbacks.Instance.LightImpactHaptic();
                     hasShield = false;
                     canMove = true;
                     return;
