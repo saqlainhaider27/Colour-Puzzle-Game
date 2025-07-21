@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Solo.MOST_IN_ONE;
 public class AdsFailedTextAnimator : MonoBehaviour {
     private const string PLAY = "PLAY";
     private Animator animator;
@@ -11,6 +11,8 @@ public class AdsFailedTextAnimator : MonoBehaviour {
     }
 
     private void RewardedAds_OnRewardedAdFailed(object sender, System.EventArgs e) {
+        GetComponent<AudioSource>().Play();
+        HapticFeedbacks.Instance.WarningHaptic();
         animator.SetTrigger(PLAY);
     }
 }

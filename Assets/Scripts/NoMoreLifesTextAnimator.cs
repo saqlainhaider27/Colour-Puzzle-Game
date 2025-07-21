@@ -1,3 +1,4 @@
+using Solo.MOST_IN_ONE;
 using System;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class NoMoreLifesTextAnimator : MonoBehaviour {
         EventController.OnZeroLifes -= EventController_OnZeroLifes;
     }
     private void EventController_OnZeroLifes() {
+        GetComponent<AudioSource>().Play();
+        HapticFeedbacks.Instance.WarningHaptic();
         animator.SetTrigger(PLAY);
     }
 }

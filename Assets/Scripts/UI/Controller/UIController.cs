@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : Singleton<UIController> {
 
@@ -11,6 +12,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private Menu gameMenu;
     [SerializeField] private Menu cantLoadAds;
     [SerializeField] private GameObject blur;
+    [SerializeField] private Slider SFXslider;
     private Menu previousMenu;
     private GameStates previousState;
 
@@ -31,16 +33,18 @@ public class UIController : Singleton<UIController> {
         public Menu menu;
     }
 
-
-    private void Awake() {
-
+    private void Start() {
         GameManager.Instance.OnGameStart += GameManager_OnGameStart;
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
 
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
-    }
+        SFXslider.onValueChanged.AddListener(OnSliderValueChanged);
 
+    }
+    private void OnSliderValueChanged(float arg0) {
+        AudioController.Instance.SFXVolume(arg0);
+    }
 
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
         ExitMenu();
@@ -245,6 +249,8 @@ public class UIController : Singleton<UIController> {
         GameManager.Instance.State = state;
     }
 
-
+    public void SetSFXSliderValue(float vol) {
+        SFXslider.value = vol;
+    }
 }
 

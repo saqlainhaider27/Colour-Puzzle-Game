@@ -1,5 +1,5 @@
 # ninja log v5
-1	1243	7743580904505297	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	46d055016521d9c2
-1244	1659	7743580908755809	E:/Projects/Unity/Colour-Puzzle-Game/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/361e5g5k/obj/arm64-v8a/libswappywrapper.so	a332d54c5108b7a
 2	6675	7747357659779021	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	46d055016521d9c2
 6675	10557	7747357698770489	E:/Projects/Unity/Colour-Puzzle-Game/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/361e5g5k/obj/arm64-v8a/libswappywrapper.so	a332d54c5108b7a
+75	1514	7748031437138236	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	46d055016521d9c2
+1515	12536	7748031547323328	E:/Projects/Unity/Colour-Puzzle-Game/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/361e5g5k/obj/arm64-v8a/libswappywrapper.so	a332d54c5108b7a

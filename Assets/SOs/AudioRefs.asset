@@ -30,3 +30,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 55bc219eadeabe441b184fcb9a76925f, type: 3}
   coinCollect:
   - {fileID: 8300000, guid: 077d9597fbb45ad4ca79ebb3c1e9d517, type: 3}
+  shieldActive:
+  - {fileID: 8300000, guid: 2f42308036151444bac9af72265eadaa, type: 3}
+  shieldBreak:
+  - {fileID: 8300000, guid: d1d155830131eef488a6d4c80ded5838, type: 3}

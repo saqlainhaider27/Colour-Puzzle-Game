@@ -22,7 +22,10 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private AudioSource buttonClick;
     [SerializeField] private float transitionDuration = 1.0f; // Duration of fade-out in seconds
     [SerializeField] private AudioSource musicSource;
+    [SerializeField] private Slider slider;
     public event Action OnMenuExit;
+    private float volume;
+    [SerializeField] private AudioSource failedSource;
 
     private void Start() {
         HideShop();
@@ -30,8 +33,17 @@ public class MenuController : Singleton<MenuController> {
         HideLevelMenu();
         HideSettings();
         musicSource.volume = 0f;
+        volume = PlayerPrefs.GetFloat("Music", 0.1f);        
         StartCoroutine(MusicFadeIn());
+        slider.value = volume * 10;
+        slider.onValueChanged.AddListener(OnSliderValueChanged);
     }
+
+    private void OnSliderValueChanged(float arg0) {
+        musicSource.volume = arg0 / 10;
+        PlayerPrefs.SetFloat("Music", arg0 / 10);
+    }
+
     public void PlayButtonClick() {
         buttonClick.Play();
     }
@@ -130,7 +142,7 @@ public class MenuController : Singleton<MenuController> {
         SceneManager.LoadScene(index);
     }
     public IEnumerator MusicFadeIn() {
-        float targetVolume = 0.1f; // Define the target volume
+        float targetVolume = volume; // Define the target volume
         float startVolume = 0f; // Start from zero
         musicSource.volume = startVolume; // Ensure starting volume is zero
         while (musicSource.volume < targetVolume) {
@@ -157,5 +169,9 @@ public class MenuController : Singleton<MenuController> {
     }
     public void QuitGame() {
         Application.Quit();
+    }
+
+    public void PlayFailedSound() {
+        failedSource.Play();
     }
 }

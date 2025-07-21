@@ -4,6 +4,7 @@ using UnityEngine;
 public class AudioController : Singleton<AudioController> {
 
     [SerializeField] private AudioRefsSO audioRefs;
+    private float vol;
 
     private void Awake() {
         EventController.OnStarCollected += EventController_OnStarCollected;
@@ -15,8 +16,20 @@ public class AudioController : Singleton<AudioController> {
         Player.Instance.OnPlayerTeleport += Player_OnPlayerTeleport;
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
-
+        Player.Instance.OnShieldActivated += Player_OnShieldActivated;
+        Player.Instance.OnShieldBreak += Player_OnShieldBreak;
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+
+        vol = PlayerPrefs.GetFloat("SFX", 1);
+        UIController.Instance.SetSFXSliderValue(vol);
+    }
+
+    private void Player_OnShieldBreak() {
+        PlaySound(audioRefs.shieldBreak, Player.Instance.transform.position);
+    }
+
+    private void Player_OnShieldActivated() {
+        PlaySound(audioRefs.shieldActive, Player.Instance.transform.position);
     }
 
     private void EventController_OnWallCollision(Vector2 vector) {
@@ -53,13 +66,17 @@ public class AudioController : Singleton<AudioController> {
     public void PlayStarEntrySound() {
         PlaySound(audioRefs.starUIEntry, transform.position);
     }
-
+    public void SFXVolume(float volume) {
+        vol = volume;
+        PlayerPrefs.SetFloat("SFX", vol);
+    }
 
     private void PlaySound(AudioClip[] audioClipArray, Vector3 position, float volume = 1f) {
         PlaySound(audioClipArray[UnityEngine.Random.Range(0, audioClipArray.Length)], position, volume);
     }
 
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) {
+        volume = vol;
         AudioSource.PlayClipAtPoint(audioClip, position, volume);
     }
 

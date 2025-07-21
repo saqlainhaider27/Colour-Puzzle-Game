@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Solo.MOST_IN_ONE;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TechJuego.InputControl;
@@ -34,6 +35,8 @@ public class Player : Singleton<Player> {
     public class OnPlayerTeleportEventArgs : EventArgs {
         public Vector3 position;
     }
+    public event Action OnShieldBreak;
+    public event Action OnShieldActivated;
 
     private bool playerMoving = false;
     private bool canMove = true;
@@ -77,6 +80,7 @@ public class Player : Singleton<Player> {
     public void UseShield() {
         shield.SetActive(true);
         hasShield = true;
+        OnShieldActivated?.Invoke();
     }
     private void EventController_OnTeleport(Vector2 vector) {
         PauseTrail();
@@ -155,6 +159,7 @@ public class Player : Singleton<Player> {
     private void CheckForCollectables(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<ICollectable>(out ICollectable collectable)) {
             collectable.Collect();
+            HapticFeedbacks.Instance.LightImpactHaptic();
             if (collectable is TeleportPoint) {
                 HandleTeleport((TeleportPoint) collectable);
             }
@@ -174,11 +179,14 @@ public class Player : Singleton<Player> {
                 canMove = true;
                 if (moveDirection == Vector2.zero) {
                     PlayWallCollisionParticles();
+                    HapticFeedbacks.Instance.LightImpactHaptic();
                 }
 
             } else {
                 if (hasShield) {
-                    shield.SetActive(false);
+                    StartCoroutine(HideShieldAfterDelay());
+                    OnShieldBreak?.Invoke();
+                    HapticFeedbacks.Instance.HeavyImpactHaptic();
                     hasShield = false;
                     canMove = true;
                     return;
@@ -187,12 +195,19 @@ public class Player : Singleton<Player> {
                 OnPlayerLose?.Invoke(this, new OnPlayerLoseEventArgs {
                     position = transform.position
                 });
+                HapticFeedbacks.Instance.FailureHaptic();
                 StopPlayer();
                 HideSelf(); // Player loses when colliding to a wall
                 GameManager.Instance.State = GameStates.Lose;
             }
         }
     }
+
+    private IEnumerator HideShieldAfterDelay(float delay = 0.5f) {
+        yield return new WaitForSeconds(delay);
+        shield.SetActive(false);
+    }
+
     private void HandleTeleport(TeleportPoint teleportPoint) {
         if (!teleportPoint.Teleported) {
             // Teleport cooldown logic is implemented in TeleportPoint script
@@ -222,6 +237,7 @@ public class Player : Singleton<Player> {
             OnWinPointReached?.Invoke(this, new OnWinPointReachedEventArgs {
                 position = transform.position
             });
+            HapticFeedbacks.Instance.SuccessHaptic();
             StopPlayer();
             HideSelf();
             return false; // Return false as the player should stop when it reaches win point   
