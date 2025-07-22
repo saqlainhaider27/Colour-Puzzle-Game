@@ -15,6 +15,7 @@ public class UIController : Singleton<UIController> {
     [SerializeField] private GameObject blur;
     [SerializeField] private Slider SFXslider;
     [SerializeField] private Toggle vibrationsToggle;
+    [SerializeField] private Toggle notificationsToggle;
     private Menu previousMenu;
     private GameStates previousState;
 
@@ -43,19 +44,24 @@ public class UIController : Singleton<UIController> {
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
         SFXslider.onValueChanged.AddListener(OnSliderValueChanged);
         vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
+        notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
         vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
+        notificationsToggle.isOn = NotificationsController.Instance.EnableNotifications;
         // vibrationsToggle.isOn = 1 == PlayerPrefs.GetInt("Vibrations", 1);
     }
+
+    private void OnNotificationsToggle(bool arg0) {
+        NotificationsController.Instance.EnableNotifications = arg0;
+        AudioController.Instance.PlayClick();
+        HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
+    }
+
     private void OnDisable() {
         vibrationsToggle.onValueChanged.RemoveAllListeners();
+        notificationsToggle.onValueChanged.RemoveAllListeners();
     }
     private void OnVibrationToggle(bool arg0) {
-        if (arg0) {
-            HapticFeedbacks.Instance.EnableNotifications = true;
-        } else {
-            HapticFeedbacks.Instance.EnableNotifications = false;
-        }
-        PlayerPrefs.Save();
+        HapticFeedbacks.Instance.EnableNotifications = arg0;
         AudioController.Instance.PlayClick();
         HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
     }

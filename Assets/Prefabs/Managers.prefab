@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioRefs: {fileID: 11400000, guid: 85566a652ff25254596b313b080ebaa2, type: 2}
-  clickSource: {fileID: 0}
+  clickSource: {fileID: 386208391332950438}
 --- !u!114 &4921761850994554263
 MonoBehaviour:
   m_ObjectHideFlags: 0

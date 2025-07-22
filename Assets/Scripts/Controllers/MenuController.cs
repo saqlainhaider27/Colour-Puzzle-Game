@@ -25,6 +25,9 @@ public class MenuController : Singleton<MenuController> {
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private Slider slider;
     [SerializeField] private Toggle vibrationsToggle;
+    [SerializeField] private Toggle notificationsToggle;
+    [SerializeField] private Button gift;
+    [SerializeField] private GameObject giftMenu;
     public event Action OnMenuExit;
     private float volume;
     [SerializeField] private AudioSource failedSource;
@@ -35,28 +38,57 @@ public class MenuController : Singleton<MenuController> {
         ShowMainMenu();
         HideLevelMenu();
         HideSettings();
-        NotificationsController.Instance.EnableNotifications = true;
         musicSource.volume = 0f;
         volume = PlayerPrefs.GetFloat("Music", 0.1f);
         vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
+        notificationsToggle.isOn = NotificationsController.Instance.EnableNotifications;
         StartCoroutine(MusicFadeIn());
         slider.value = volume * 10;
         slider.onValueChanged.AddListener(OnSliderValueChanged);
     }
     private void OnEnable() {
         vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
+        notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
+        gift.onClick.AddListener(OnGiftClicked);
     }
+    public event Action OnGiftboxClicked;
+    private int giftTapCount = 0;
+    private const int requiredGiftTaps = 3;
+
+    private void OnGiftClicked() {
+        if (GiftController.Instance.IsAvailable) {
+            giftTapCount++;
+            OnGiftboxClicked?.Invoke();
+            clickSource.Play();
+            HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
+
+            if (giftTapCount >= requiredGiftTaps) {
+                GiftController.Instance.ClaimGift();
+                giftTapCount = 0;
+            }
+        } else {
+            giftTapCount = 0;
+        }
+    }
+    public void ShowGiftMenu() {
+        UIBlur.SetActive(true);
+        giftMenu.SetActive(true);
+    }
+
+    private void OnNotificationsToggle(bool arg0) {
+        HapticFeedbacks.Instance.EnableNotifications = arg0;
+        clickSource.Play();
+        HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
+    }
+
     private void OnDisable() {
         vibrationsToggle.onValueChanged.RemoveAllListeners();
+        notificationsToggle.onValueChanged.RemoveAllListeners();
+        gift.onClick.RemoveAllListeners();
     }
 
     private void OnVibrationToggle(bool arg0) {
-        if (arg0) {
-            HapticFeedbacks.Instance.EnableNotifications = true;
-        } else {
-            HapticFeedbacks.Instance.EnableNotifications = false;
-        }
-        PlayerPrefs.Save();
+        HapticFeedbacks.Instance.EnableNotifications = arg0;
         clickSource.Play();
         HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
     }
@@ -147,9 +179,22 @@ public class MenuController : Singleton<MenuController> {
     public void GetLife() {
         LifeSaveManager.Instance.Lifes += 1;
     }
+    public void GetGift() {
+
+    }
     public void CloseLifesMenu() {
         OnMenuExit.Invoke();
         StartCoroutine(HideLifesMenuAfterDelay());
+    }
+    public void CloseGiftMenu() {
+        OnMenuExit?.Invoke();
+        StartCoroutine(HideGiftMenuAfterDelay());
+    }
+
+    private IEnumerator HideGiftMenuAfterDelay(float delay = 0.5f) {
+        yield return new WaitForSeconds(delay);
+        UIBlur.SetActive(false);
+        giftMenu.SetActive(false);
     }
 
     private IEnumerator HideLifesMenuAfterDelay(float delay = 0.5f) {
@@ -195,5 +240,9 @@ public class MenuController : Singleton<MenuController> {
 
     public void PlayFailedSound() {
         failedSource.Play();
+    }
+    [SerializeField] private AudioSource giftAudio;
+    internal void PlayGiftRevealSound() {
+        giftAudio.Play();
     }
 }

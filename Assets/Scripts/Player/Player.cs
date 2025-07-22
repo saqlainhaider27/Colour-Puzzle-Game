@@ -159,7 +159,7 @@ public class Player : Singleton<Player> {
     private void CheckForCollectables(RaycastHit2D raycastHit) {
         if (raycastHit.collider.TryGetComponent<ICollectable>(out ICollectable collectable)) {
             collectable.Collect();
-            HapticFeedbacks.Instance.LightImpactHaptic();
+            // HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.SoftImpact);
             if (collectable is TeleportPoint) {
                 HandleTeleport((TeleportPoint) collectable);
             }
@@ -179,14 +179,14 @@ public class Player : Singleton<Player> {
                 canMove = true;
                 if (moveDirection == Vector2.zero) {
                     PlayWallCollisionParticles();
-                    HapticFeedbacks.Instance.SuccessHaptic();
+                    //HapticFeedbacks.Instance.SuccessHaptic();
                 }
 
             } else {
                 if (hasShield) {
                     StartCoroutine(HideShieldAfterDelay());
                     OnShieldBreak?.Invoke();
-                    HapticFeedbacks.Instance.LightImpactHaptic();
+                    HapticFeedbacks.Instance.SoftImpactHaptic();
                     hasShield = false;
                     canMove = true;
                     return;

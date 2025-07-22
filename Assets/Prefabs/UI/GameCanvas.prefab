@@ -57,6 +57,7 @@ MonoBehaviour:
   blur: {fileID: 3520393664453169775}
   SFXslider: {fileID: 3075905394770642893}
   vibrationsToggle: {fileID: 1249807044018575554}
+  notificationsToggle: {fileID: 702601308192881442}
 --- !u!82 &119937741373923471
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1485,6 +1486,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ec0c6609b66a2b4f9cd3d0981683360, type: 3}
+--- !u!114 &702601308192881442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6393306362833551900, guid: 4ec0c6609b66a2b4f9cd3d0981683360, type: 3}
+  m_PrefabInstance: {fileID: 5870919754797021502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &883683218431668254 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6717905397990557984, guid: 4ec0c6609b66a2b4f9cd3d0981683360, type: 3}
