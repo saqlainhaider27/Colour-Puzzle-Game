@@ -1,54 +1,43 @@
 using System;
 using UnityEngine;
-using UnityEngine.Advertisements;
+using Unity.Services.LevelPlay;
 
-public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener {
+public class RewardedAds : Singleton<RewardedAds>{
 
-    [SerializeField] private string androidAdsUnitID;
-    [SerializeField] private string iosAdsUnitID;
-
-    private string adUnitID;
+    [SerializeField] private string rewardedAdUnitId = "5u4alr0dsj2ai698";
+    private LevelPlayRewardedAd rewardedAd;
 
     public event EventHandler OnRewardedAdComplete;
-
     public event EventHandler OnRewardedAdFailed;
 
-    private void Awake() {
-        //#if UNITY_IOS
-        //    adUnitID = iosAdsUnitID;
-        //#elif UNITY_ANDROID
-        //    adUnitID = androidAdsUnitID;
-        //#endif
-        adUnitID = androidAdsUnitID;
+    private void OnEnable() {
+        rewardedAd.OnAdLoaded += RewardedOnAdLoadedEvent;
+        rewardedAd.OnAdLoadFailed += RewardedOnAdLoadFailedEvent;
+        rewardedAd.OnAdDisplayed += RewardedOnAdDisplayedEvent;
+        rewardedAd.OnAdDisplayFailed += RewardedOnAdDisplayFailedEvent;
+        rewardedAd.OnAdRewarded += RewardedOnAdRewardedEvent;
+        rewardedAd.OnAdClosed += RewardedOnAdClosedEvent;
     }
-
-    public void LoadRewardedAds() {
-        Advertisement.Load(adUnitID, this);
-    }
-    public void ShowRewardedAds() {
-        Advertisement.Show(adUnitID, this);
-        LoadRewardedAds();
-    }
-
-    public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) {
+    void RewardedOnAdLoadedEvent(LevelPlayAdInfo adInfo) { }
+    void RewardedOnAdLoadFailedEvent(LevelPlayAdError error) { }
+    void RewardedOnAdDisplayedEvent(LevelPlayAdInfo adInfo) { }
+    void RewardedOnAdDisplayFailedEvent(LevelPlayAdDisplayInfoError infoError) {
         OnRewardedAdFailed?.Invoke(this, EventArgs.Empty);
     }
-
-    public void OnUnityAdsShowStart(string placementId) {
+    void RewardedOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) {
+        OnRewardedAdComplete?.Invoke(this, EventArgs.Empty);
     }
+    void RewardedOnAdClosedEvent(LevelPlayAdInfo adInfo) { }
 
-    public void OnUnityAdsShowClick(string placementId) {
+    public void LoadRewardedAds() {
+        rewardedAd = new LevelPlayRewardedAd(rewardedAdUnitId);
+        rewardedAd.LoadAd();
     }
-
-    public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) {
-        if (placementId == adUnitID && showCompletionState == UnityAdsShowCompletionState.COMPLETED) {
-            OnRewardedAdComplete?.Invoke(this, EventArgs.Empty);
+    public void ShowRewardedAds() {
+        if (rewardedAd.IsAdReady()) {
+            rewardedAd.ShowAd();
+        } else {
+            Debug.Log("unity-script: Levelplay Rewarded Ad Ready? - False");
         }
-    }
-
-    public void OnUnityAdsAdLoaded(string placementId) {
-    }
-
-    public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message) {
     }
 }

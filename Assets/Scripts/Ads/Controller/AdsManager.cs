@@ -1,39 +1,34 @@
 using UnityEngine;
-using UnityEngine.Advertisements;
+using Unity.Services.LevelPlay;
 
-public class AdsManager : Singleton<AdsManager>, IUnityAdsInitializationListener {
-
-    [field: SerializeField]
+public class AdsManager : Singleton<AdsManager>{
     public RewardedAds RewardedAds {
         get; private set;
     }
-    [SerializeField] private string androidGameID;
-    [SerializeField] private string iosGameID;
+    [SerializeField] private string appKey = "230369e85";
     private string gameID;
-    [SerializeField] private bool testing;
-
-
-
-    private void Awake() {
-#if UNITY_IOS
-            gameID = iosGameID;
-#elif UNITY_ANDROID
-        gameID = androidGameID;
+    public bool Testing;
+    private void Start() {
+        RewardedAds = RewardedAds.Instance;
+        DontDestroyOnLoad(this);
+#if UNITY_ANDROID
+        gameID = appKey;
 #elif UNITY_EDITOR
-            gameID = androidGameID; //Only for testing the functionality in the Editor
+            gameID = "unexpected_platform"; //Only for testing the functionality in the Editor
 #endif
-        gameID = androidGameID;
-        if (!Advertisement.isInitialized && Advertisement.isSupported) {
-            Advertisement.Initialize(gameID, testing, this);
-        }
+        LevelPlay.ValidateIntegration();
+        LevelPlay.Init(gameID);
 
+        LevelPlay.OnInitSuccess += LevelPlay_OnInitSuccess;
+        LevelPlay.OnInitFailed += LevelPlay_OnInitFailed;
+    }
+
+    private void LevelPlay_OnInitFailed(LevelPlayInitError obj) {
+        Debug.Log(obj);
+    }
+
+    private void LevelPlay_OnInitSuccess(LevelPlayConfiguration configuration) {
+        Debug.Log("Success");
         RewardedAds.LoadRewardedAds();
-    }
-
-
-    public void OnInitializationComplete() {
-    }
-
-    public void OnInitializationFailed(UnityAdsInitializationError error, string message) {
     }
 }

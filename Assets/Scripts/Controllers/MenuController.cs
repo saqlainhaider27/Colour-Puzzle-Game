@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -177,10 +176,11 @@ public class MenuController : Singleton<MenuController> {
         lifesMenu.SetActive(true);
     }
     public void GetLife() {
+        AdsManager.Instance.RewardedAds.ShowRewardedAds();
         LifeSaveManager.Instance.Lifes += 1;
     }
     public void GetGift() {
-
+        AdsManager.Instance.RewardedAds.ShowRewardedAds();
     }
     public void CloseLifesMenu() {
         OnMenuExit.Invoke();

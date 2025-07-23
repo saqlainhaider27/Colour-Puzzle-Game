@@ -17,8 +17,6 @@ GameObject:
   - component: {fileID: 1412723523329361043}
   - component: {fileID: 4981794368662442460}
   - component: {fileID: 7614867780602794034}
-  - component: {fileID: 4921761850994554263}
-  - component: {fileID: 1123229856112312776}
   - component: {fileID: 8078423080197797711}
   - component: {fileID: 5820246318578933069}
   - component: {fileID: 105546039828565443}
@@ -144,36 +142,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioRefs: {fileID: 11400000, guid: 85566a652ff25254596b313b080ebaa2, type: 2}
   clickSource: {fileID: 386208391332950438}
---- !u!114 &4921761850994554263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3077965628337132230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0409775f6466564097e6025e407951d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <RewardedAds>k__BackingField: {fileID: 1123229856112312776}
-  androidGameID: 5722821
-  iosGameID: 5722820
-  testing: 1
---- !u!114 &1123229856112312776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3077965628337132230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 822caa175404f8f409971d3d570068ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  androidAdsUnitID: Rewarded_Android
-  iosAdsUnitID: Rewarded_iOS
 --- !u!114 &8078423080197797711
 MonoBehaviour:
   m_ObjectHideFlags: 0
