@@ -18,10 +18,16 @@ public class AudioController : Singleton<AudioController> {
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
         Player.Instance.OnShieldActivated += Player_OnShieldActivated;
         Player.Instance.OnShieldBreak += Player_OnShieldBreak;
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        
 
         vol = PlayerPrefs.GetFloat("SFX", 1);
         UIController.Instance.SetSFXSliderValue(vol);
+    }
+    private void OnEnable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+    }
+    private void OnDisable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
     }
     public void PlayClick() {
         clickSource.Play();

@@ -16,9 +16,16 @@ public class ReviveTimer : MonoBehaviour {
         timerText = GetComponent<TextMeshProUGUI>();
 
         UIController.Instance.OnMenuAppeared += UIController_OnMenuAppeared;
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        
     }
 
+    private void OnEnable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+
+    }
+    private void OnDisable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+    }
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
         // Disable the reviveButton and stop the timer
         reviveButton.SetActive(false);

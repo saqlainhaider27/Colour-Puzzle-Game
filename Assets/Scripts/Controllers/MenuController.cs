@@ -2,6 +2,7 @@ using Solo.MOST_IN_ONE;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -44,8 +45,29 @@ public class MenuController : Singleton<MenuController> {
         StartCoroutine(MusicFadeIn());
         slider.value = volume * 10;
         slider.onValueChanged.AddListener(OnSliderValueChanged);
+
+
     }
+    
+    private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
+        if (reward == Reward.Life) {
+            LifeSaveManager.Instance.Lifes += 1;
+            return;
+        }
+        if (reward == Reward.Gift) {
+            GiftController.Instance.IsAvailable = true;
+            return;
+        }
+        
+    }
+    public enum Reward {
+        Gift,
+        Life
+    }
+    private Reward reward;
+
     private void OnEnable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
         vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
         notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
         gift.onClick.AddListener(OnGiftClicked);
@@ -84,6 +106,7 @@ public class MenuController : Singleton<MenuController> {
         vibrationsToggle.onValueChanged.RemoveAllListeners();
         notificationsToggle.onValueChanged.RemoveAllListeners();
         gift.onClick.RemoveAllListeners();
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
     }
 
     private void OnVibrationToggle(bool arg0) {
@@ -176,10 +199,12 @@ public class MenuController : Singleton<MenuController> {
         lifesMenu.SetActive(true);
     }
     public void GetLife() {
+        reward = Reward.Life;
         AdsManager.Instance.RewardedAds.ShowRewardedAds();
-        LifeSaveManager.Instance.Lifes += 1;
+
     }
     public void GetGift() {
+        reward = Reward.Gift;
         AdsManager.Instance.RewardedAds.ShowRewardedAds();
     }
     public void CloseLifesMenu() {

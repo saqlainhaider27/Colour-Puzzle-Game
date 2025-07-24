@@ -77,7 +77,7 @@ namespace Assets.SimpleAndroidNotifications
 
 #else
 
-            Debug.LogWarning("Simple Android Notifications are not supported for current platform. Build and play this scene on android device!");
+            //Debug.LogWarning("Simple Android Notifications are not supported for current platform. Build and play this scene on android device!");
 
             #endif
 

@@ -19,7 +19,7 @@ public class GiftController : Singleton<GiftController> {
             }
             return isAvailable;
         }
-        private set {
+        set {
             isAvailable = value;
             PlayerPrefs.SetInt(GiftKey, isAvailable ? 1 : 0);
             if (!isAvailable) {
@@ -49,33 +49,31 @@ public class GiftController : Singleton<GiftController> {
 
     public event Action<GiftItemCreator.Item, int> OnGiftOpened;
     public void ClaimGift() {
-        if (IsAvailable) {
-            IsAvailable = false;
-            bool canGiveLife = !PlayerHasMaxLifes();
-            float rand = UnityEngine.Random.value;
+        IsAvailable = false;
+        bool canGiveLife = !PlayerHasMaxLifes();
+        float rand = UnityEngine.Random.value;
 
-            if (rand < 0.5f) {
+        if (rand < 0.5f) {
+            int coins = UnityEngine.Random.Range(1, 31);
+            GameEconomics.Instance.Coins += coins;
+            OnGiftOpened?.Invoke(GiftItemCreator.Item.coin, coins);
+        } else if (rand < 0.9f) {
+            int shields = UnityEngine.Random.Range(1, 4);
+            ShieldController.Instance.Shield += shields;
+            OnGiftOpened?.Invoke(GiftItemCreator.Item.shield, shields);
+        } else if (canGiveLife) {
+            LifeSaveManager.Instance.Lifes += 1;
+            OnGiftOpened?.Invoke(GiftItemCreator.Item.heart, 1);
+        } else {
+            float reroll = UnityEngine.Random.value;
+            if (reroll < 0.5f) {
                 int coins = UnityEngine.Random.Range(1, 31);
                 GameEconomics.Instance.Coins += coins;
                 OnGiftOpened?.Invoke(GiftItemCreator.Item.coin, coins);
-            } else if (rand < 0.9f) {
+            } else {
                 int shields = UnityEngine.Random.Range(1, 4);
                 ShieldController.Instance.Shield += shields;
                 OnGiftOpened?.Invoke(GiftItemCreator.Item.shield, shields);
-            } else if (canGiveLife) {
-                LifeSaveManager.Instance.Lifes += 1;
-                OnGiftOpened?.Invoke(GiftItemCreator.Item.heart, 1);
-            } else {
-                float reroll = UnityEngine.Random.value;
-                if (reroll < 0.5f) {
-                    int coins = UnityEngine.Random.Range(1, 31);
-                    GameEconomics.Instance.Coins += coins;
-                    OnGiftOpened?.Invoke(GiftItemCreator.Item.coin, coins);
-                } else {
-                    int shields = UnityEngine.Random.Range(1, 4);
-                    ShieldController.Instance.Shield += shields;
-                    OnGiftOpened?.Invoke(GiftItemCreator.Item.shield, shields);
-                }
             }
         }
     }

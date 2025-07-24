@@ -41,7 +41,7 @@ public class UIController : Singleton<UIController> {
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
 
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        
         SFXslider.onValueChanged.AddListener(OnSliderValueChanged);
         vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
         notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
@@ -50,13 +50,17 @@ public class UIController : Singleton<UIController> {
         // vibrationsToggle.isOn = 1 == PlayerPrefs.GetInt("Vibrations", 1);
     }
 
+
     private void OnNotificationsToggle(bool arg0) {
         NotificationsController.Instance.EnableNotifications = arg0;
         AudioController.Instance.PlayClick();
         HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
     }
-
+    private void OnEnable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+    }
     private void OnDisable() {
+        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
         vibrationsToggle.onValueChanged.RemoveAllListeners();
         notificationsToggle.onValueChanged.RemoveAllListeners();
     }
