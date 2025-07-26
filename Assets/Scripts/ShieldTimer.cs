@@ -32,6 +32,9 @@ public class ShieldTimer : MonoBehaviour {
     private void OnEnable() {
         button.onClick.AddListener(OnUseShieldButtonClicked);
     }
+    private void OnDisable() {
+        button.onClick.RemoveAllListeners();
+    }
 
     private void OnUseShieldButtonClicked() {
         if (used) {
@@ -41,6 +44,7 @@ public class ShieldTimer : MonoBehaviour {
         m_Time = waitDuration;
         ShieldController.Instance.Shield -= 1;
         Player.Instance.UseShield();
+        StartCoroutine(DisableSelfAfterDelay());
     }
 
     private void Update() {
@@ -52,13 +56,13 @@ public class ShieldTimer : MonoBehaviour {
         } else {
             animator.SetTrigger(PLAY);
             timerComplete = true;
-            DisableSelfAfterDelay();
+            StartCoroutine(DisableSelfAfterDelay());
             
         }
     }
 
     private IEnumerator DisableSelfAfterDelay(float delay = 0.5f) {
         yield return new WaitForSeconds(delay);
-        this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
     }
 }

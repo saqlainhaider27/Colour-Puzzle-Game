@@ -18,9 +18,10 @@ public class AudioController : Singleton<AudioController> {
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
         Player.Instance.OnShieldActivated += Player_OnShieldActivated;
         Player.Instance.OnShieldBreak += Player_OnShieldBreak;
-        
 
+        
         vol = PlayerPrefs.GetFloat("SFX", 1);
+        // Debug.Log("Volume: " + vol);
         UIController.Instance.SetSFXSliderValue(vol);
     }
     private void OnEnable() {
@@ -84,7 +85,7 @@ public class AudioController : Singleton<AudioController> {
     }
 
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) {
-        volume = vol;
+        volume = PlayerPrefs.GetFloat("SFX", 1);
         AudioSource.PlayClipAtPoint(audioClip, position, volume);
     }
 
