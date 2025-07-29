@@ -21,7 +21,7 @@ public class ShieldController : Singleton<ShieldController> {
             PlayerPrefs.SetInt(ShieldKey, shields);
         }
     }
-
+    
     public string ShieldKey { get; private set; } = "Shields";
 
     private void Awake() {

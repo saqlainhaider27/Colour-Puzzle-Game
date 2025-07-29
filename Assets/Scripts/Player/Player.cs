@@ -41,7 +41,7 @@ public class Player : Singleton<Player> {
     private bool playerMoving = false;
     private bool canMove = true;
     private bool hasShield = false;
-
+    
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
 
@@ -65,17 +65,23 @@ public class Player : Singleton<Player> {
     //}
     private void OnEnable() {
         SwipeController.Instance.OnSwipeUp += SwipeController_OnSwipeUp;
-        SwipeController.Instance.OnSwipeDown += SwipeController_OnSwipeDown;
         SwipeController.Instance.OnSwipeLeft += SwipeController_OnSwipeLeft;
+        SwipeController.Instance.OnSwipeDown += SwipeController_OnSwipeDown;
         SwipeController.Instance.OnSwipeRight += SwipeController_OnSwipeRight;
 
         EventController.OnTeleport += EventController_OnTeleport;
         UIController.Instance.OnMenuExit += UIController_OnMenuExit;
+        UIController.Instance.OnMenuEnter += UIController_OnMenuEnter;
+    }
+
+    private bool detectSwipes = true;
+    private void UIController_OnMenuEnter(object sender, UIController.OnMenuEnterEventArgs e) {
+        // Stop detecting new swipes
+        detectSwipes = false;
     }
 
     private void UIController_OnMenuExit(object sender, UIController.OnMenuExitEventArgs e) {
-        moveDirection = Vector2.zero;
-        canMove = true;
+        detectSwipes = true;
     }
     public void UseShield() {
         shield.SetActive(true);
@@ -96,6 +102,9 @@ public class Player : Singleton<Player> {
     }
 
     private void SwipeController_OnSwipeRight() {
+        if (!detectSwipes) {
+            return;
+        }
         if (canMove) {
             moveDirection = Vector2.right;
             canMove = false;
@@ -103,6 +112,9 @@ public class Player : Singleton<Player> {
     }
 
     private void SwipeController_OnSwipeLeft() {
+        if (!detectSwipes) {
+            return;
+        }
         if (canMove) {
             moveDirection = Vector2.left;
             canMove = false;
@@ -110,6 +122,9 @@ public class Player : Singleton<Player> {
     }
 
     private void SwipeController_OnSwipeDown() {
+        if (!detectSwipes) {
+            return;
+        }
         if (canMove) {
             moveDirection = Vector2.down;
             canMove = false;
@@ -117,6 +132,9 @@ public class Player : Singleton<Player> {
     }
 
     private void SwipeController_OnSwipeUp() {
+        if (!detectSwipes) {
+            return;
+        }
         if (canMove) {
             moveDirection = Vector2.up;
             canMove = false;
