@@ -42,11 +42,14 @@ public class MenuController : Singleton<MenuController> {
         volume = PlayerPrefs.GetFloat("Music", 0.1f);
         vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
         notificationsToggle.isOn = NotificationsController.Instance.EnableNotifications;
-        StartCoroutine(MusicFadeIn());
+        
         slider.value = volume * 10;
         slider.onValueChanged.AddListener(OnSliderValueChanged);
 
 
+    }
+    public void FadeInMusic() {
+        StartCoroutine(MusicFadeIn());
     }
     
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
@@ -74,7 +77,7 @@ public class MenuController : Singleton<MenuController> {
     }
     public event Action OnGiftboxClicked;
     private int giftTapCount = 0;
-    private const int requiredGiftTaps = 3;
+    private const int requiredGiftTaps = 1;
 
     private void OnGiftClicked() {
         if (GiftController.Instance.IsAvailable) {

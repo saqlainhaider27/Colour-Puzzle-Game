@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Shield
   m_EditorClassIdentifier: 
   itemName: 5 Shields
-  itemSprite: {fileID: 21300000, guid: bd4c04b82051cde47bb62ee65d36c3db, type: 3}
+  itemSprite: {fileID: -8391566782126530650, guid: bd4c04b82051cde47bb62ee65d36c3db, type: 3}
   itemPrice: 50 Coins
   buyable: {fileID: 11400000, guid: 3f320998070fd324ba9e3d85e4d0205a, type: 2}

@@ -1729,6 +1729,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 5709468175594860921, guid: f5cc67816799d4148bdb983cbbb07515, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5709468175594860921, guid: f5cc67816799d4148bdb983cbbb07515, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 6306790496492111804, guid: f5cc67816799d4148bdb983cbbb07515, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1737,6 +1745,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 119937741373923471}
+    - target: {fileID: 7214353307199134879, guid: f5cc67816799d4148bdb983cbbb07515, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8391566782126530650, guid: bd4c04b82051cde47bb62ee65d36c3db, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

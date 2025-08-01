@@ -11,11 +11,6 @@ public class RevivePlayer : Singleton<RevivePlayer> {
         AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
     }
     private void RewardedAds_OnRewardedAdComplete(object sender, System.EventArgs e) {
-        Revive();
-    }
-
-    private void Revive() {
-        Player.Instance.ShowSelf();
-        // Also disable revive button
+        Player.Instance.Revive();
     }
 }

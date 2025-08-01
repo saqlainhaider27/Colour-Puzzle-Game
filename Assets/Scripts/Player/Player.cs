@@ -344,4 +344,10 @@ public class Player : Singleton<Player> {
     public void SetCurrentPlayerColour(Colour setColour) {
         currentColour = setColour;
     }
+
+    public void Revive() {
+        ShowSelf();
+        canMove = true;
+        detectSwipes = true;
+    }
 }

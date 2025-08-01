@@ -8,9 +8,10 @@ public class GameEconomics : Singleton<GameEconomics> {
         get {
             return _coins;
         }
-        set { 
-            _coins = value;
-            PlayerPrefs.SetInt("Coins", value);
+        set {
+            int clampedValue = Mathf.Clamp(value, 0, 9999);
+            _coins = clampedValue;
+            PlayerPrefs.SetInt("Coins", clampedValue);
             OnCoinsValueChanged?.Invoke(Coins);
         }
     }
