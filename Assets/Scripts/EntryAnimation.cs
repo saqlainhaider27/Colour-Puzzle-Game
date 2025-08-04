@@ -1,7 +1,17 @@
+using System.Collections;
 using UnityEngine;
 
 public class EntryAnimation : MonoBehaviour {
     [SerializeField] private AudioRefsSO audioRefsSO;
+    private Animator menuAnimator;
+    private void Awake() {
+        menuAnimator = GetComponent<Animator>();
+    }
+    IEnumerator Start() {
+        yield return new WaitForEndOfFrame();
+        menuAnimator.Play("EntryAnimation");
+    }
+
     public void PlayColourChangeSound() {
         PlaySound(audioRefsSO.colourCollect, Vector3.zero);
     }
