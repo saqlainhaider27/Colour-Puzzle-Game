@@ -20,7 +20,7 @@ public class ScoreController : Singleton<ScoreController> {
 
     private void Awake() {
 
-        GameManager.Instance.OnWinState += GameManager_OnWinState;
+        
         EventController.OnStarCollected += EventController_OnStarCollected;
 
         maxScoreAchieved = PlayerPrefs.GetInt(LEVEL + SceneController.Instance.GetCurrentSceneIndex());
@@ -32,7 +32,12 @@ public class ScoreController : Singleton<ScoreController> {
             currentLevelScore++;
         }
     }
-
+    private void OnEnable() {
+        GameManager.Instance.OnWinState += GameManager_OnWinState;
+    }
+    private void OnDisable() {
+        GameManager.Instance.OnWinState -= GameManager_OnWinState;
+    }
     private void GameManager_OnWinState(object sender, System.EventArgs e) {
         int updateScore;
         // Always store the score, regardless of its value

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class LifeSaveManager : Singleton<LifeSaveManager> {
+public class LifeSaveManager : SingletonPersistent<LifeSaveManager> {
     private int lifes;
     public int MaxLifes{
         get;
@@ -34,8 +34,8 @@ public class LifeSaveManager : Singleton<LifeSaveManager> {
 
     private float unprocessedTime;
 
-    private void Awake() {
-        DontDestroyOnLoad(this);
+    public override void Awake() {
+        base.Awake();
         if ( PlayerPrefs.HasKey("UnlimitedLifes")) {
             int i = PlayerPrefs.GetInt("UnlimitedLifes");
             if (i == 0) {

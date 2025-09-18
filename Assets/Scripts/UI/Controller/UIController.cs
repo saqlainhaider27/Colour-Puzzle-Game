@@ -25,7 +25,6 @@ public class UIController : Singleton<UIController> {
     public event EventHandler OnHomeButtonPressed;
     public event EventHandler OnMenuAppeared;
     public event EventHandler OnMenuDisappeared;
-
     public event EventHandler<OnMenuEnterEventArgs> OnMenuEnter;
     public class OnMenuEnterEventArgs : EventArgs {
         public Menu menu;
@@ -36,33 +35,45 @@ public class UIController : Singleton<UIController> {
         public Menu menu;
     }
 
+    private void Awake() {
+        vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
+        vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
+        notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
+        notificationsToggle.isOn = NotificationsController.Instance.EnableNotifications;
+        //if(vibrationsToggle != null) {
+        
+        //}
+        //if(notificationsToggle != null) {
+            
+        //}
+        
+        SFXslider?.onValueChanged.AddListener(OnSliderValueChanged);
+        
+        
+
+        // vibrationsToggle.isOn = 1 == PlayerPrefs.GetInt("Vibrations", 1);
+    }
+
     private void Start() {
         GameManager.Instance.OnGameStart += GameManager_OnGameStart;
         GameManager.Instance.OnWinState += GameManager_OnWinState;
         GameManager.Instance.OnLoseState += GameManager_OnLoseState;
-
-        
-        SFXslider.onValueChanged.AddListener(OnSliderValueChanged);
-        vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
-        notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
-        vibrationsToggle.isOn = HapticFeedbacks.Instance.EnableNotifications; // Set toggle based on HapticFeedbacks instance state
-        notificationsToggle.isOn = NotificationsController.Instance.EnableNotifications;
-        // vibrationsToggle.isOn = 1 == PlayerPrefs.GetInt("Vibrations", 1);
     }
-
-
     private void OnNotificationsToggle(bool arg0) {
         NotificationsController.Instance.EnableNotifications = arg0;
         AudioController.Instance.PlayClick();
         HapticFeedbacks.Instance.GenerateBasicHaptic(Most_HapticFeedback.HapticTypes.Selection);
     }
     private void OnEnable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+
+
     }
     private void OnDisable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
-        vibrationsToggle.onValueChanged.RemoveAllListeners();
-        notificationsToggle.onValueChanged.RemoveAllListeners();
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        vibrationsToggle?.onValueChanged.RemoveAllListeners();
+        notificationsToggle?.onValueChanged.RemoveAllListeners();
+
     }
     private void OnVibrationToggle(bool arg0) {
         HapticFeedbacks.Instance.EnableNotifications = arg0;
@@ -75,8 +86,7 @@ public class UIController : Singleton<UIController> {
     }
 
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
-        ExitMenu();
-        gameMenu.ShowMenu();
+        
     }
 
     private void GameManager_OnGameStart(object sender, EventArgs e) {
@@ -170,8 +180,25 @@ public class UIController : Singleton<UIController> {
 
     }
     public void ReviveButton() {
-        AdsManager.Instance.RewardedAds.ShowRewardedAds();
+        if(!IsGameplayScene()) {
+            Debug.LogWarning("ReviveButton called in non-gameplay scene!");
+            return;
+        }
+        if(Gley.MobileAds.API.IsRewardedInterstitialAvailable()) {
+            Gley.MobileAds.API.ShowRewardedVideo((bool success) => {
+                if(success) {
+                    ExitMenu();
+                    gameMenu.ShowMenu();
+                    Player.Instance.Revive();
 
+                } else {
+                    cantLoadAds.ShowMenu();
+                }
+            });
+        }
+    }
+    private bool IsGameplayScene() {
+        return GameManager.Instance != null && Player.Instance != null;
     }
 
     public void Replay() {

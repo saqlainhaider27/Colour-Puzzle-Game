@@ -35,16 +35,18 @@ public class Player : Singleton<Player> {
     public class OnPlayerTeleportEventArgs : EventArgs {
         public Vector3 position;
     }
+    public class OnPlayerReviveEventArgs : EventArgs {
+        public Vector3 position;
+    }
     public event Action OnShieldBreak;
     public event Action OnShieldActivated;
-
+    public event EventHandler<OnPlayerReviveEventArgs> OnPlayerRevive;
     private bool playerMoving = false;
     private bool canMove = true;
     private bool hasShield = false;
     
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
-
         currentColour = GetComponentInChildren<PlayerColour>().GetCurrentPlayerMeshColour();
         trailRenderers = GetComponentsInChildren<TrailRenderer>(true);
     }
@@ -93,12 +95,6 @@ public class Player : Singleton<Player> {
         StopPlayer();
         this.moveDirection = vector;
         MovePlayer();
-    }
-    private void OnDisable() {
-        SwipeController.Instance.OnSwipeUp -= SwipeController_OnSwipeUp;
-        SwipeController.Instance.OnSwipeDown -= SwipeController_OnSwipeDown;
-        SwipeController.Instance.OnSwipeLeft -= SwipeController_OnSwipeLeft;
-        SwipeController.Instance.OnSwipeRight -= SwipeController_OnSwipeRight;
     }
 
     private void SwipeController_OnSwipeRight() {
@@ -346,6 +342,9 @@ public class Player : Singleton<Player> {
     }
 
     public void Revive() {
+        OnPlayerRevive?.Invoke(this, new OnPlayerReviveEventArgs { 
+            position = transform.position
+        });
         ShowSelf();
         canMove = true;
         detectSwipes = true;

@@ -45,24 +45,13 @@ public class MenuController : Singleton<MenuController> {
         
         slider.value = volume * 10;
         slider.onValueChanged.AddListener(OnSliderValueChanged);
-
+        FadeInMusic();
 
     }
     public void FadeInMusic() {
         StartCoroutine(MusicFadeIn());
     }
-    
-    private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
-        if (reward == Reward.Life) {
-            LifeSaveManager.Instance.Lifes += 1;
-            return;
-        }
-        if (reward == Reward.Gift) {
-            GiftController.Instance.IsAvailable = true;
-            return;
-        }
-        
-    }
+   
     public enum Reward {
         Gift,
         Life
@@ -70,7 +59,7 @@ public class MenuController : Singleton<MenuController> {
     private Reward reward;
 
     private void OnEnable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
         vibrationsToggle.onValueChanged.AddListener(OnVibrationToggle);
         notificationsToggle.onValueChanged.AddListener(OnNotificationsToggle);
         gift.onClick.AddListener(OnGiftClicked);
@@ -109,7 +98,7 @@ public class MenuController : Singleton<MenuController> {
         vibrationsToggle.onValueChanged.RemoveAllListeners();
         notificationsToggle.onValueChanged.RemoveAllListeners();
         gift.onClick.RemoveAllListeners();
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
     }
 
     private void OnVibrationToggle(bool arg0) {
@@ -202,13 +191,27 @@ public class MenuController : Singleton<MenuController> {
         lifesMenu.SetActive(true);
     }
     public void GetLife() {
-        reward = Reward.Life;
-        AdsManager.Instance.RewardedAds.ShowRewardedAds();
+        if(Gley.MobileAds.API.IsRewardedInterstitialAvailable()) {
+            Gley.MobileAds.API.ShowRewardedVideo((bool success) => {
+                if(success) {
+                    LifeSaveManager.Instance.Lifes += 1;
+                    return;
+                } else {
+                }
+            });
+        }
 
     }
     public void GetGift() {
-        reward = Reward.Gift;
-        AdsManager.Instance.RewardedAds.ShowRewardedAds();
+        if(Gley.MobileAds.API.IsRewardedInterstitialAvailable()) {
+            Gley.MobileAds.API.ShowRewardedVideo((bool success) => {
+                if(success) {
+                    GiftController.Instance.IsAvailable = true;
+                    return;
+                } else {
+                }
+            });
+        }
     }
     public void CloseLifesMenu() {
         OnMenuExit.Invoke();

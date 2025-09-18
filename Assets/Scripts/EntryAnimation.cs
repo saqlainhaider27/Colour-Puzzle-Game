@@ -9,7 +9,8 @@ public class EntryAnimation : MonoBehaviour {
     }
     IEnumerator Start() {
         yield return new WaitForEndOfFrame();
-        menuAnimator.Play("EntryAnimation");
+        MenuController.Instance.FadeInMusic();
+        //menuAnimator.Play("EntryAnimation");
     }
 
     public void PlayColourChangeSound() {

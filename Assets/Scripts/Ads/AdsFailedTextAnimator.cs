@@ -10,10 +10,10 @@ public class AdsFailedTextAnimator : MonoBehaviour {
         
     }
     private void OnEnable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdFailed += RewardedAds_OnRewardedAdFailed;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdFailed += RewardedAds_OnRewardedAdFailed;
     }
     private void OnDisable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdFailed -= RewardedAds_OnRewardedAdFailed;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdFailed -= RewardedAds_OnRewardedAdFailed;
     }
 
     private void RewardedAds_OnRewardedAdFailed(object sender, System.EventArgs e) {

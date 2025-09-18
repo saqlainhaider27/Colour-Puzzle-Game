@@ -11,7 +11,7 @@ namespace Solo.MOST_IN_ONE
     // or Most_HapticFeedback.GenerateWithCooldown(HapticTypes type, float cooldown)
     // or StartCoroutine(Most_HapticFeedback.GeneratePattern(CustomHapticPattern CustomPattern));
 
-    public class HapticFeedbacks : Singleton<HapticFeedbacks>
+    public class HapticFeedbacks : SingletonPersistent<HapticFeedbacks>
     {
         public Most_HapticFeedback.CustomHapticPattern CustomHapticPatternA;
         public Most_HapticFeedback.CustomHapticPattern CustomHapticPatternB;
@@ -28,8 +28,8 @@ namespace Solo.MOST_IN_ONE
             }
         }
 
-        private void Awake() {
-            DontDestroyOnLoad(this);
+        public override void Awake() {
+            base.Awake();
             if (PlayerPrefs.GetInt("Notifications", 1) == 1) {
                 enableNotifications = true;
             } else { 

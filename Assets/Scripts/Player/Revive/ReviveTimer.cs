@@ -20,15 +20,21 @@ public class ReviveTimer : MonoBehaviour {
     }
 
     private void OnEnable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
-
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        Player.Instance.OnPlayerRevive += Player_OnPlayerRevive;
     }
+
+    private void Player_OnPlayerRevive(object sender, Player.OnPlayerReviveEventArgs e) {
+        reviveButton.SetActive(false);
+    }
+
     private void OnDisable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        Player.Instance.OnPlayerRevive -= Player_OnPlayerRevive;
     }
     private void RewardedAds_OnRewardedAdComplete(object sender, EventArgs e) {
         // Disable the reviveButton and stop the timer
-        reviveButton.SetActive(false);
+        
     }
 
     private void UIController_OnMenuAppeared(object sender, System.EventArgs e) {

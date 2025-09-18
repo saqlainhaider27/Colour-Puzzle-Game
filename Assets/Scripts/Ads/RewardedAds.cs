@@ -95,7 +95,7 @@ public class RewardedAds : Singleton<RewardedAds>{
         ad.OnAdFullScreenContentClosed += () =>
         {
             Time.timeScale = 1f;
-            OnRewardedAdComplete?.Invoke(this, EventArgs.Empty);
+            //OnRewardedAdComplete?.Invoke(this, EventArgs.Empty);
             Debug.Log("Rewarded ad full screen content closed.");
         };
         // Raised when the ad failed to open full screen content.

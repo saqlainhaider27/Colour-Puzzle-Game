@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AudioController : Singleton<AudioController> {
@@ -18,17 +19,24 @@ public class AudioController : Singleton<AudioController> {
         Player.Instance.OnPlayerLose += Player_OnPlayerLose;
         Player.Instance.OnShieldActivated += Player_OnShieldActivated;
         Player.Instance.OnShieldBreak += Player_OnShieldBreak;
+        Player.Instance.OnPlayerRevive += Player_OnPlayerRevive;
 
-        
         vol = PlayerPrefs.GetFloat("SFX", 1);
         // Debug.Log("Volume: " + vol);
+        
+    }
+    private IEnumerator Start() {
+        yield return null;
         UIController.Instance.SetSFXSliderValue(vol);
+        
     }
     private void OnEnable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete += RewardedAds_OnRewardedAdComplete;
+        
     }
     private void OnDisable() {
-        AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        //AdsManager.Instance.RewardedAds.OnRewardedAdComplete -= RewardedAds_OnRewardedAdComplete;
+        //Player.Instance.OnPlayerRevive -= Player_OnPlayerRevive;
     }
     public void PlayClick() {
         clickSource.Play();
@@ -49,7 +57,7 @@ public class AudioController : Singleton<AudioController> {
         PlaySound(audioRefs.coinCollect, vector);
     }
 
-    private void RewardedAds_OnRewardedAdComplete(object sender, System.EventArgs e) {
+    private void Player_OnPlayerRevive(object sender, System.EventArgs e) {
         PlaySound(audioRefs.revive, transform.position);
     }
 

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ShieldController : Singleton<ShieldController> {
+public class ShieldController : SingletonPersistent<ShieldController> {
     private int shields;
     private int minShields = 0;
     public event Action<int> OnShieldChanged;
@@ -23,9 +23,5 @@ public class ShieldController : Singleton<ShieldController> {
     }
     
     public string ShieldKey { get; private set; } = "Shields";
-
-    private void Awake() {
-        DontDestroyOnLoad(this);
-    }
 
 }

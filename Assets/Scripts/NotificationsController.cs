@@ -3,7 +3,7 @@ using Assets.SimpleAndroidNotifications.Helpers;
 using System;
 using UnityEngine;
 
-public class NotificationsController : Singleton<NotificationsController> {
+public class NotificationsController : SingletonPersistent<NotificationsController> {
 
     private bool enableNotifications;
     public bool EnableNotifications {
@@ -20,8 +20,8 @@ public class NotificationsController : Singleton<NotificationsController> {
     private int quitLifes;
     private float timeTogenerateAllLifes;
 
-    private void Awake() {
-        DontDestroyOnLoad(this);
+    public override void Awake() {
+        base.Awake();
 #if UNITY_ANDROID
         PermissionManager.RequestPostNotifications();
 #endif

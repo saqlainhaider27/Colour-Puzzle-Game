@@ -3,13 +3,10 @@ using UnityEngine;
 public class LifesVisual : MonoBehaviour {
     private Life[] lifes;
     private int savedLifes;
-    private void Awake() {
-        // Get All lives in childern
+    private void Start() {
         lifes = GetComponentsInChildren<Life>();
         savedLifes = LifeSaveManager.Instance.Lifes;
         UpdateLivesVisual();
-    }
-    private void Start() {
         LifeSaveManager.Instance.OnLifeValueChanged += LifeSaveManager_OnLifeValueChanged;
 
     }

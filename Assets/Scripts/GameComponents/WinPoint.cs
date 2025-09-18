@@ -6,9 +6,11 @@ public class WinPoint : Singleton<WinPoint> {
 
     private void Awake() {
         particle = GetComponentInChildren<ParticleSystem>();
+        
+    }
+    private void Start() {
         Player.Instance.OnWinPointReached += Player_OnWinPointReached;
     }
-
     private void Player_OnWinPointReached(object sender, Player.OnWinPointReachedEventArgs e) {
         particle.Play();
     }
