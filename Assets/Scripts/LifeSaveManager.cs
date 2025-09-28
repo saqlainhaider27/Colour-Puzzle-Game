@@ -17,12 +17,7 @@ public class LifeSaveManager : SingletonPersistent<LifeSaveManager> {
 
     public int Lifes {
         get {
-            if (PlayerPrefs.HasKey(LifesKey)) {
-                lifes = PlayerPrefs.GetInt(LifesKey);
-            } else {
-                lifes = MaxLifes;
-                PlayerPrefs.SetInt(LifesKey, lifes);
-            }
+            lifes = PlayerPrefs.GetInt(LifesKey, MaxLifes);
             return lifes;
         }
         set {
@@ -52,7 +47,7 @@ public class LifeSaveManager : SingletonPersistent<LifeSaveManager> {
     }
 
     private void Update() {
-        if (Lifes == MaxLifes) return;
+        if (lifes == MaxLifes) return;
 
         unprocessedTime += Time.deltaTime;
 
@@ -87,7 +82,7 @@ public class LifeSaveManager : SingletonPersistent<LifeSaveManager> {
         totalElapsedSeconds -= livesToAdd * LifeIncrementInterval;
         unprocessedTime = totalElapsedSeconds;
         Lifes += livesToAdd;
-        if (Lifes > MaxLifes ) {
+        if (lifes > MaxLifes ) {
             Lifes = MaxLifes;
             unprocessedTime = 0f;
         }
@@ -98,7 +93,7 @@ public class LifeSaveManager : SingletonPersistent<LifeSaveManager> {
         if (UnlimitedLifes) {
             return;
         }
-        Lifes = Mathf.Max(0, Lifes - 1);
+        Lifes = Mathf.Max(0, lifes - 1);
         EventController.OnLevelChanged -= DecrementLife;
     }
 
