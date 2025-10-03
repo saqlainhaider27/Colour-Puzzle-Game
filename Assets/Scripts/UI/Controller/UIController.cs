@@ -145,7 +145,7 @@ public class UIController : Singleton<UIController> {
             return;
         }
         ExitMenu();
-        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        //LifeSaveManager.Instance.SubscribeToOnLevelChanged();
         EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnLoadNextLevel, 0.5f));
     }
@@ -155,7 +155,7 @@ public class UIController : Singleton<UIController> {
             return;
         }
         ExitMenu();
-        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        //LifeSaveManager.Instance.SubscribeToOnLevelChanged();
         EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnLoadPreviousLevel, 0.5f));
     }
@@ -210,7 +210,7 @@ public class UIController : Singleton<UIController> {
             Resume();
         }
         ExitMenu();
-        LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+        //LifeSaveManager.Instance.SubscribeToOnLevelChanged();
         EventController.Invoke(EventController.OnLevelChanged);
         StartCoroutine(InvokeEventAfterDelay(OnReplayButtonPressed, 0.5f));
     }

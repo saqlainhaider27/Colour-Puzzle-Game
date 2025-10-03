@@ -47,7 +47,7 @@ MonoBehaviour:
         id: 
         displayName: App Open ID
         required: 1
-      testMode: 0
+      testMode: 1
       testDevice: 
       debugGeography: 0
     directedForChildren: 0

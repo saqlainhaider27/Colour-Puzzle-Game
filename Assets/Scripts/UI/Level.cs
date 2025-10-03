@@ -51,7 +51,7 @@ public class Level : MonoBehaviour {
                 EventController.Invoke(EventController.OnZeroLifes);
                 return;
             }
-            LifeSaveManager.Instance.SubscribeToOnLevelChanged();
+            //LifeSaveManager.Instance.SubscribeToOnLevelChanged();
             EventController.Invoke(EventController.OnLevelChanged);
             MenuController.Instance.LoadLevel(level);
         });
